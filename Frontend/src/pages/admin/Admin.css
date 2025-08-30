@@ -1,0 +1,28 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #e3f1ff;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  overflow-x: auto;
+}
+
+.admin-layout .admin-navbar.collapsed + .admin-main {
+  margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .admin-layout .admin-navbar.collapsed + .admin-main {
+    margin-left: 0;
+  }
+}
