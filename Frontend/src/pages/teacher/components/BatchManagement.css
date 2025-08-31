@@ -1,0 +1,528 @@
+.batch-management {
+  padding: 30px;
+  background: #f8fafc;
+  min-height: calc(100vh - 60px);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h2 {
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.batch-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+  height: calc(100vh - 200px);
+}
+
+.batches-sidebar {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 25px;
+  border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h3 {
+  color: #1e293b;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.batch-count {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.batch-list {
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100% - 100px);
+}
+
+.batch-item {
+  padding: 20px;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.batch-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.batch-item.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+}
+
+.batch-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.batch-item-header h4 {
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.batch-status {
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.batch-item-details {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.batch-schedule {
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.batch-details {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.batch-details-header {
+  padding: 25px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.batch-info h2 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+}
+
+.batch-meta {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.meta-item {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.view-tabs {
+  display: flex;
+  gap: 5px;
+  background: #f8fafc;
+  padding: 5px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: #667eea;
+  color: white;
+}
+
+.batch-content {
+  padding: 25px;
+  overflow-y: auto;
+  height: calc(100% - 150px);
+}
+
+.overview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #e2e8f0;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info h3 {
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.stat-info p {
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+.quick-actions h3 {
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.recent-activities h3 {
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.activity-icon {
+  font-size: 1.3rem;
+}
+
+.activity-text {
+  flex: 1;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.activity-time {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.students-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.students-header h3 {
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.add-student-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.student-card {
+  background: #f8fafc;
+  border: 2px solid #f1f5f9;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.student-avatar {
+  font-size: 2rem;
+  background: #667eea;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-info {
+  flex: 1;
+}
+
+.student-info h4 {
+  color: #1e293b;
+  margin: 0 0 5px 0;
+  font-weight: 600;
+}
+
+.student-info p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.student-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.action-icon {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.action-icon:hover {
+  background: #e2e8f0;
+}
+
+.attendance-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attendance-header h3 {
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.attendance-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.date-input {
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.mark-attendance-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.attendance-summary {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.summary-card h4 {
+  color: #1e293b;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+}
+
+.attendance-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.attendance-stats span {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.present {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.absent {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.percentage {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.no-batch-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.no-batch-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.no-batch-selected h3 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+}
+
+.no-batch-selected p {
+  color: #64748b;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .batch-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .batches-sidebar {
+    height: 300px;
+  }
+
+  .batch-content {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .batch-management {
+    padding: 20px;
+  }
+
+  .batch-meta {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .students-header,
+  .attendance-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .attendance-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,364 @@
+.manual-add-mark {
+  padding: 30px;
+  background: #f8fafc;
+  min-height: calc(100vh - 60px);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h2 {
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.selection-section {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.select-input {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.marks-section {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.exam-info h3 {
+  color: #1e293b;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.max-marks {
+  color: #667eea;
+  font-weight: 500;
+  background: #f0f4ff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.search-and-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  width: 200px;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.bulk-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.bulk-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.clear-btn {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.clear-btn:hover {
+  background: #e2e8f0;
+}
+
+.absent-btn {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.absent-btn:hover {
+  background: #fecaca;
+}
+
+.students-grid {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.student-card {
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.student-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.student-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.student-details h4 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.roll-no {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.current-mark {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0f9ff;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.mark-label {
+  color: #0369a1;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.mark-value {
+  color: #0369a1;
+  font-weight: 700;
+}
+
+.mark-input-section label {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.mark-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mark-input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.mark-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.absent-btn-small {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.absent-btn-small:hover {
+  background: #fecaca;
+}
+
+.mark-status {
+  font-size: 0.85rem;
+}
+
+.status {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.status.absent {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status.entered {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.empty {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.save-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid #f1f5f9;
+}
+
+.save-summary {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .section-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .search-and-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-input {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .manual-add-mark {
+    padding: 20px;
+  }
+
+  .selection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-and-actions {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .bulk-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .student-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .save-section {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+}

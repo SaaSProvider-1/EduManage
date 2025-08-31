@@ -1,0 +1,27 @@
+.teacher-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #e3f1ff;
+}
+
+.teacher-main {
+  flex: 1;
+  margin-left: 300px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.teacher-layout .teacher-navbar.collapsed + .teacher-main {
+  margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+  .teacher-main {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .teacher-layout .teacher-navbar.collapsed + .teacher-main {
+    margin-left: 0;
+  }
+}

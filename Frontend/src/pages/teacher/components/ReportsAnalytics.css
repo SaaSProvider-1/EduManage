@@ -1,0 +1,511 @@
+.reports-analytics {
+  padding: 30px;
+  background: #f8fafc;
+  min-height: calc(100vh - 60px);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h2 {
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.reports-controls {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: end;
+}
+
+.report-selector,
+.date-range-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-selector label,
+.date-range-selector label {
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.report-select,
+.date-select {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.report-select:focus,
+.date-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.report-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.generate-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.export-options {
+  display: flex;
+  gap: 5px;
+}
+
+.export-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+  background: #e2e8f0;
+  color: #374151;
+}
+
+.report-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.report-header {
+  padding: 25px;
+  border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-header h3 {
+  color: #1e293b;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.report-summary {
+  display: flex;
+  gap: 30px;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f8fafc;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 2px solid #f1f5f9;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.attendance-report,
+.performance-report,
+.batch-summary-report,
+.student-progress-report {
+  padding: 25px;
+}
+
+.table-header {
+  display: grid;
+  gap: 15px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.attendance-table .table-header {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+}
+
+.performance-table .table-header {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+
+.table-row {
+  display: grid;
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.3s ease;
+}
+
+.attendance-table .table-row {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+}
+
+.performance-table .table-row {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+
+.table-row:hover {
+  background: #f9fafb;
+}
+
+.table-cell {
+  display: flex;
+  align-items: center;
+}
+
+.batch-name {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.percentage-badge {
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.score-badge {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.high-score {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.low-score {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status.excellent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.good {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status.poor {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.attendance-chart,
+.performance-insights,
+.detailed-progress {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.attendance-chart h4,
+.performance-insights h4,
+.detailed-progress h4 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+}
+
+.chart-placeholder,
+.progress-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+}
+
+.chart-placeholder p,
+.progress-placeholder p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+.trend-indicators {
+  margin-top: 20px;
+}
+
+.trend-up {
+  background: #dcfce7;
+  color: #166534;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.insight-card {
+  background: white;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.insight-icon {
+  font-size: 2rem;
+}
+
+.insight-content h5 {
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.insight-content p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.batch-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.batch-summary-card {
+  background: #f8fafc;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.batch-summary-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.batch-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.batch-card-header h4 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.student-count {
+  background: #667eea;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.batch-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.metric {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.progress-overview {
+  margin-bottom: 30px;
+}
+
+.progress-overview h4 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.progress-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.progress-category {
+  background: white;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-category.improving {
+  border-left: 5px solid #10b981;
+}
+
+.progress-category.stable {
+  border-left: 5px solid #3b82f6;
+}
+
+.category-icon {
+  font-size: 2.5rem;
+}
+
+.category-info {
+  flex: 1;
+}
+
+.category-info h5 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.category-info p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.category-percentage {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+@media (max-width: 1024px) {
+  .reports-controls {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .report-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .batch-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .reports-analytics {
+    padding: 20px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .batch-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-category {
+    flex-direction: column;
+    text-align: center;
+  }
+}
