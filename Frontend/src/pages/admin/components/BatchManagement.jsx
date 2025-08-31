@@ -117,7 +117,7 @@ export default function BatchManagement() {
       <div className="batch-header">
         <h2>Batch Management</h2>
         <button className="create-btn create-btn-primary">
-          <i class="fa-solid fa-plus"></i>
+          <i className="fa-solid fa-plus"></i>
           <p>Create New Batch</p>
         </button>
       </div>

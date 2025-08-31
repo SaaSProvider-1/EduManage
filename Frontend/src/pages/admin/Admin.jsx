@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./navbar";
 import Dashboard from "./components/Dashboard";
 import StudentManagement from "./components/StudentManagement";
@@ -13,7 +14,7 @@ import "./Admin.css";
 
 export default function Admin() {
   const [collapsed, setCollapsed] = useState();
-  const [currentView, setCurrentView] = useState("dashboard");
+  const [isMenuClicked, setIsMenuClicked] = useState(false);
 
   const handleViewChange = (view) => {
     setCurrentView(view);
@@ -30,39 +31,9 @@ export default function Admin() {
     setCollapsed(val);
   };
 
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case "dashboard":
-        return <Dashboard />;
-      case "students":
-        return <StudentManagement />;
-      case "teachers":
-        return <TeacherManagement />;
-      case "batches":
-        return <BatchManagement />;
-      case "fees":
-        return <FeesManagement />;
-      case "resources":
-        return <UploadResources />;
-      case "reports":
-        return <ReportsAnalytics />;
-      case "approval":
-        return <Approval />;
-      case "settings":
-        return <Settings />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
   return (
     <div className="admin-layout">
-      <Navbar
-        currentView={currentView}
-        onViewChange={handleViewChange}
-        onLogout={handleLogout}
-        isHandleMargin={handleMargin}
-      />
+      <Navbar onLogout={handleLogout} isHandleMargin={handleMargin} />
       <main
         className="admin-main"
         style={{
@@ -73,7 +44,19 @@ export default function Admin() {
             : "300px",
         }}
       >
-        {renderCurrentView()}
+        <Routes>
+          <Route path="/" element={<Navigate to="dashboard" replace />} />
+
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="students" element={<StudentManagement />} />
+          <Route path="teachers" element={<TeacherManagement />} />
+          <Route path="batches" element={<BatchManagement />} />
+          <Route path="fees" element={<FeesManagement />} />
+          <Route path="resources" element={<UploadResources />} />
+          <Route path="reports" element={<ReportsAnalytics />} />
+          <Route path="approval" element={<Approval />} />
+          <Route path="settings" element={<Settings />} />
+        </Routes>
       </main>
     </div>
   );

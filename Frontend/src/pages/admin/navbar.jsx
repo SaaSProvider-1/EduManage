@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   GraduationCap,
   CircleUserRound,
@@ -28,15 +29,15 @@ const menuItems = [
     id: "teachers",
     label: "Teachers",
     icon: <SquareUserRound />,
-    color: "#ff8400ff",
+    color: "#ff8400",
   },
   { id: "batches", label: "Batches", icon: <Users />, color: "#a855f7" },
-  { id: "fees", label: "Fees", icon: <IndianRupee />, color: "#ff8400ff" },
+  { id: "fees", label: "Fees", icon: <IndianRupee />, color: "#ff8400" },
   {
     id: "resources",
     label: "Resources",
     icon: <FolderOpen />,
-    color: "#ff8000ff",
+    color: "#ff8400",
   },
   {
     id: "reports",
@@ -48,15 +49,15 @@ const menuItems = [
     id: "approval",
     label: "Approval",
     icon: <BookCheck />,
-    color: "#0095ffff",
+    color: "#0095ff",
   },
-  { id: "settings", label: "Settings", icon: <Cog />, color: "#4e5c6eff" },
+  { id: "settings", label: "Settings", icon: <Cog />, color: "#4e5c6e" },
 ];
 
-export default function Navbar({ onViewChange, isHandleMargin }) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+export default function Navbar({ isHandleMargin }) {
+  const [isMobile] = useState(window.innerWidth <= 768);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentView, setCurrentView] = useState("dashboard");
 
   const handleResize = () => {
     if (isMobile) {
@@ -74,7 +75,11 @@ export default function Navbar({ onViewChange, isHandleMargin }) {
   };
 
   const handleViewChange = (view) => {
-    onViewChange(view);
+    setCurrentView(view);
+    if (isMobile) {
+      setIsCollapsed(false);
+      isHandleMargin(false);
+    }
   };
 
   if (!isMobile) {
@@ -115,25 +120,35 @@ export default function Navbar({ onViewChange, isHandleMargin }) {
           </span>
         </div>
         <div className={`nav-links ${isCollapsed ? "collapsed" : ""}`}>
-          {menuItems.map((item) => (
-            <button
-              className="link-btn"
-              key={item.id}
-              onClick={() => handleViewChange(item.id)}
-              style={{
-                borderLeft: "4px solid " + item.color,
-                backgroundColor: item.color + "22",
-                color: item.color,
-              }}
-            >
-              <span>
-                {React.cloneElement(item.icon, { color: item.color })}
-              </span>
-              <span className={`item-label ${isCollapsed ? "collapsed" : ""}`}>
-                {item.label}
-              </span>
-            </button>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = item.id === currentView;
+            return (
+              <Link
+                to={`/admin/${item.id}`}
+                className="link-btn"
+                key={item.id}
+                onClick={() => handleViewChange(item.id)}
+                style={{
+                  borderLeft: isActive
+                    ? `4px solid ${item.color}`
+                    : "4px solid transparent",
+                  backgroundColor: item.color + "22",
+                  color: item.color,
+                  transform: isActive ? "scale(1.05)" : "scale(1)",
+                  transition: "transform 0.3s ease-in-out",
+                }}
+              >
+                <span>
+                  {React.cloneElement(item.icon, { color: item.color })}
+                </span>
+                <span
+                  className={`item-label ${isCollapsed ? "collapsed" : ""}`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
         <div className="nav-footer">
           <button className="logout-btn">
@@ -165,7 +180,6 @@ export default function Navbar({ onViewChange, isHandleMargin }) {
             ) : (
               <ArrowRight size={35} />
             )}
-            
           </button>
         </div>
         <div className={`admin-profile ${!isCollapsed ? "collapsed" : ""}`}>
@@ -186,25 +200,33 @@ export default function Navbar({ onViewChange, isHandleMargin }) {
           </span>
         </div>
         <div className={`nav-links ${!isCollapsed ? "collapsed" : ""}`}>
-          {menuItems.map((item) => (
-            <button
-              className="link-btn"
-              key={item.id}
-              onClick={() => handleViewChange(item.id)}
-              style={{
-                borderLeft: "4px solid " + item.color,
-                backgroundColor: item.color + "22",
-                color: item.color,
-              }}
-            >
-              <span>
-                {React.cloneElement(item.icon, { color: item.color })}
-              </span>
-              <span className={`item-label ${!isCollapsed ? "collapsed" : ""}`}>
-                {item.label}
-              </span>
-            </button>
-          ))}
+          {menuItems.map((item) => {
+            const isMobActive = item.id === currentView;
+            return (
+              <Link
+                to={`/admin/${item.id}`}
+                className="link-btn"
+                key={item.id}
+                onClick={() => handleViewChange(item.id)}
+                style={{
+                  borderLeft: isMobActive
+                    ? `4px solid ${item.color}`
+                    : "4px solid transparent",
+                  backgroundColor: item.color + "22",
+                  color: item.color,
+                }}
+              >
+                <span>
+                  {React.cloneElement(item.icon, { color: item.color })}
+                </span>
+                <span
+                  className={`item-label ${!isCollapsed ? "collapsed" : ""}`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
         <div className="nav-footer">
           <button className="logout-btn">

@@ -87,7 +87,7 @@ export default function TeacherManagement() {
       <div className="teacher-header">
         <h2>Teacher Management</h2>
         <button className="teacher-btn teacher-btn-primary">
-          <i class="fa-solid fa-user-plus"></i>
+          <i className="fa-solid fa-user-plus"></i>
           <p>Add New Teacher</p>
         </button>
       </div>

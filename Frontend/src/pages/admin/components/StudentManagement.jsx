@@ -6,35 +6,35 @@ export default function StudentManagement() {
     {
       id: 1,
       name: "John Doe",
-      image: "images/student1.jpg",
+      image: "/images/student1.jpg",
       batch: "10th A",
       status: "active",
     },
     {
       id: 2,
       name: "Sarah Smith",
-      image: "images/student2.jpg",
+      image: "/images/student2.jpg",
       batch: "6th B",
       status: "active",
     },
     {
       id: 3,
       name: "Mike Johnson",
-      image: "images/student3.jpg",
+      image: "/images/student3.jpg",
       batch: "8th C",
       status: "inactive",
     },
     {
       id: 4,
       name: "Emily Davis",
-      image: "images/student4.jpg",
+      image: "/images/student4.jpg",
       batch: "9th A",
       status: "active",
     },
     {
       id: 5,
       name: "Alex Wilson",
-      image: "images/student5.jpg",
+      image: "/images/student5.jpg",
       batch: "5th B",
       status: "active",
     },
@@ -70,7 +70,7 @@ export default function StudentManagement() {
       <div className="student-header">
         <h2>Student Management</h2>
         <button className="add-btn student-add-btn">
-          <i class="fa-solid fa-user-plus"></i>
+          <i className="fa-solid fa-user-plus"></i>
           <p>Add New Student</p>
         </button>
       </div>
@@ -95,7 +95,7 @@ export default function StudentManagement() {
             <option value="inactive">Inactive</option>
           </select>
           <div className="filter">
-            <i class="fa-solid fa-filter"></i>
+            <i className="fa-solid fa-filter"></i>
             <p>Filter</p>
           </div>
         </div>
