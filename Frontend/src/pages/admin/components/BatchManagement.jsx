@@ -1,92 +1,98 @@
-import React, { useState } from 'react';
-import './BatchManagement.css';
+import React, { useState } from "react";
+import "./BatchManagement.css";
 
 export default function BatchManagement() {
   const [batches] = useState([
-    { 
-      id: 1, 
-      name: 'Physics A', 
-      subject: 'Physics',
-      teacher: 'Dr. Rajesh Kumar',
+    {
+      id: 1,
+      name: "Physics A",
+      subject: "Physics",
+      teacher: "Dr. Rajesh Kumar",
       students: 25,
       capacity: 30,
-      startDate: '2025-01-15',
-      endDate: '2025-06-15',
-      schedule: 'Mon, Wed, Fri - 10:00 AM',
+      startDate: "2025-01-15",
+      endDate: "2025-06-15",
+      schedule: "Mon, Wed, Fri - 10:00 AM",
       fees: 5000,
-      status: 'active'
+      status: "active",
     },
-    { 
-      id: 2, 
-      name: 'Chemistry B', 
-      subject: 'Chemistry',
-      teacher: 'Prof. Priya Sharma',
+    {
+      id: 2,
+      name: "Chemistry B",
+      subject: "Chemistry",
+      teacher: "Prof. Priya Sharma",
       students: 18,
       capacity: 25,
-      startDate: '2025-02-01',
-      endDate: '2025-07-01',
-      schedule: 'Tue, Thu, Sat - 2:00 PM',
+      startDate: "2025-02-01",
+      endDate: "2025-07-01",
+      schedule: "Tue, Thu, Sat - 2:00 PM",
       fees: 4500,
-      status: 'active'
+      status: "active",
     },
-    { 
-      id: 3, 
-      name: 'Math Advanced', 
-      subject: 'Mathematics',
-      teacher: 'Mr. Amit Patel',
+    {
+      id: 3,
+      name: "Math Advanced",
+      subject: "Mathematics",
+      teacher: "Mr. Amit Patel",
       students: 22,
       capacity: 28,
-      startDate: '2025-01-20',
-      endDate: '2025-06-20',
-      schedule: 'Mon, Wed, Fri - 4:00 PM',
+      startDate: "2025-01-20",
+      endDate: "2025-06-20",
+      schedule: "Mon, Wed, Fri - 4:00 PM",
       fees: 6000,
-      status: 'active'
+      status: "active",
     },
-    { 
-      id: 4, 
-      name: 'Biology A', 
-      subject: 'Biology',
-      teacher: 'Dr. Sunita Mehta',
+    {
+      id: 4,
+      name: "Biology A",
+      subject: "Biology",
+      teacher: "Dr. Sunita Mehta",
       students: 15,
       capacity: 20,
-      startDate: '2025-03-01',
-      endDate: '2025-08-01',
-      schedule: 'Tue, Thu, Sat - 10:00 AM',
+      startDate: "2025-03-01",
+      endDate: "2025-08-01",
+      schedule: "Tue, Thu, Sat - 10:00 AM",
       fees: 4000,
-      status: 'upcoming'
+      status: "upcoming",
     },
-    { 
-      id: 5, 
-      name: 'Physics Basic', 
-      subject: 'Physics',
-      teacher: 'Dr. Rajesh Kumar',
+    {
+      id: 5,
+      name: "Physics Basic",
+      subject: "Physics",
+      teacher: "Dr. Rajesh Kumar",
       students: 30,
       capacity: 30,
-      startDate: '2024-09-01',
-      endDate: '2025-02-01',
-      schedule: 'Mon, Wed, Fri - 8:00 AM',
+      startDate: "2024-09-01",
+      endDate: "2025-02-01",
+      schedule: "Mon, Wed, Fri - 8:00 AM",
       fees: 4000,
-      status: 'completed'
-    }
+      status: "completed",
+    },
   ]);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  const filteredBatches = batches.filter(batch => {
-    const matchesSearch = batch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         batch.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         batch.teacher.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || batch.status === filterStatus;
+  const filteredBatches = batches.filter((batch) => {
+    const matchesSearch =
+      batch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      batch.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      batch.teacher.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterStatus === "all" || batch.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'active': return '#10b981';
-      case 'upcoming': return '#f59e0b';
-      case 'completed': return '#6b7280';
-      default: return '#6b7280';
+      case "active":
+        return "#10b981";
+      case "upcoming":
+        return "#f59e0b";
+      case "completed":
+        return "#6b7280";
+      default:
+        return "#6b7280";
     }
   };
 
@@ -110,7 +116,10 @@ export default function BatchManagement() {
     <div className="batch-management">
       <div className="batch-header">
         <h2>Batch Management</h2>
-        <button className="btn btn-primary">Create New Batch</button>
+        <button className="create-btn create-btn-primary">
+          <i class="fa-solid fa-plus"></i>
+          <p>Create New Batch</p>
+        </button>
       </div>
 
       <div className="batch-filters">
@@ -124,8 +133,8 @@ export default function BatchManagement() {
           />
           <span className="search-icon">🔍</span>
         </div>
-        <select 
-          value={filterStatus} 
+        <select
+          value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           className="filter-select"
         >
@@ -138,30 +147,38 @@ export default function BatchManagement() {
 
       <div className="batch-stats">
         <div className="stat-item">
-          <span className="stat-number">{batches.filter(b => b.status === 'active').length}</span>
+          <span className="stat-number">
+            {batches.filter((b) => b.status === "active").length}
+          </span>
           <span className="stat-label">Active Batches</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{batches.filter(b => b.status === 'upcoming').length}</span>
+          <span className="stat-number">
+            {batches.filter((b) => b.status === "upcoming").length}
+          </span>
           <span className="stat-label">Upcoming</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{batches.reduce((sum, b) => sum + b.students, 0)}</span>
+          <span className="stat-number">
+            {batches.reduce((sum, b) => sum + b.students, 0)}
+          </span>
           <span className="stat-label">Total Students</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{batches.reduce((sum, b) => sum + b.capacity, 0)}</span>
+          <span className="stat-number">
+            {batches.reduce((sum, b) => sum + b.capacity, 0)}
+          </span>
           <span className="stat-label">Total Capacity</span>
         </div>
       </div>
 
       <div className="batches-grid">
-        {filteredBatches.map(batch => (
+        {filteredBatches.map((batch) => (
           <div key={batch.id} className="batch-card">
             <div className="batch-card-header">
               <h3>{batch.name}</h3>
-              <span 
-                className="status-indicator" 
+              <span
+                className="status-indicator"
                 style={{ backgroundColor: getStatusColor(batch.status) }}
               >
                 {batch.status}
@@ -169,7 +186,13 @@ export default function BatchManagement() {
             </div>
 
             <div className="subject-info">
-              <span className="subject-badge" style={{ backgroundColor: getStatusColor(batch.status) + '20', color: getStatusColor(batch.status) }}>
+              <span
+                className="subject-badge"
+                style={{
+                  backgroundColor: getStatusColor(batch.status) + "20",
+                  color: getStatusColor(batch.status),
+                }}
+              >
                 {batch.subject}
               </span>
             </div>
@@ -189,46 +212,63 @@ export default function BatchManagement() {
               </div>
               <div className="detail-item">
                 <span className="detail-icon">📆</span>
-                <span>{batch.startDate} to {batch.endDate}</span>
+                <span>
+                  {batch.startDate} to {batch.endDate}
+                </span>
               </div>
             </div>
 
             <div className="capacity-section">
               <div className="capacity-header">
                 <span>Capacity</span>
-                <span className="capacity-numbers">{batch.students}/{batch.capacity}</span>
+                <span className="capacity-numbers">
+                  {batch.students}/{batch.capacity}
+                </span>
               </div>
               <div className="capacity-bar">
-                <div 
-                  className="capacity-fill" 
-                  style={{ 
-                    width: `${getCapacityPercentage(batch.students, batch.capacity)}%`,
-                    backgroundColor: getCapacityPercentage(batch.students, batch.capacity) > 80 ? '#ef4444' : 
-                                   getCapacityPercentage(batch.students, batch.capacity) > 60 ? '#f59e0b' : '#10b981'
+                <div
+                  className="capacity-fill"
+                  style={{
+                    width: `${getCapacityPercentage(
+                      batch.students,
+                      batch.capacity
+                    )}%`,
+                    backgroundColor:
+                      getCapacityPercentage(batch.students, batch.capacity) > 80
+                        ? "#ef4444"
+                        : getCapacityPercentage(
+                            batch.students,
+                            batch.capacity
+                          ) > 60
+                        ? "#f59e0b"
+                        : "#10b981",
                   }}
                 ></div>
               </div>
               <div className="capacity-percentage">
-                {Math.round(getCapacityPercentage(batch.students, batch.capacity))}% filled
+                {Math.round(
+                  getCapacityPercentage(batch.students, batch.capacity)
+                )}
+                % filled
               </div>
             </div>
 
             <div className="batch-actions">
-              <button 
+              <button
                 className="btn-action view"
                 onClick={() => handleViewBatch(batch.id)}
                 title="View Details"
               >
                 👁️
               </button>
-              <button 
+              <button
                 className="btn-action edit"
                 onClick={() => handleEditBatch(batch.id)}
                 title="Edit Batch"
               >
                 ✏️
               </button>
-              <button 
+              <button
                 className="btn-action students"
                 onClick={() => handleManageStudents(batch.id)}
                 title="Manage Students"

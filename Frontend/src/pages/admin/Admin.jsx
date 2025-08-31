@@ -12,6 +12,7 @@ import Settings from './components/Settings';
 import './Admin.css';
 
 export default function Admin() {
+  const [collapsed, setCollapsed] = useState();
   const [currentView, setCurrentView] = useState('dashboard');
 
   const handleViewChange = (view) => {
@@ -23,6 +24,10 @@ export default function Admin() {
       // Handle logout logic here
       alert('Logging out...');
     }
+  };
+
+  const handleMargin = (val) => {
+    setCollapsed(val);
   };
 
   const renderCurrentView = () => {
@@ -56,8 +61,9 @@ export default function Admin() {
         currentView={currentView} 
         onViewChange={handleViewChange}
         onLogout={handleLogout}
+        isHandleMargin={handleMargin}
       />
-      <main className="admin-main">
+      <main className="admin-main" style={{ marginLeft: collapsed ? "100px" : "300px" && window.innerWidth < 768 ? '100px': '300px'}}>
         {renderCurrentView()}
       </main>
     </div>

@@ -6,51 +6,36 @@ export default function StudentManagement() {
     {
       id: 1,
       name: "John Doe",
-      image: 'images/student1.jpg',
-      email: "john@email.com",
-      phone: "+91 9876543210",
-      batch: "Physics A",
-      joinDate: "2025-01-15",
+      image: "images/student1.jpg",
+      batch: "10th A",
       status: "active",
     },
     {
       id: 2,
       name: "Sarah Smith",
-      image: 'images/student2.jpg',
-      email: "sarah@email.com",
-      phone: "+91 9876543211",
-      batch: "Chemistry B",
-      joinDate: "2025-02-10",
+      image: "images/student2.jpg",
+      batch: "6th B",
       status: "active",
     },
     {
       id: 3,
       name: "Mike Johnson",
-      image: 'images/student3.jpg',
-      email: "mike@email.com",
-      phone: "+91 9876543212",
-      batch: "Math Advanced",
-      joinDate: "2025-01-20",
+      image: "images/student3.jpg",
+      batch: "8th C",
       status: "inactive",
     },
     {
       id: 4,
       name: "Emily Davis",
-      image: 'images/student4.jpg',
-      email: "emily@email.com",
-      phone: "+91 9876543213",
-      batch: "Biology A",
-      joinDate: "2025-03-05",
+      image: "images/student4.jpg",
+      batch: "9th A",
       status: "active",
     },
     {
       id: 5,
       name: "Alex Wilson",
-      image: 'images/student5.jpg',
-      email: "alex@email.com",
-      phone: "+91 9876543214",
-      batch: "Physics A",
-      joinDate: "2025-02-28",
+      image: "images/student5.jpg",
+      batch: "5th B",
       status: "active",
     },
   ]);
@@ -84,29 +69,36 @@ export default function StudentManagement() {
     <div className="student-management">
       <div className="student-header">
         <h2>Student Management</h2>
-        <button className="add-btn student-add-btn">Add New Student</button>
+        <button className="add-btn student-add-btn">
+          <i class="fa-solid fa-user-plus"></i>
+          <p>Add New Student</p>
+        </button>
       </div>
 
       <div className="student-filters">
         <div className="search-box">
           <input
             type="text"
-            placeholder="Search students by name, email, or batch..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search students by name or batch..."
             className="search-input"
           />
           <span className="search-icon">🔍</span>
         </div>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="filter-select"
-        >
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+        <div className="filter-btns">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="filter-select"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <div className="filter">
+            <i class="fa-solid fa-filter"></i>
+            <p>Filter</p>
+          </div>
+        </div>
       </div>
 
       <div className="students-grid">
@@ -115,30 +107,15 @@ export default function StudentManagement() {
             <div className="student-card-header">
               <div className="student-avatar-large">
                 <img src={student.image} alt="image" />
-                <span className={`status-badge ${student.status}`}>
-                  {student.status === "active" ? "✅ Active" : "❌ Inactive"}
-                </span>
               </div>
               <div className="student-status"></div>
             </div>
 
-            <div className="student-info">
+            <div className="student-info-card">
               <h3>{student.name}</h3>
-              <div className="info-item">
-                <span className="info-icon">📧</span>
-                <span>{student.email}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-icon">📞</span>
-                <span>{student.phone}</span>
-              </div>
               <div className="info-item">
                 <span className="info-icon">📚</span>
                 <span>{student.batch}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-icon">📅</span>
-                <span>Joined: {student.joinDate}</span>
               </div>
             </div>
 

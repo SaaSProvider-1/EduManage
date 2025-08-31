@@ -30,10 +30,6 @@ export default function FeesManagement() {
     <div className="fees-management">
       <div className="fees-header">
         <h2>Fees Management</h2>
-        <div className="fees-actions">
-          <button className="btn btn-primary">Generate Report</button>
-          <button className="btn btn-secondary">Export Data</button>
-        </div>
       </div>
 
       <div className="fees-tabs">
