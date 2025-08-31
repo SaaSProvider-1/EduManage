@@ -24,6 +24,7 @@
 }
 
 .btn {
+  width: fit-content;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -263,18 +264,14 @@
   }
   
   .settings-header {
-    flex-direction: column;
+    align-items: center;
     gap: 15px;
-    align-items: flex-start;
-  }
-  
-  .settings-tabs {
-    flex-direction: column;
+    margin: 0.5rem;
+    margin-bottom: 1rem;
   }
   
   .tab {
-    justify-content: flex-start;
-    text-align: left;
+    justify-content: center;
   }
   
   .settings-content {

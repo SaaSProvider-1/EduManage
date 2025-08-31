@@ -53,8 +53,8 @@
 }
 
 .approvals-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 20px;
 }
 
@@ -325,7 +325,7 @@
   .approval-content {
     grid-template-columns: 1fr;
   }
-  
+
   .approval-detail-panel {
     position: static;
     max-height: none;
@@ -336,31 +336,36 @@
   .approval {
     padding: 15px;
   }
-  
+
   .approval-header {
-    flex-direction: column;
+    align-items: center;
     gap: 15px;
-    align-items: flex-start;
+    margin: 0.5rem 0;
+    margin-bottom: 1rem;
   }
-  
+
+  .approvals-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .approval-card {
     padding: 20px;
   }
-  
+
   .approval-card-header {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .approval-actions {
     align-self: stretch;
     justify-content: space-around;
   }
-  
+
   .detail-content {
     padding: 20px;
   }
-  
+
   .detail-actions {
     flex-direction: column;
   }

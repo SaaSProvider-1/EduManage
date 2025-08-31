@@ -331,13 +331,13 @@
   }
   
   .batch-header {
-    flex-direction: column;
+    align-items: center;
     gap: 15px;
-    align-items: flex-start;
+    margin: 0.5rem;
+    margin-bottom: 1rem;
   }
   
   .batch-filters {
-    flex-direction: column;
     align-items: stretch;
   }
   
@@ -350,7 +350,7 @@
   }
   
   .batches-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   
   .batch-card {

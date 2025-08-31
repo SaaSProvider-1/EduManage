@@ -204,20 +204,17 @@
   }
   
   .dashboard-header {
-    flex-direction: column;
     gap: 15px;
     align-items: flex-start;
+    margin: 0.5rem 0;
+    margin-bottom: 1rem;
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   
   .summary-section {
     grid-template-columns: 1fr;
-  }
-  
-  .fees-breakdown {
-    flex-direction: column;
   }
 }

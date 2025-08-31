@@ -9,7 +9,6 @@
   margin-left: 300px;
   transition: margin-left 0.3s ease;
   min-height: 100vh;
-  overflow-y: scroll;
 }
 
 .admin-layout .admin-navbar.collapsed + .admin-main {

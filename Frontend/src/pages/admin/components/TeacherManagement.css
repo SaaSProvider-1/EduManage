@@ -323,13 +323,13 @@
   }
   
   .teacher-header {
-    flex-direction: column;
+    align-items: center;
     gap: 15px;
-    align-items: flex-start;
+    margin: 0.5rem 0;
+    margin-bottom: 1rem;
   }
   
   .teacher-filters {
-    flex-direction: column;
     align-items: stretch;
   }
   
@@ -338,7 +338,7 @@
   }
   
   .teachers-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   
   .teacher-card {

@@ -85,12 +85,12 @@ export default function ReportsAnalytics() {
                 <div className="metric-label">Overall Attendance</div>
                 <div className="metric-trend positive">↗ +2.3%</div>
               </div>
-              <div className="metric-card">
+              <div className="metric-card success">
                 <div className="metric-value">92%</div>
                 <div className="metric-label">Best Batch</div>
                 <div className="metric-subtitle">Physics A</div>
               </div>
-              <div className="metric-card">
+              <div className="metric-card warning">
                 <div className="metric-value">79%</div>
                 <div className="metric-label">Needs Attention</div>
                 <div className="metric-subtitle">Biology A</div>
