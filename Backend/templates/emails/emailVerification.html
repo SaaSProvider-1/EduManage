@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - {{companyName}}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .verification-code {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .verification-code h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin: 0;
+            letter-spacing: 5px;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .expiry-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .security-tips {
+            background: #d1ecf1;
+            border-left: 4px solid #bee5eb;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            .header {
+                padding: 20px;
+                margin: -15px -15px 15px -15px;
+            }
+            .verification-code h2 {
+                font-size: 28px;
+                letter-spacing: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 {{companyName}}</h1>
+            <p>Email Verification Required</p>
+        </div>
+        
+        <div class="content">
+            <h2>Hello {{name}}{{firstName}}{{username}}!</h2>
+            
+            <p>Thank you for registering with {{companyName}}. To complete your registration and secure your account, please verify your email address.</p>
+            
+            <!-- ALWAYS SHOW VERIFICATION CODE/OTP IF PROVIDED -->
+            <div class="verification-code">
+                <p>Your verification code is:</p>
+                <h2>{{verificationCode}}{{otp}}{{token}}123456</h2>
+            </div>
+            
+            <div class="expiry-notice">
+                ⏰ This verification code expires in {{expirationMinutes}}{{expiresIn}}15 minutes
+            </div>
+            
+            <p>Enter this code in the verification form to activate your account.</p>
+            
+            <!-- ALWAYS SHOW VERIFICATION LINK IF PROVIDED -->
+            <div style="text-align: center;">
+                <a href="{{verificationUrl}}{{verificationLink}}{{resetUrl}}#" class="button">Verify Email Address</a>
+            </div>
+            
+            <div class="security-tips">
+                <p><strong>🔒 Security Information:</strong></p>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>This code expires in {{expirationMinutes}}{{expiresIn}}15 minutes</li>
+                    <li>Never share this verification code with anyone</li>
+                    <li>If you didn't create an account, please ignore this email</li>
+                    <li>Our team will never ask for your verification code</li>
+                </ul>
+            </div>
+            
+            <p><strong>Having trouble?</strong> Copy and paste this link into your browser:</p>
+            <p style="word-break: break-all; color: #667eea; font-size: 12px;">{{verificationUrl}}{{verificationLink}}{{resetUrl}}</p>
+
+            <p>Need help? Contact us at {{supportEmail}} or call {{supportPhone}}.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© {{currentYear}} {{companyName}}. All rights reserved.</p>
+            <p>This is an automated message from {{fromEmail}}{{senderEmail}}, please do not reply.</p>
+            <p>Visit us at <a href="{{websiteUrl}}" style="color: #667eea;">{{websiteUrl}}</a></p>
+        </div>
+    </div>
+</body>
+</html>
