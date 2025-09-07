@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./navbar";
 import Dashboard from "./components/Dashboard";
 import PendingTask from "./components/PendingTask";
+import AddTask from "./components/AddTask";
 import BatchManagement from "./components/BatchManagement";
 import StudentManagement from "./components/StudentManagement";
 import ExamPerformance from "./components/ExamPerformance";
@@ -48,6 +49,7 @@ export default function Teacher() {
           <Route path="/" element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="pending-tasks" element={<PendingTask />} />
+          <Route path="add-task" element={<AddTask />} />
           <Route path="reschedule-class" element={<RescheduleClass />} />
           <Route path="manual-add-mark" element={<ManualAddMark />} />
           <Route path="batch-management" element={<BatchManagement />} />

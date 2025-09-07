@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   ClipboardList,
   Calendar,
-  BookOpen,
   Users,
   User,
   BarChart,
@@ -15,70 +14,77 @@ import {
   LogOut,
   ArrowRight,
   BookMarked,
+  Plus,
 } from "lucide-react";
 import "./navbar.css";
-
-const menuItems = [
-  {
-    id: "dashboard",
-    label: "Dashboard",
-    icon: <LayoutDashboard />,
-    color: "#3b82f6",
-  },
-  {
-    id: "pending-tasks",
-    label: "Pending Tasks",
-    icon: <ClipboardList />,
-    color: "#ef4444",
-  },
-  {
-    id: "reschedule-class",
-    label: "Reschedule Class/Exam",
-    icon: <Calendar />,
-    color: "#f59e0b",
-  },
-  {
-    id: "manual-add-mark",
-    label: "Manual Add Mark",
-    icon: <BookMarked />,
-    color: "#10b981",
-  },
-  {
-    id: "batch-management",
-    label: "Batch Management",
-    icon: <Users />,
-    color: "#a855f7",
-  },
-  {
-    id: "students",
-    label: "Student Management",
-    icon: <User />,
-    color: "#06b6d4",
-  },
-  {
-    id: "exam-performance",
-    label: "Exam Performance",
-    icon: <BarChart />,
-    color: "#8b5cf6",
-  },
-  {
-    id: "reports",
-    label: "Reports Analytics",
-    icon: <PieChart />,
-    color: "#f97316",
-  },
-  {
-    id: "salary-summary",
-    label: "Salary Summary",
-    icon: <DollarSign />,
-    color: "#22c55e",
-  },
-];
 
 export default function Navbar({ isHandleMargin }) {
   const [isMobile] = useState(window.innerWidth <= 768);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [currentView, setCurrentView] = useState("dashboard");
+
+  const menuItems = [
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: <LayoutDashboard />,
+      color: "#3b82f6",
+    },
+    {
+      id: "pending-tasks",
+      label: "Pending Tasks",
+      icon: <ClipboardList />,
+      color: "#ef4444",
+    },
+    {
+      id: "add-task",
+      label: "Add Task",
+      icon: <Plus />,
+      color: "#16a34a",
+    },
+    {
+      id: "reschedule-class",
+      label: "Reschedule Class/Exam",
+      icon: <Calendar />,
+      color: "#f59e0b",
+    },
+    {
+      id: "manual-add-mark",
+      label: "Manual Add Mark",
+      icon: <BookMarked />,
+      color: "#10b981",
+    },
+    {
+      id: "batch-management",
+      label: "Batch Management",
+      icon: <Users />,
+      color: "#a855f7",
+    },
+    {
+      id: "students",
+      label: "Student Management",
+      icon: <User />,
+      color: "#06b6d4",
+    },
+    {
+      id: "exam-performance",
+      label: "Exam Performance",
+      icon: <BarChart />,
+      color: "#8b5cf6",
+    },
+    {
+      id: "reports",
+      label: "Reports Analytics",
+      icon: <PieChart />,
+      color: "#f97316",
+    },
+    {
+      id: "salary-summary",
+      label: "Salary Summary",
+      icon: <DollarSign />,
+      color: "#22c55e",
+    },
+  ];
 
   const handleResize = () => {
     if (isMobile) {
@@ -158,7 +164,7 @@ export default function Navbar({ isHandleMargin }) {
                   transition: "transform 0.3s ease-in-out",
                 }}
               >
-                <span>
+                <span style={{ display: "flex", alignItems: "center" }}>
                   {React.cloneElement(item.icon, { color: item.color })}
                 </span>
                 <span
