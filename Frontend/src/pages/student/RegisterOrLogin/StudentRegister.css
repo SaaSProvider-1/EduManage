@@ -1,0 +1,25 @@
+.student-register {
+  width: 100%;
+  height: auto;
+  background: linear-gradient(180deg, hsl(219 20% 98%), hsl(210, 44%, 96%));
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.register-body {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.formAndFooter {
+    width: 100%;
+    border: 2px solid rgb(237, 237, 237);
+    border-radius: 0.7rem;
+    background: hsl(0, 10%, 100%);
+}

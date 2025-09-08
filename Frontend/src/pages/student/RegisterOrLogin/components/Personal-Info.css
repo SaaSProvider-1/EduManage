@@ -1,0 +1,151 @@
+.personal-info {
+  width: 100%;
+  padding: 1.5rem 2.5rem;
+}
+
+.personal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.personal-header p {
+  margin: 0;
+  margin-top: -0.5rem;
+}
+
+.user-icon {
+  color: white;
+}
+
+.personal-hader-desc {
+  color: gray;
+}
+
+.personal-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.form label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgb(40, 40, 40);
+  letter-spacing: 0.5px;
+}
+
+.form input {
+  width: 100%;
+  height: auto;
+  border: 2px solid rgb(237, 237, 237);
+  border-radius: 5px;
+  font-size: 0.95rem;
+  outline: none;
+  padding: 0.7rem 1rem;
+}
+
+.form input:focus {
+  border: 2px solid #3b82f6;
+}
+
+.personal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  /* padding-bottom: 2rem; */
+  margin-top: 1rem;
+}
+
+.prev-btn,
+.next-btn {
+  border: none;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.next-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  flex-direction: row-reverse;
+}
+
+.prev-icon,
+.next-icon {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.next-btn:hover .next-icon {
+  animation: right 0.7s ease infinite;
+}
+
+.prev-btn:hover .prev-icon {
+  animation: left 0.7s ease infinite;
+}
+
+@keyframes left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+}
+
+@keyframes right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+.prev-btn:disabled,
+.next-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.prev-btn:disabled .prev-icon,
+.next-btn:disabled .next-icon {
+  animation: none;
+}
