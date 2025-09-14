@@ -1,268 +1,467 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Clock,
-  Calendar,
-  PlusCircleIcon,
-  LayoutDashboard,
+  CheckCircle,
+  Plus,
+  RotateCcw,
+  GraduationCap,
+  Moon,
+  Users,
   UserCheck,
-  SquareChartGantt,
-  BookOpenCheck,
-  BadgeAlert,
+  UserX,
+  ChevronDown,
 } from "lucide-react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "./Dashboard.css";
 
 export default function Dashboard() {
-  const [stats] = useState({
-    myBatches: 5,
-    totalStudents: 125,
-    pendingTasks: 8,
-    upcomingClasses: 3,
-    attendanceToday: 92,
-    assignmentsToGrade: 15,
-  });
-
-  const [timeData, setTimeData] = useState({
-    checkInTime: "",
-    checkOutTime: "",
-    currentTime: new Date().toLocaleTimeString(),
-    isCheckedIn: false,
-  });
-  const [isComplete, setIsComplete] = useState(0);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [teacherName] = useState("Ms. Johnson");
+  const [customTime, setCustomTime] = useState("");
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [newTask, setNewTask] = useState("");
   const [isMobile] = useState(window.innerWidth < 768);
 
+  // Attendance Management State
+  const [selectedBatch, setSelectedBatch] = useState("Select Batch");
+  const [selectedSubject, setSelectedSubject] = useState("Select Subject");
+  const [showBatchDropdown, setShowBatchDropdown] = useState(false);
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+  
+  // Refs for dropdown containers
+  const batchDropdownRef = useRef(null);
+  const subjectDropdownRef = useRef(null);
+  
+  const batchOptions = ["Batch A", "Batch B", "Batch C"];
+  const subjectOptions = ["Mathematics", "Physics", "Chemistry", "Computer Science"];
+  
+  const [students] = useState([
+    { id: 1, name: "Alice Johnson", rollNo: "CS001", status: null },
+    { id: 2, name: "Bob Smith", rollNo: "CS002", status: "present" },
+    { id: 3, name: "Carol Davis", rollNo: "CS003", status: null },
+    { id: 4, name: "David Wilson", rollNo: "CS004", status: null },
+  ]);
+  const [attendanceData, setAttendanceData] = useState({
+    2: "present" // Bob Smith is marked present
+  });
+
+  const [tasks] = useState([
+    {
+      id: 1,
+      text: "Review homework submissions",
+      completed: true,
+      priority: "high",
+    },
+    {
+      id: 2,
+      text: "Prepare lesson plan for Math",
+      completed: true,
+      priority: "high",
+    },
+    { id: 3, text: "Grade quiz papers", completed: true, priority: "medium" },
+    {
+      id: 4,
+      text: "Parent-teacher meeting at 3 PM",
+      completed: true,
+      priority: "high",
+    },
+    {
+      id: 5,
+      text: "Update student progress reports",
+      completed: true,
+      priority: "low",
+    },
+  ]);
+
   // Update current time every second
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
-      setTimeData((prev) => ({
-        ...prev,
-        currentTime: new Date().toLocaleTimeString(),
-      }));
+      setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
-  const handleCheckIn = () => {
-    const formatTimeForInput = (date) =>
-      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  // Handle click outside dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (batchDropdownRef.current && !batchDropdownRef.current.contains(event.target)) {
+        setShowBatchDropdown(false);
+      }
+      if (subjectDropdownRef.current && !subjectDropdownRef.current.contains(event.target)) {
+        setShowSubjectDropdown(false);
+      }
+    };
 
-    const currentTime = formatTimeForInput(new Date());
-    setTimeData((prev) => ({
-      ...prev,
-      checkInTime: currentTime,
-      isCheckedIn: true,
-    }));
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-    // Show success toast notification
-    toast.success(`✅ Checked in at ${currentTime}`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      style: {
-        width: "max-content",
-        padding: "10px 30px",
-      },
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     });
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString([], {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const handleCheckIn = () => {
+    setIsCheckedIn(true);
+    // Handle check-in logic here
   };
 
   const handleCheckOut = () => {
-    const currentTime = new Date().toLocaleTimeString();
-    setTimeData((prev) => ({
-      ...prev,
-      checkOutTime: currentTime,
-      isCheckedIn: false,
-    }));
-
-    // Show info toast notification
-    toast.info(`🏃‍♂️ Checked out at ${currentTime}`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    setIsCheckedIn(false);
+    // Handle check-out logic here
   };
 
-  const handleTimeChange = (field, value) => {
-    setTimeData((prev) => ({
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "#ef4444";
+      case "medium":
+        return "#f59e0b";
+      case "low":
+        return "#10b981";
+      default:
+        return "#6b7280";
+    }
+  };
+
+  const getCompletedCount = () => {
+    return tasks.filter((task) => task.completed).length;
+  };
+
+  const handleAddTask = () => {
+    if (newTask.trim()) {
+      // Add task logic here
+      setNewTask("");
+    }
+  };
+
+  // Attendance Management Functions
+  const markAttendance = (studentId, status) => {
+    setAttendanceData(prev => ({
       ...prev,
-      [field]: value,
+      [studentId]: status
     }));
+  };
+
+  const markAllPresent = () => {
+    const allPresentData = {};
+    students.forEach(student => {
+      allPresentData[student.id] = 'present';
+    });
+    setAttendanceData(allPresentData);
+  };
+
+  const clearAll = () => {
+    setAttendanceData({});
+  };
+
+  const getAttendanceCount = () => {
+    const marked = Object.keys(attendanceData).length;
+    const total = students.length;
+    return { marked, total };
+  };
+
+  // Dropdown functions
+  const handleBatchSelect = (batch) => {
+    setSelectedBatch(batch);
+    setShowBatchDropdown(false);
+  };
+
+  const handleSubjectSelect = (subject) => {
+    setSelectedSubject(subject);
+    setShowSubjectDropdown(false);
+  };
+
+  const toggleBatchDropdown = () => {
+    console.log('Batch dropdown clicked, current state:', showBatchDropdown);
+    setShowBatchDropdown(!showBatchDropdown);
+  };
+
+  const toggleSubjectDropdown = () => {
+    console.log('Subject dropdown clicked, current state:', showSubjectDropdown);
+    setShowSubjectDropdown(!showSubjectDropdown);
   };
 
   return (
     <div className="teacher-dashboard">
+      {/* Header */}
       <div className="teacher-dashboard-header">
-        <span className="dash-header-title">
-          <p className="header-icon">
-            <LayoutDashboard size={isMobile ? 18 : 24} />
-          </p>
-          <h3>Teacher Dashboard</h3>
-        </span>
-        <div className="welcome-message">
-          <span className="greeting-icon">👋</span>
-          <span>Welcome back, Teacher!</span>
+        <div className="header-left">
+          <span className="dash-icon-container">
+            <GraduationCap size={isMobile ? 40 : 32} className="dash-header-icon" />
+          </span>
+          <div className="dash-header-text">
+            <h1>Teacher Dashboard</h1>
+          </div>
+        </div>
+        <div className="header-right">
+          <Moon size={20} />
+          <span>{getGreeting()}!</span>
         </div>
       </div>
 
-      <div className="greetings-msg">
-        <div className="msg">
-          <div className="msg-body">
-            <h2>Good morning, Mr. John!</h2>
-            <p>Ready to inspire minds today? Here's your quick overview.</p>
-            <span className="msg-stats">
-              <p> 12 classes today</p>
-              <p>6 subjects</p>
-            </span>
-          </div>
-          <div className="header-btns">
-            <button>Quick Attendance</button>
-            <button>View Schedule</button>
+      {/* Dashboard Body */}
+      <div className="teacher-dashboard-body">
+        {/* Welcome Card */}
+        <div className="welcome-card">
+          <div className="welcome-content">
+            <div className="welcome-icon">
+              <Moon size={32} />
+            </div>
+            <div className="welcome-text">
+              <h2>
+                {getGreeting()}, {teacherName}!
+              </h2>
+              <p>
+                Ready to make today a great learning experience? Let's check
+                your schedule.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="attend-actions">
-        <div className="teacher-attendance">
-          <div className="attendance-time-section">
-            <h3>Teacher Attendance</h3>
+        {/* Main Content Grid */}
+        <div className="dashboard-grid">
+          {/* Current Time Card */}
+          <div className="dash-time-attendance">
+            <div className="current-time-card">
+              <div className="time-header">
+                <Clock size={24} className="time-icon" />
+                <h3>Current Time</h3>
+              </div>
+              <div className="time-display">
+                <div className="current-time">{formatTime(currentTime)}</div>
+                <div className="current-date">{formatDate(currentTime)}</div>
+              </div>
+            </div>
 
-            {/* Current Time Display with Check In/Out Controls */}
-            <div className="current-time-display">
-              <div className="time-info">
-                <span className="current-time">
-                  <Clock size={isMobile ? 18 : 24} className="time-icon" />
-                  <p>{timeData.currentTime}</p>
-                </span>
-                <span className="current-date">
-                  <Calendar size={isMobile ? 18 : 24} className="date-icon" />
-                  <p>{new Date().toLocaleDateString()}</p>
-                </span>
+            {/* Attendance Tracking Card */}
+            <div className="dash-attendance-card">
+              <div className="dash-attendance-header">
+                <GraduationCap size={24} className="dash-attendance-icon" />
+                <div>
+                  <h3>Attendance Tracking</h3>
+                  <p className="dash-attendance-subtitle">
+                    Record your check-in and check-out times
+                  </p>
+                </div>
               </div>
 
-              <div className="time-display-right">
-                <div className="inline-check-controls">
-                  <div className="inline-time-input-group">
-                    <label htmlFor="checkInTime">Check-in:</label>
-                    <div className="inline-time-input-wrapper">
-                      <input
-                        type="time"
-                        id="checkInTime"
-                        value={timeData.checkInTime}
-                        onChange={(e) =>
-                          handleTimeChange("checkInTime", e.target.value)
-                        }
-                        className="inline-time-input"
-                      />
-                      <button
-                        className={`inline-check-btn check-in ${
-                          timeData.isCheckedIn ? "checked" : ""
-                        }`}
-                        onClick={handleCheckIn}
-                        disabled={timeData.isCheckedIn}
-                      >
-                        {timeData.isCheckedIn ? "✓" : "In"}
-                      </button>
-                    </div>
-                  </div>
+              <div className="dash-attendance-form">
+                <div className="dash-form-row">
+                  <label htmlFor="customTime">Custom Time</label>
+                  <input
+                    type="time"
+                    id="customTime"
+                    value={customTime}
+                    onChange={(e) => setCustomTime(e.target.value)}
+                    placeholder="Select time"
+                    className="dash-form-input"
+                  />
+                </div>
 
-                  <div className="inline-time-input-group">
-                    <label htmlFor="checkOutTime">Check-out:</label>
-                    <div className="inline-time-input-wrapper">
-                      <input
-                        type="time"
-                        id="checkOutTime"
-                        value={timeData.checkOutTime}
-                        onChange={(e) =>
-                          handleTimeChange("checkOutTime", e.target.value)
-                        }
-                        className="inline-time-input"
-                      />
-                      <button
-                        className="inline-check-btn check-out"
-                        onClick={handleCheckOut}
-                        disabled={!timeData.isCheckedIn}
-                      >
-                        Out
-                      </button>
-                    </div>
-                  </div>
+                <div className="dash-attendance-buttons">
+                  <button
+                    className="dash-btn btn-check-in"
+                    onClick={handleCheckIn}
+                  >
+                    ➡️ Check In
+                  </button>
+                  <button
+                    className="dash-btn btn-check-out"
+                    onClick={handleCheckOut}
+                  >
+                    ↩️ Check Out
+                  </button>
+                </div>
+
+                <div className="system-status">
+                  <div className="teacher-status-indicator"></div>
+                  <span>System ready for attendance tracking</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="dash-quick-actions">
-          <div className="quick-header">
-            <h3>Quick Actions</h3>
-          </div>
-          <div className="action-contents">
-            <div className="track-attendance action-item">
-              <span className="icon-span">
-                <UserCheck size={isMobile ? 22 : 26} />
+          {/* Today's Tasks Card */}
+          <div className="teacher-tasks-card">
+            <div className="teacher-tasks-header">
+              <div className="teacher-tasks-title">
+                <CheckCircle size={24} />
+                <h3>Today's Tasks</h3>
+              </div>
+              <div className="add-task-btn" onClick={handleAddTask}>
+                <Plus size={16} />
+                <span>Add Task</span>
+              </div>
+            </div>
+
+            <div className="tasks-summary">
+              <span>
+                {getCompletedCount()} of {tasks.length} completed
               </span>
-              <span className="text-span">
+            </div>
+
+            <div className="tasks-list">
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className={`task-item ${task.completed ? "completed" : ""}`}
+                >
+                  <div className="task-checkbox">
+                    <CheckCircle
+                      size={16}
+                      className={task.completed ? "checked" : ""}
+                    />
+                  </div>
+                  <span className="task-text">{task.text}</span>
+                  <span
+                    className="task-priority"
+                    style={{ color: getPriorityColor(task.priority) }}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="dash-progress-bar">
+              <div className="dash-progress-label">Progress</div>
+              <div className="dash-progress-container">
+                <div
+                  className="dash-progress-fill"
+                  style={{
+                    width: `${(getCompletedCount() / tasks.length) * 100}%`,
+                  }}
+                ></div>
+              </div>
+              <div className="dash-progress-percentage">100%</div>
+            </div>
+          </div>
+
+          {/* Attendance Management Card */}
+          <div className="attendance-management-card">
+            <div className="attendance-management-header">
+              <div className="attendance-mgmt-title">
+                <Users size={24} />
+                <h3>Attendance Management</h3>
+              </div>
+              <div className="attendance-selectors">
+                <div className="batch-custom-dropdown" ref={batchDropdownRef}>
+                  <div 
+                    className="batch-selector"
+                    onClick={toggleBatchDropdown}
+                  >
+                    <span>{selectedBatch}</span>
+                    <ChevronDown size={16} className={`dropdown-arrow ${showBatchDropdown ? 'open' : ''}`} />
+                  </div>
+                  {showBatchDropdown && (
+                    <div className="batch-dropdown-options">
+                      {batchOptions.map((batch) => (
+                        <div 
+                          key={batch}
+                          className="batch-dropdown-option"
+                          onClick={() => handleBatchSelect(batch)}
+                        >
+                          {batch}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="batch-custom-dropdown" ref={subjectDropdownRef}>
+                  <div 
+                    className="subject-selector"
+                    onClick={toggleSubjectDropdown}
+                  >
+                    <span>{selectedSubject}</span>
+                    <ChevronDown size={16} className={`dropdown-arrow ${showSubjectDropdown ? 'open' : ''}`} />
+                  </div>
+                  {showSubjectDropdown && (
+                    <div className="batch-dropdown-options">
+                      {subjectOptions.map((subject) => (
+                        <div 
+                          key={subject}
+                          className="batch-dropdown-option"
+                          onClick={() => handleSubjectSelect(subject)}
+                        >
+                          {subject}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="attendance-actions">
+              <div className="attendance-section-title">
                 <h4>Mark Attendance</h4>
-                <p>Quick attendance making for today's classes.</p>
-              </span>
-              <button className="act-btn">Mark Attendance</button>
+              </div>
+              <div className="bulk-actions">
+                <button className="mark-all-present-btn" onClick={markAllPresent}>
+                  Mark All Present
+                </button>
+                <button className="clear-all-btn" onClick={clearAll}>
+                  Clear All
+                </button>
+              </div>
             </div>
-            <div className="manage-batches action-item">
-              <span className="icon-span">
-                <SquareChartGantt size={isMobile ? 22 : 26} />
-              </span>
-              <span className="text-span">
-                <h4>Manage Batches</h4>
-                <p>View and manage your class batches and schedules.</p>
-              </span>
-              <button className="act-btn">View Batches</button>
+
+            <div className="students-attendance-list">
+              {students.map((student) => (
+                <div key={student.id} className="student-attendance-item">
+                  <div className="student-details">
+                    <div className="att-student-name">{student.name}</div>
+                    <div className="att-student-roll">{student.rollNo}</div>
+                  </div>
+                  <div className="attendance-buttons">
+                    <button 
+                      className={`attendance-action-btn present-btn ${attendanceData[student.id] === 'present' ? 'active' : ''}`}
+                      onClick={() => markAttendance(student.id, 'present')}
+                    >
+                      <UserCheck size={16} />
+                    </button>
+                    <button 
+                      className={`attendance-action-btn absent-btn ${attendanceData[student.id] === 'absent' ? 'active' : ''}`}
+                      onClick={() => markAttendance(student.id, 'absent')}
+                    >
+                      <UserX size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="manage-exams action-item">
-              <span className="icon-span">
-                <BookOpenCheck size={isMobile ? 22 : 26} />
-              </span>
-              <span className="text-span">
-                <h4>Manage Exams</h4>
-                <p>Set up and review exams for your students.</p>
-              </span>
-              <button className="act-btn">Manage Exams</button>
-            </div>
-            <div className="pending-actions action-item">
-              <span className="icon-span">
-                <BadgeAlert size={isMobile ? 22 : 26} />
-              </span>
-              <span className="text-span">
-                <h4>Pending Tasks</h4>
-                <p>You have {stats.pendingTasks} tasks to complete.</p>
-              </span>
-              <button className="act-btn">View all</button>
+
+            <div className="save-attendance">
+              <button className="save-attendance-btn">
+                <Clock size={16} />
+                Save Attendance ({getAttendanceCount().marked}/{getAttendanceCount().total})
+              </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="add-task">
-        <div className="dash-add-task-header">
-          <span>Add New Task</span>
-        </div>
-        <div className="add-task-body">
-          <input
-            type="text"
-            className="new-task-input"
-            placeholder="Enter new task..."
-          />
-          <button className="add-task-btn">
-            <span>
-              <PlusCircleIcon size={isMobile ? 18 : 22} />
-            </span>
-            <p>Add Task</p>
-          </button>
         </div>
       </div>
     </div>

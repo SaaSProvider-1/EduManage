@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FileCheck, ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import { toast } from "react-toastify";
 import "./Document-Info.css";
 
 const DocumentsAddress = ({ 
@@ -7,15 +8,25 @@ const DocumentsAddress = ({
   sections,
   activeSection,
   setActiveSection,
+  initialValues = {},
  }) => {
   const [formData, setFormData] = useState({
-    aadharNumber: "",
-    aadharDocument: null,
-    completeAddress: "",
+    aadharNumber: initialValues.aadharNumber || "",
+    aadharDocument: initialValues.aadharDocument || null,
+    completeAddress: initialValues.completeAddress || "",
   });
 
   const [errors, setErrors] = useState({});
   const currentIndex = sections.indexOf(activeSection);
+
+  // Update local state when initialValues change
+  useEffect(() => {
+    setFormData({
+      aadharNumber: initialValues.aadharNumber || "",
+      aadharDocument: initialValues.aadharDocument || null,
+      completeAddress: initialValues.completeAddress || "",
+    });
+  }, [initialValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +39,7 @@ const DocumentsAddress = ({
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: false,
       }));
     }
   };
@@ -67,7 +78,7 @@ const DocumentsAddress = ({
 
       setErrors((prev) => ({
         ...prev,
-        aadharDocument: "",
+        aadharDocument: false,
       }));
     }
   };
@@ -78,20 +89,47 @@ const DocumentsAddress = ({
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Validate Aadhar number
+    if (!formData.aadharNumber || formData.aadharNumber.length !== 12) {
+      newErrors.aadharNumber = true;
+    }
+    
+    // Validate complete address
+    if (!formData.completeAddress || formData.completeAddress.trim() === "") {
+      newErrors.completeAddress = true;
+    }
+    
+    // Validate Aadhar document (optional but recommended)
+    // if (!formData.aadharDocument) {
+    //   newErrors.aadharDocument = true;
+    // }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNext = () => {
+    if (!validateForm()) {
+      toast.error("Please fill all required fields correctly");
+      return;
+    }
+    
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
+      getValues(formData);
     }
-    getValues(formData);
   };
 
   return (
     <div className="documents-address-container">
       <div className="documents-address-header">
-        <div className="icon-container">
+        <div className="docs-icon-container">
           <FileCheck className="documents-icon" size={32} />
         </div>
-        <div className="header-text">
+        <div className="docs-header-text">
           <h2>Documents & Address</h2>
           <p>Required documents and address</p>
         </div>
@@ -116,7 +154,7 @@ const DocumentsAddress = ({
             required
           />
           {errors.aadharNumber ? (
-            <span className="error-message">{errors.aadharNumber}</span>
+            <span className="error-message">Valid 12-digit Aadhar number is required</span>
           ) : (
             <span className="form-hint">Aadhar number must be 12 digits</span>
           )}
@@ -171,7 +209,7 @@ const DocumentsAddress = ({
             required
           />
           {errors.completeAddress ? (
-            <span className="error-message">{errors.completeAddress}</span>
+            <span className="error-message">Complete address is required</span>
           ) : (
             <span className="form-hint">Please provide complete address</span>
           )}

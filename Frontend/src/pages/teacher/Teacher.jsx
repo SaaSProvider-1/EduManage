@@ -41,7 +41,7 @@ export default function Teacher() {
           marginLeft: collapsed
             ? "100px"
             : "300px" && window.innerWidth <= 768
-            ? "100px"
+            ? "0px"
             : "300px",
         }}
       >

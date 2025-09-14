@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GraduationCap } from 'lucide-react';
+import { toast } from 'react-toastify';
 import './StudentLogin.css';
 
 const StudentLogin = () => {
@@ -10,6 +13,8 @@ const StudentLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const Navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +42,7 @@ const StudentLogin = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3000/student-login', {
+      const response = await fetch('http://localhost:3000/student/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,15 +51,18 @@ const StudentLogin = () => {
       });
 
       const data = await response.json();
-
-      if (data.success) {
+      console.log("Response from Backend:", data)
+      const { message, success, token, user } = data;
+      if (success) {
         // Store user data in localStorage
-        localStorage.setItem('studentData', JSON.stringify(data.data));
-        
-        console.log('Login successful:', data.data);
-        alert('Login successful! Welcome ' + data.data.name);
+        localStorage.setItem('Name', data.user.name);
+        localStorage.setItem('Token', token);
+        toast.success(message);
+        setTimeout(() => {
+          Navigate('/student/student-profile');
+        }, 2000);
       } else {
-        setError(data.message || 'Login failed');
+        setError(message || 'Login failed');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -74,10 +82,7 @@ const StudentLogin = () => {
       <div className="login-header">
         <div className="login-header-content">
           <div className="graduation-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 3L1 9L12 15L21 12V17H23V9L12 3Z" fill="white"/>
-              <path d="M5 13.18V17.18C5 17.97 5.53 18.71 6.26 19.03L12 21.5L17.74 19.03C18.47 18.71 19 17.97 19 17.18V13.18L12 16L5 13.18Z" fill="white"/>
-            </svg>
+            <GraduationCap />
           </div>
           <h1>Student Login</h1>
           <p>Sign in to access your account</p>
@@ -88,15 +93,15 @@ const StudentLogin = () => {
       <div className="login-body">
         <div className="login-container">
           <div className="login-card">
-            <div className="card-header">
-              <div className="icon-container">
+            <div className="log-card-header">
+              <div className="log-icon-container">
                 <svg className="login-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M10 17L15 12L10 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M15 12H3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <div className="header-text">
+              <div className="log-header-text">
                 <h2>Welcome Back</h2>
                 <p>Enter your credentials to continue</p>
               </div>
@@ -114,8 +119,8 @@ const StudentLogin = () => {
                 </div>
               )}
 
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">
+              <div className="log-form-group">
+                <label htmlFor="email" className="log-form-label">
                   Email Address <span className="required">*</span>
                 </label>
                 <input
@@ -124,14 +129,14 @@ const StudentLogin = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="form-input"
+                  className="log-form-input"
                   placeholder="Enter your email address"
                   required
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
+              <div className="log-form-group">
+                <label htmlFor="password" className="log-form-label">
                   Password <span className="required">*</span>
                 </label>
                 <div className="password-input-container">
@@ -141,7 +146,7 @@ const StudentLogin = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="form-input"
+                    className="log-form-input"
                     placeholder="Enter your password"
                     required
                   />
@@ -166,7 +171,7 @@ const StudentLogin = () => {
                 </div>
               </div>
 
-              <div className="form-actions">
+              <div className="log-form-actions">
                 <button 
                   type="submit" 
                   className="login-button"
@@ -174,8 +179,8 @@ const StudentLogin = () => {
                 >
                   {isLoading ? (
                     <div className="loading-content">
-                      <div className="spinner"></div>
-                      Signing in...
+                      <div className="log-spinner"></div>
+                      Logging in...
                     </div>
                   ) : (
                     'Log In'

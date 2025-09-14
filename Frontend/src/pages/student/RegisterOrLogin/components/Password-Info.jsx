@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import './Password-Info.css';
 
 const PasswordInfo = ({
   getValues,
+  print,
   sections,
   activeSection,
   setActiveSection,
+  initialValues = {},
 }) => {
   const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: ''
+    password: initialValues.password || '',
+    confirmPassword: initialValues.confirmPassword || ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const currentIndex = sections.indexOf(activeSection);
+
+  // Update local state when initialValues change
+  useEffect(() => {
+    setFormData({
+      password: initialValues.password || '',
+      confirmPassword: initialValues.confirmPassword || ''
+    });
+  }, [initialValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +39,7 @@ const PasswordInfo = ({
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        [name]: ''
+        [name]: false
       }));
     }
   };
@@ -59,26 +70,34 @@ const PasswordInfo = ({
 
     // Validate password
     if (!passwordValidation.isValid) {
-      newErrors.password = 'Password must meet all requirements';
+      newErrors.password = true;
     }
 
     // Validate confirm password
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = true;
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      toast.error("Please fix the password requirements and ensure passwords match");
       return;
     }
 
-    // Pass the form data back to parent
-    getValues({
+    // Pass only confirmPassword back to parent
+    const passwordData = {
       password: formData.password,
       confirmPassword: formData.confirmPassword
-    });
+    };
+    
+    console.log('Password data being sent:', passwordData);
+    getValues(passwordData);
 
-    console.log('Registration completed!', formData);
+    // Add a small delay to ensure data is processed before final submission
+    setTimeout(() => {
+      // console.log('Registration completed!', formData);
+      print();
+    }, 100);
   };
 
   const togglePasswordVisibility = () => {
@@ -98,14 +117,14 @@ const PasswordInfo = ({
   return (
     <div className="password-info-container">
       <div className="password-info-header">
-        <div className="icon-container">
+        <div className="pass-icon-container">
           <svg className="password-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 8H20C21.1 8 22 8.9 22 10V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V10C2 8.9 2.9 8 4 8H6V6C6 3.8 7.8 2 10 2H14C16.2 2 18 3.8 18 6V8Z" fill="white"/>
             <path d="M6 8H18V6C18 4.9 17.1 4 16 4H8C6.9 4 6 4.9 6 6V8Z" fill="white"/>
             <circle cx="12" cy="15" r="2" fill="#4285f4"/>
           </svg>
         </div>
-        <div className="header-text">
+        <div className="pass-header-text">
           <h2>Password Information</h2>
           <p>Create secure password for your account</p>
         </div>
@@ -147,7 +166,7 @@ const PasswordInfo = ({
             </button>
           </div>
           {errors.password && (
-            <span className="error-message">{errors.password}</span>
+            <span className="error-message">Password must meet all requirements</span>
           )}
           
           {/* Password Requirements */}
@@ -223,10 +242,10 @@ const PasswordInfo = ({
             </button>
           </div>
           {errors.confirmPassword && (
-            <span className="error-message">{errors.confirmPassword}</span>
+            <span className="error-message">Passwords do not match</span>
           )}
           {formData.confirmPassword && formData.password === formData.confirmPassword && (
-            <span className="success-message">Passwords match!</span>
+            <span className="pass-success-message">Passwords match!</span>
           )}
         </div>
 
@@ -241,6 +260,7 @@ const PasswordInfo = ({
           <button 
             type="submit" 
             className="btn-next"
+            onClick={handleSubmit}
             disabled={!passwordValidation.isValid || formData.password !== formData.confirmPassword}
           >
             Complete Registration

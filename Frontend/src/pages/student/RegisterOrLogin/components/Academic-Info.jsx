@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { GraduationCap, ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import { toast } from "react-toastify";
 import "./Academic-Info.css";
 
 const AcademicInfo = ({
@@ -7,16 +8,27 @@ const AcademicInfo = ({
   sections,
   activeSection,
   setActiveSection,
+  initialValues = {},
 }) => {
   const [formData, setFormData] = useState({
-    class: "",
-    schoolName: "",
-    lastSchoolAttended: "",
+    class: initialValues.class || "",
+    schoolName: initialValues.schoolName || "",
+    lastSchoolAttended: initialValues.lastSchoolAttended || "",
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [errors, setErrors] = useState({});
   const currentIndex = sections.indexOf(activeSection);
 
   const dropdownRef = useRef(null);
+
+  // Update local state when initialValues change
+  useEffect(() => {
+    setFormData({
+      class: initialValues.class || "",
+      schoolName: initialValues.schoolName || "",
+      lastSchoolAttended: initialValues.lastSchoolAttended || "",
+    });
+  }, [initialValues]);
 
   const classOptions = [
     { value: "1", label: "Class 1" },
@@ -39,6 +51,14 @@ const AcademicInfo = ({
       ...prevState,
       [name]: value,
     }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: false
+      }));
+    }
   };
 
   const handleClassSelect = (value, label) => {
@@ -47,6 +67,14 @@ const AcademicInfo = ({
       class: value,
     }));
     setIsDropdownOpen(false);
+    
+    // Clear error when user selects class
+    if (errors.class) {
+      setErrors(prev => ({
+        ...prev,
+        class: false
+      }));
+    }
   };
 
   const toggleDropdown = () => {
@@ -80,24 +108,43 @@ const AcademicInfo = ({
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    const requiredFields = ['class', 'schoolName', 'lastSchoolAttended'];
+    
+    requiredFields.forEach(field => {
+      if (!formData[field] || formData[field] === "") {
+        newErrors[field] = true;
+      }
+    });
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNext = () => {
+    if (!validateForm()) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
+      getValues(formData);
     }
-    getValues(formData);
   };
 
   return (
     <div className="academic-info-container">
       <div className="academic-info-header">
-        <div className="icon-container">
+        <div className="aca-icon-container">
           <GraduationCap
-            className="graduation-icon"
+            className="aca-graduation-icon"
             strokeWidth={2.5}
             size={48}
           />
         </div>
-        <div className="header-text">
+        <div className="aca-header-text">
           <h2>Academic Information</h2>
           <p>School and class details</p>
         </div>
@@ -112,7 +159,7 @@ const AcademicInfo = ({
             <div
               className={`dropdown-header ${isDropdownOpen ? "active" : ""} ${
                 formData.class ? "selected" : ""
-              }`}
+              } ${errors.class ? 'error' : ''}`}
               onClick={toggleDropdown}
             >
               <span className="dropdown-text">{getSelectedClassLabel()}</span>
@@ -146,6 +193,7 @@ const AcademicInfo = ({
               ))}
             </div>
           </div>
+          {errors.class && <span className="error-message">Class selection is required</span>}
         </div>
 
         <div className="form-group">
@@ -158,10 +206,11 @@ const AcademicInfo = ({
             name="schoolName"
             value={formData.schoolName}
             onChange={handleInputChange}
-            className="form-input"
+            className={`form-input ${errors.schoolName ? 'error' : ''}`}
             placeholder="Enter your school name"
             required
           />
+          {errors.schoolName && <span className="error-message">School name is required</span>}
         </div>
 
         <div className="form-group">
@@ -174,10 +223,11 @@ const AcademicInfo = ({
             name="lastSchoolAttended"
             value={formData.lastSchoolAttended}
             onChange={handleInputChange}
-            className="form-input"
+            className={`form-input ${errors.lastSchoolAttended ? 'error' : ''}`}
             placeholder="Enter previous school name"
             required
           />
+          {errors.lastSchoolAttended && <span className="error-message">Last school attended is required</span>}
           <p className="form-hint">Enter "N/A" if this is the first school</p>
         </div>
       </form>

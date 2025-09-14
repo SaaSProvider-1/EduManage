@@ -8,6 +8,7 @@ import Admin from "./pages/admin/Admin";
 import Teacher from "./pages/teacher/Teacher";
 import StudentRegister from "./pages/student/RegisterOrLogin/StudentRegister";
 import StudentLogin from "./pages/student/RegisterOrLogin/StudentLogin";
+import Student from "./pages/student/Student";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/teacher/*" element={<Teacher />} />
+          <Route path="/student/*" element={<Student />} />
           <Route path="/student-register" element={<StudentRegister />} />
           <Route path="/student-login" element={<StudentLogin />} />
         </Routes>

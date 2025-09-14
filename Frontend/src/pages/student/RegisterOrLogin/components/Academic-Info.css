@@ -11,7 +11,7 @@
   gap: 15px;
 }
 
-.icon-container {
+.aca-icon-container {
   width: 50px;
   height: 50px;
   background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
@@ -28,20 +28,20 @@
   50% { transform: scale(1.05); }
 }
 
-.graduation-icon {
+.aca-graduation-icon {
   width: 28px;
   height: 28px;
   color: white;
 }
 
-.header-text h2 {
+.aca-header-text h2 {
   margin: 0 0 5px 0;
   font-size: 24px;
   font-weight: 600;
   color: #333;
 }
 
-.header-text p {
+.aca-header-text p {
   margin: 0;
   color: #666;
   font-size: 14px;
@@ -290,4 +290,26 @@
 
 .dropdown-options::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Error Styles */
+.form-input.error,
+.dropdown-header.error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  animation: shake 0.5s ease-in-out;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-weight: 500;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
