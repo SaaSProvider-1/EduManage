@@ -101,7 +101,7 @@ export default function StudentRegister() {
       formDataToSend.append(key, currentFormData[key]);
     }
 
-    const url = "http://localhost:3000/student/register";
+    const url = "https://edu-manage-backend.onrender.com/student/register";
     try {
       const response = await fetch(url, {
         method: "POST",

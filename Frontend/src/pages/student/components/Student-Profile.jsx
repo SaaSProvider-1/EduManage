@@ -35,7 +35,7 @@ export default function StudentProfile() {
       return;
     }
 
-    fetch("http://localhost:3000/student/profile", {
+    fetch("https://edu-manage-backend.onrender.com/student/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
