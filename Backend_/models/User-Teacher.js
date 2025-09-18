@@ -12,7 +12,7 @@ const TeacherSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      required: true,
+      required: false,
     },
     email: {
       type: String,
@@ -49,6 +49,24 @@ const TeacherSchema = new mongoose.Schema(
     },
     assignedClasses: {
       type: String,
+    },
+    // Email Verification Fields
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+    },
+    emailVerificationExpires: {
+      type: Date,
+    },
+    // Password Reset Fields
+    passwordResetToken: {
+      type: String,
+    },
+    passwordResetExpires: {
+      type: Date,
     },
   },
   { timestamps: true }

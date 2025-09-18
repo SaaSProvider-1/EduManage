@@ -168,7 +168,7 @@
   color: #2563eb;
   line-height: 1;
   margin-bottom: 8px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .current-date {
@@ -772,16 +772,16 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
-  
+
   .attendance-management-card {
     grid-column: span 2;
   }
-  
+
   .attendance-management-header {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .attendance-selectors {
     justify-content: space-between;
   }
@@ -872,7 +872,7 @@
   .dash-attendance-buttons {
     flex-direction: column;
   }
-  
+
   .attendance-management-card {
     grid-column: span 1;
     padding: 16px;
@@ -887,7 +887,7 @@
   .attendance-selectors {
     justify-content: space-evenly;
   }
-  
+
   .attendance-actions {
     flex-direction: column;
     gap: 6px;
@@ -895,7 +895,7 @@
     padding-bottom: 8px;
     margin-bottom: 10px;
   }
-  
+
   .bulk-actions {
     justify-content: space-between;
   }
@@ -903,23 +903,24 @@
   .students-attendance-list {
     margin-bottom: 10px;
   }
-  
+
   .student-attendance-item {
     padding: 8px 12px;
   }
 
-  .batch-selector, .subject-selector {
+  .batch-selector,
+  .subject-selector {
     padding: 6px 15px;
   }
-  
+
   .att-student-name {
     font-size: 14px;
   }
-  
+
   .att-student-roll {
     font-size: 12px;
   }
-  
+
   .attendance-action-btn {
     width: 35px;
     height: 35px;
@@ -932,4 +933,160 @@
   .save-attendance-btn {
     padding: 8px 15px;
   }
+}
+
+/* Task Management Styles */
+.tasks-summary {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.tasks-list {
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.task-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.task-item.completed {
+  background: #f0f9ff;
+  border-color: #3b82f6;
+}
+
+.task-item.updating {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.task-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.task-checkbox .lucide {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.task-checkbox .checked {
+  color: #3b82f6;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+.task-priority {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f1f5f9;
+}
+
+.add-task-section {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.add-task-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.add-task-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.add-task-button {
+  padding: 10px 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.add-task-button:hover {
+  background: #2563eb;
+}
+
+.dash-progress-bar {
+  margin-top: 16px;
+}
+
+.dash-progress-label {
+  font-size: 0.9rem;
+  color: #374151;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.dash-progress-container {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.dash-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.dash-progress-percentage {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: right;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+  padding: 20px;
 }

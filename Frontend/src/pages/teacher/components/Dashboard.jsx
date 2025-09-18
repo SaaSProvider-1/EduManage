@@ -10,75 +10,47 @@ import {
   UserCheck,
   UserX,
   ChevronDown,
+  RefreshCw,
 } from "lucide-react";
 import "./Dashboard.css";
 import { toast } from "react-toastify";
 
 export default function Dashboard() {
-  const [teacherData, setTeacherData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [customTime, setCustomTime] = useState("");
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
-  const [newTask, setNewTask] = useState("");
+  const [newTaskTitle, setNewTaskTitle] = useState("");
   const [isMobile] = useState(window.innerWidth < 768);
 
+  // Add state for task operations
+  const [updatingTaskId, setUpdatingTaskId] = useState(null);
+
+  // Derived state from dashboard data
+  const tasks = dashboardData?.recentTasks || [];
+  const students = dashboardData?.recentStudents || [];
+  const batchOptions = dashboardData?.batches || [];
+  const subjectOptions = dashboardData?.subjects || [];
+
   // Attendance Management State
-  const [selectedBatch, setSelectedBatch] = useState("Select Batch");
-  const [selectedSubject, setSelectedSubject] = useState("Select Subject");
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [showBatchDropdown, setShowBatchDropdown] = useState(false);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+  const [attendanceData, setAttendanceData] = useState({});
+  const [isMarkingAttendance, setIsMarkingAttendance] = useState(false);
 
   // Refs for dropdown containers
   const batchDropdownRef = useRef(null);
   const subjectDropdownRef = useRef(null);
 
-  const batchOptions = ["Batch A", "Batch B", "Batch C"];
-  const subjectOptions = [
-    "Mathematics",
-    "Physics",
-    "Chemistry",
-    "Computer Science",
-  ];
-
-  const [students] = useState([
-    { id: 1, name: "Alice Johnson", rollNo: "CS001", status: null },
-    { id: 2, name: "Bob Smith", rollNo: "CS002", status: "present" },
-    { id: 3, name: "Carol Davis", rollNo: "CS003", status: null },
-    { id: 4, name: "David Wilson", rollNo: "CS004", status: null },
-  ]);
-  const [attendanceData, setAttendanceData] = useState({
-    2: "present",
-  });
-
-  const [tasks] = useState([
-    {
-      id: 1,
-      text: "Review homework submissions",
-      completed: true,
-      priority: "high",
-    },
-    {
-      id: 2,
-      text: "Prepare lesson plan for Math",
-      completed: true,
-      priority: "high",
-    },
-    { id: 3, text: "Grade quiz papers", completed: true, priority: "medium" },
-    {
-      id: 4,
-      text: "Parent-teacher meeting at 3 PM",
-      completed: true,
-      priority: "high",
-    },
-    {
-      id: 5,
-      text: "Update student progress reports",
-      completed: true,
-      priority: "low",
-    },
-  ]);
-
+  // Fetch dashboard data
   useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
     const token = localStorage.getItem("Token");
 
     if (!token) {
@@ -87,32 +59,41 @@ export default function Dashboard() {
       return;
     }
 
-    fetch("http://localhost:3000/teacher/dashboard", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setTeacherData(data.teacher);
-          console.log(data.teacher);
-        } else {
-          toast.error(data.message || "Failed to fetch profile");
+    try {
+      const response = await fetch(
+        "http://localhost:3000/teacher/dashboard-data",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      .catch((err) => {
-        console.error("Profile fetch error:", err);
-        setError("Something went wrong while fetching profile.");
-      })
-      // .finally(() => {
-      //   setTimeout(() => {
-      //     setIsLoading(false);
-      //   }, 2000);
-      // });
-  }, []);
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        setDashboardData(result.data);
+        // Initialize attendance data based on fetched batches
+        if (result.data.batches && result.data.batches.length > 0) {
+          setSelectedBatch(result.data.batches[0]);
+          setSelectedSubject(result.data.batches[0].subject);
+        }
+        console.log("Dashboard data loaded:", result.data);
+        console.log("Recent tasks:", result.data.recentTasks);
+      } else {
+        toast.error(result.message || "Failed to fetch dashboard data");
+        setError(result.message);
+      }
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+      setError("Something went wrong while fetching dashboard data.");
+      toast.error("Failed to load dashboard data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Update current time every second
   useEffect(() => {
@@ -170,14 +151,66 @@ export default function Dashboard() {
     });
   };
 
-  const handleCheckIn = () => {
-    setIsCheckedIn(true);
-    // Handle check-in logic here
+  const handleCheckIn = async () => {
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await fetch(
+        "http://localhost:3000/teacher/check-attendance",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            action: "checkin",
+            customTime: customTime || null,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Checked in successfully!");
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        toast.error(result.message || "Failed to check in");
+      }
+    } catch (error) {
+      console.error("Check-in error:", error);
+      toast.error("Failed to check in");
+    }
   };
 
-  const handleCheckOut = () => {
-    setIsCheckedIn(false);
-    // Handle check-out logic here
+  const handleCheckOut = async () => {
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await fetch(
+        "http://localhost:3000/teacher/check-attendance",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            action: "checkout",
+            customTime: customTime || null,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Checked out successfully!");
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        toast.error(result.message || "Failed to check out");
+      }
+    } catch (error) {
+      console.error("Check-out error:", error);
+      toast.error("Failed to check out");
+    }
   };
 
   const getPriorityColor = (priority) => {
@@ -194,13 +227,81 @@ export default function Dashboard() {
   };
 
   const getCompletedCount = () => {
-    return tasks.filter((task) => task.completed).length;
+    if (!dashboardData?.recentTasks) return 0;
+    return dashboardData.recentTasks.filter(
+      (task) => task.status === "completed"
+    ).length;
   };
 
-  const handleAddTask = () => {
-    if (newTask.trim()) {
-      // Add task logic here
-      setNewTask("");
+  const handleAddTask = async () => {
+    if (!newTaskTitle.trim()) {
+      toast.error("Please enter a task title");
+      return;
+    }
+
+    if (isLoading) return;
+
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await fetch("http://localhost:3000/teacher/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: newTaskTitle,
+          priority: "medium",
+          category: "other",
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Task added successfully!");
+        setNewTaskTitle("");
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        console.error("Add task failed:", result.message);
+        toast.error(result.message || "Failed to add task");
+      }
+    } catch (error) {
+      console.error("Add task error:", error);
+      toast.error("Failed to add task. Please try again.");
+    }
+  };
+
+  const handleTaskStatusUpdate = async (taskId, newStatus) => {
+    if (isLoading || updatingTaskId) return;
+
+    setUpdatingTaskId(taskId);
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await fetch("http://localhost:3000/teacher/tasks", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          taskId: taskId,
+          status: newStatus,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Task updated successfully!");
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        console.error("Task update failed:", result.message);
+        toast.error(result.message || "Failed to update task");
+      }
+    } catch (error) {
+      console.error("Update task error:", error);
+      toast.error("Failed to update task. Please try again.");
+    } finally {
+      setUpdatingTaskId(null);
     }
   };
 
@@ -213,9 +314,11 @@ export default function Dashboard() {
   };
 
   const markAllPresent = () => {
+    if (!selectedBatch?.students) return;
+
     const allPresentData = {};
-    students.forEach((student) => {
-      allPresentData[student.id] = "present";
+    selectedBatch.students.forEach((student) => {
+      allPresentData[student._id] = "present";
     });
     setAttendanceData(allPresentData);
   };
@@ -224,16 +327,69 @@ export default function Dashboard() {
     setAttendanceData({});
   };
 
+  const saveAttendance = async () => {
+    if (!selectedBatch || !selectedSubject) {
+      toast.error("Please select batch and subject");
+      return;
+    }
+
+    if (Object.keys(attendanceData).length === 0) {
+      toast.error("Please mark attendance for at least one student");
+      return;
+    }
+
+    setIsMarkingAttendance(true);
+    const token = localStorage.getItem("Token");
+
+    try {
+      const attendanceRecords = Object.entries(attendanceData).map(
+        ([studentId, status]) => ({
+          student: studentId,
+          status: status,
+        })
+      );
+
+      const response = await fetch("http://localhost:3000/teacher/attendance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          batchId: selectedBatch.id,
+          subject: selectedSubject,
+          attendanceRecords: attendanceRecords,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Attendance saved successfully!");
+        setAttendanceData({});
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        toast.error(result.message || "Failed to save attendance");
+      }
+    } catch (error) {
+      console.error("Save attendance error:", error);
+      toast.error("Failed to save attendance");
+    } finally {
+      setIsMarkingAttendance(false);
+    }
+  };
+
   const getAttendanceCount = () => {
     const marked = Object.keys(attendanceData).length;
-    const total = students.length;
+    const total = selectedBatch?.students?.length || 0;
     return { marked, total };
   };
 
   // Dropdown functions
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch);
+    setSelectedSubject(batch.subject);
     setShowBatchDropdown(false);
+    setAttendanceData({}); // Clear attendance data when batch changes
   };
 
   const handleSubjectSelect = (subject) => {
@@ -242,17 +398,54 @@ export default function Dashboard() {
   };
 
   const toggleBatchDropdown = () => {
-    console.log("Batch dropdown clicked, current state:", showBatchDropdown);
     setShowBatchDropdown(!showBatchDropdown);
   };
 
   const toggleSubjectDropdown = () => {
-    console.log(
-      "Subject dropdown clicked, current state:",
-      showSubjectDropdown
-    );
     setShowSubjectDropdown(!showSubjectDropdown);
   };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="teacher-dashboard">
+        <div className="loading-container">
+          <RefreshCw className="loading-spinner" size={32} />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="teacher-dashboard">
+        <div className="error-container">
+          <p>Error: {error}</p>
+          <button onClick={fetchDashboardData} className="retry-button">
+            <RefreshCw size={16} />
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // No data state
+  if (!dashboardData) {
+    return (
+      <div className="teacher-dashboard">
+        <div className="no-data-container">
+          <p>No dashboard data available</p>
+          <button onClick={fetchDashboardData} className="retry-button">
+            <RefreshCw size={16} />
+            Refresh
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="teacher-dashboard">
@@ -285,7 +478,7 @@ export default function Dashboard() {
             </div>
             <div className="welcome-text">
               <h2>
-                {getGreeting()}, {teacherData?.name}!
+                {getGreeting()}, {dashboardData?.teacher?.name}!
               </h2>
               <p>
                 Ready to make today a great learning experience? Let's check
@@ -373,31 +566,59 @@ export default function Dashboard() {
 
             <div className="tasks-summary">
               <span>
-                {getCompletedCount()} of {tasks.length} completed
+                {getCompletedCount()} of{" "}
+                {dashboardData?.recentTasks?.length || 0} completed
               </span>
             </div>
 
             <div className="tasks-list">
-              {tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className={`task-item ${task.completed ? "completed" : ""}`}
-                >
-                  <div className="task-checkbox">
-                    <CheckCircle
-                      size={16}
-                      className={task.completed ? "checked" : ""}
-                    />
-                  </div>
-                  <span className="task-text">{task.text}</span>
-                  <span
-                    className="task-priority"
-                    style={{ color: getPriorityColor(task.priority) }}
+              {dashboardData?.recentTasks?.length > 0 ? (
+                dashboardData.recentTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className={`task-item ${
+                      task.status === "completed" ? "completed" : ""
+                    } ${updatingTaskId === task.id ? "updating" : ""}`}
+                    onClick={() =>
+                      updatingTaskId !== task.id &&
+                      handleTaskStatusUpdate(
+                        task.id,
+                        task.status === "completed" ? "pending" : "completed"
+                      )
+                    }
                   >
-                    {task.priority}
-                  </span>
-                </div>
-              ))}
+                    <div className="task-checkbox">
+                      <CheckCircle
+                        size={16}
+                        className={task.status === "completed" ? "checked" : ""}
+                      />
+                    </div>
+                    <span className="task-text">{task.title}</span>
+                    <span
+                      className="task-priority"
+                      style={{ color: getPriorityColor(task.priority) }}
+                    >
+                      {task.priority}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="no-tasks">No tasks available</p>
+              )}
+            </div>
+
+            <div className="add-task-section">
+              <input
+                type="text"
+                placeholder="Add a new task..."
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
+                className="add-task-input"
+              />
+              <button onClick={handleAddTask} className="add-task-button">
+                <Plus size={16} />
+              </button>
             </div>
 
             <div className="dash-progress-bar">
@@ -406,11 +627,25 @@ export default function Dashboard() {
                 <div
                   className="dash-progress-fill"
                   style={{
-                    width: `${(getCompletedCount() / tasks.length) * 100}%`,
+                    width: `${
+                      dashboardData?.recentTasks?.length > 0
+                        ? (getCompletedCount() /
+                            dashboardData.recentTasks.length) *
+                          100
+                        : 0
+                    }%`,
                   }}
                 ></div>
               </div>
-              <div className="dash-progress-percentage">100%</div>
+              <div className="dash-progress-percentage">
+                {dashboardData?.recentTasks?.length > 0
+                  ? Math.round(
+                      (getCompletedCount() / dashboardData.recentTasks.length) *
+                        100
+                    )
+                  : 0}
+                %
+              </div>
             </div>
           </div>
 

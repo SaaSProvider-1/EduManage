@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -14,7 +14,7 @@ import {
 import "./Register.css";
 
 export default function Register() {
-  const formDataRef = useRef(null);
+  // const formDataRef = useRef(null);
   const navigate = useNavigate();
 
   const [toggleBtn, setToggleBtn] = useState("Teacher");
@@ -323,9 +323,26 @@ export default function Register() {
     }
   };
 
+  const handleGoBack = () => {
+    navigate("/");
+  };
+
   return (
     <div className="register">
       <div className="register-container">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button
+            type="button"
+            className="back-button"
+            onClick={handleGoBack}
+            title="Go back to home"
+          >
+            <ArrowLeft size={20} />
+            <span>Back to Home</span>
+          </button>
+        </div>
+
         <div className="register-header">
           <span className="register-header-icon">
             <GraduationCap strokeWidth={2.2} size={40} color="white" />
@@ -700,7 +717,9 @@ export default function Register() {
                   </div>
                   <div className="extra-info">
                     <div className="input-cont last-school">
-                      <label htmlFor="lastSchoolAttended">Last School Attended</label>
+                      <label htmlFor="lastSchoolAttended">
+                        Last School Attended
+                      </label>
                       <input
                         type="text"
                         name="lastSchoolAttended"

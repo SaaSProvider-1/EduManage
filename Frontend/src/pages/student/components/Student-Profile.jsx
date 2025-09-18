@@ -26,7 +26,7 @@ export default function StudentProfile() {
       return;
     }
 
-    fetch("https://edu-manage-backend.onrender.com/student/profile", {
+    fetch("http://localhost:3000/student/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,10 +35,12 @@ export default function StudentProfile() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("Full API response:", data);
         if (data.success) {
+          console.log("Student data received:", data.student);
           setStudentData(data.student);
-          console.log(data.student);
         } else {
+          console.error("API returned error:", data.message);
           setError(data.message || "Failed to fetch profile");
         }
       })
@@ -59,6 +61,24 @@ export default function StudentProfile() {
       month: "long",
       year: "numeric",
     });
+  };
+
+  const getGradeBadgeClass = (grade) => {
+    if (!grade) return 'grade-badge';
+    const gradeUpper = grade.toUpperCase();
+    if (gradeUpper.includes('A+')) return 'grade-badge grade-a-plus';
+    if (gradeUpper.includes('A')) return 'grade-badge grade-a';
+    if (gradeUpper.includes('B+')) return 'grade-badge grade-b-plus';
+    if (gradeUpper.includes('B')) return 'grade-badge grade-b';
+    if (gradeUpper.includes('C')) return 'grade-badge grade-c';
+    return 'grade-badge';
+  };
+
+  const getProgressBarClass = (score) => {
+    if (score >= 90) return 'sub-progress-bar';
+    if (score >= 80) return 'sub-progress-bar blue';
+    if (score >= 70) return 'sub-progress-bar orange';
+    return 'sub-progress-bar red';
   };
 
   if (isLoading) {
@@ -105,13 +125,13 @@ export default function StudentProfile() {
               </div>
               <div className="user-details">
                 <span className="name-status">
-                  <h2 className="student-name">{studentData.name}</h2>
-                  <p className="status-badge-new">{studentData.status || "Active Student"}</p>
+                  <h2 className="student-name">{studentData?.name || 'N/A'}</h2>
+                  <p className="status-badge-new">{studentData?.status || "Active Student"}</p>
                 </span>
                 <div className="detail-item">
                   <Calendar size={16} color="#6b7280" />
                   <span style={{ color: "#6b7280" }}>
-                    Joined: {formatDate(studentData.dateOfJoining)}
+                    Joined: {studentData?.dateOfJoining ? formatDate(studentData.dateOfJoining) : 'N/A'}
                   </span>
                 </div>
               </div>
@@ -131,84 +151,46 @@ export default function StudentProfile() {
                   <BookOpen size={20} /> <h3>Academic Performance</h3>
                 </div>
                 <div className="performance-grid">
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">Mathematics</span>
-                      <span className="grade-badge grade-a-plus">A+</span>
+                  {studentData?.academicPerformance?.subjects?.map((subject, index) => (
+                    <div key={index} className="subject-performance">
+                      <div className="subject-info">
+                        <span className="subject-name">{subject.name || 'N/A'}</span>
+                        <span className={getGradeBadgeClass(subject.grade)}>{subject.grade || 'N/A'}</span>
+                      </div>
+                      <div className={getProgressBarClass(subject.score)}>
+                        <div
+                          className="sub-progress-fill"
+                          style={{ width: `${subject.score || 0}%` }}
+                        ></div>
+                      </div>
+                      <span className="percentage">{subject.score || 0}%</span>
                     </div>
-                    <div className="sub-progress-bar">
-                      <div
-                        className="sub-progress-fill"
-                        style={{ width: "95%" }}
-                      ></div>
+                  )) || (
+                    <div className="no-performance-data">
+                      <p>No academic performance data available</p>
                     </div>
-                    <span className="percentage">95%</span>
-                  </div>
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">Science</span>
-                      <span className="grade-badge grade-a">A</span>
+                  )}
+                  
+                  {/* Overall GPA Section */}
+                  {studentData?.academicPerformance?.overallGPA && (
+                    <div className="subject-performance">
+                      <div className="subject-info">
+                        <span className="subject-name">Overall GPA</span>
+                        <span className="grade-badge grade-a">
+                          {studentData.academicPerformance.overallGPA >= 8 ? 'A' : 
+                           studentData.academicPerformance.overallGPA >= 7 ? 'B' : 
+                           studentData.academicPerformance.overallGPA >= 6 ? 'C' : 'D'}
+                        </span>
+                      </div>
+                      <div className="sub-progress-bar blue">
+                        <div
+                          className="sub-progress-fill blue"
+                          style={{ width: `${(studentData.academicPerformance.overallGPA / 10) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="percentage">{studentData.academicPerformance.overallGPA}/10</span>
                     </div>
-                    <div className="sub-progress-bar">
-                      <div
-                        className="sub-progress-fill"
-                        style={{ width: "88%" }}
-                      ></div>
-                    </div>
-                    <span className="percentage">88%</span>
-                  </div>
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">English</span>
-                      <span className="grade-badge grade-a">A</span>
-                    </div>
-                    <div className="sub-progress-bar">
-                      <div
-                        className="sub-progress-fill"
-                        style={{ width: "92%" }}
-                      ></div>
-                    </div>
-                    <span className="percentage">92%</span>
-                  </div>
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">Social Studies</span>
-                      <span className="grade-badge grade-b-plus">B+</span>
-                    </div>
-                    <div className="sub-progress-bar orange">
-                      <div
-                        className="sub-progress-fill orange"
-                        style={{ width: "82%" }}
-                      ></div>
-                    </div>
-                    <span className="percentage">82%</span>
-                  </div>
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">Hindi</span>
-                      <span className="grade-badge grade-a">A</span>
-                    </div>
-                    <div className="sub-progress-bar">
-                      <div
-                        className="sub-progress-fill"
-                        style={{ width: "89%" }}
-                      ></div>
-                    </div>
-                    <span className="percentage">89%</span>
-                  </div>
-                  <div className="subject-performance">
-                    <div className="subject-info">
-                      <span className="subject-name">Overall GPA</span>
-                      <span className="grade-badge grade-a">A</span>
-                    </div>
-                    <div className="sub-progress-bar blue">
-                      <div
-                        className="sub-progress-fill blue"
-                        style={{ width: "89%" }}
-                      ></div>
-                    </div>
-                    <span className="percentage">8.9/10</span>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -224,23 +206,23 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Full Name</span>
-                  <span className="value">{studentData.name}</span>
+                  <span className="value">{studentData?.name || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Blood Group</span>
-                  <span className="value">{studentData.bloodGroup}</span>
+                  <span className="value">{studentData?.bloodGroup || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Aadhaar Number</span>
                   <span className="value">
-                    {studentData.aadharNumber}
-                    <span className="verified-badge">Verified</span>
+                    {studentData?.aadharNumber || 'N/A'}
+                    {studentData?.aadharNumber && <span className="verified-badge">Verified</span>}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Email</span>
                   <span className="value email-value">
-                    <Mail size={14} /> {studentData.email}
+                    <Mail size={14} /> {studentData?.email || 'N/A'}
                   </span>
                 </div>
               </div>
@@ -254,23 +236,23 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Current School</span>
-                  <span className="value">{studentData.schoolName}</span>
+                  <span className="value">{studentData?.schoolName || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Current Class</span>
-                  <span className="value">{studentData.class}</span>
+                  <span className="value">{studentData?.class || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Last School Attended</span>
                   <span className="value">
-                    {studentData.lastSchoolAttended}
+                    {studentData?.lastSchoolAttended || 'N/A'}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Date of Joining</span>
                   <span className="value">
                     <Calendar size={14} />
-                    {formatDate(studentData.dateOfJoining)}
+                    {studentData?.dateOfJoining ? formatDate(studentData.dateOfJoining) : 'N/A'}
                   </span>
                 </div>
               </div>
@@ -284,22 +266,22 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Father's Name</span>
-                  <span className="value">{studentData.fatherName}</span>
+                  <span className="value">{studentData?.fatherName || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Mother's Name</span>
-                  <span className="value">{studentData.motherName}</span>
+                  <span className="value">{studentData?.motherName || 'N/A'}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Guardian Contact</span>
                   <span className="value phone-value">
-                    <Phone size={14} /> {studentData.guardianPhone}
+                    <Phone size={14} /> {studentData?.guardianPhone || 'N/A'}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Address</span>
                   <span className="value address-value">
-                    <MapPin size={14} /> {studentData.completeAddress}
+                    <MapPin size={14} /> {studentData?.completeAddress || 'N/A'}
                   </span>
                 </div>
               </div>

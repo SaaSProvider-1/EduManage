@@ -9,8 +9,7 @@ import FeeManagement from "./components/FeeManagement";
 import StudyMaterials from "./components/StudyMaterials";
 import DoubtRequests from "./components/DoubtRequests";
 import Notifications from "./components/Notifications";
-import NotFoundPage from "./NotFoundPage";
-
+import NotFoundPage from '../../NotFoundPage'
 export default function Student() {
   const [collapsed, setCollapsed] = useState();
   const [isMenuClicked, setIsMenuClicked] = useState(false);

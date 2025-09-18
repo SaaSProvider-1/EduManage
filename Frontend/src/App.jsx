@@ -11,8 +11,10 @@ import Teacher from "./pages/teacher/Teacher";
 import Student from "./pages/student/Student";
 import Register from "./pages/Register-Login/Register";
 import Login from "./pages/Register-Login/Login";
+import ForgotPassword from "./pages/Register-Login/ForgotPassword";
+import ResetPassword from "./pages/Register-Login/ResetPassword";
 import TutorRegister from "./pages/TutionRegister/TutorRegister";
-
+import NotFoundPage from "./NotFoundPage";
 export default function App() {
   return (
     <>
@@ -22,8 +24,10 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/tutor-register" element={<TutorRegister />} />
-
+          <Route path="*" element={<NotFoundPage />} />
           {/* Protected Routes */}
           <Route element={<ProtectRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/*" element={<Admin />} />

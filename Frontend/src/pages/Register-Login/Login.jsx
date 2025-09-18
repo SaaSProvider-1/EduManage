@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -8,6 +8,7 @@ import {
   Lock,
   User,
   UserCheck,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import "./Login.css";
@@ -130,9 +131,26 @@ export default function Login() {
     }
   };
 
+  const handleGoBack = () => {
+    navigate("/");
+  };
+
   return (
     <div className="edu-login-container">
       <div className="edu-login-card">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button
+            type="button"
+            className="back-button"
+            onClick={handleGoBack}
+            title="Go back to home"
+          >
+            <ArrowLeft size={20} />
+            <span>Back to Home</span>
+          </button>
+        </div>
+
         {/* Header Section */}
         <div className="edu-login-header">
           <div className="edu-login-icon">
@@ -220,12 +238,12 @@ export default function Login() {
 
         {/* Footer Links */}
         <div className="edu-login-footer">
-          <a href="/forgot-password" className="forgot-link">
+          <Link to="/forgot-password" className="forgot-link">
             Forgot your password?
-          </a>
+          </Link>
           <p>
             Don't have an account?{" "}
-            <a href="/register">Contact your administrator</a>
+            <Link to="/register">Register as Student / Teacher</Link>
           </p>
         </div>
       </div>

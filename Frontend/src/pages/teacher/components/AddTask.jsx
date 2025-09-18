@@ -1,73 +1,109 @@
-import React, { useState } from 'react';
-import { 
-  Plus, 
-  Calendar, 
-  Clock, 
-  BookOpen, 
-  Users, 
+import React, { useState, useEffect } from "react";
+import {
+  Plus,
+  Calendar,
+  Clock,
+  BookOpen,
+  Users,
   AlertCircle,
   CheckCircle,
-  X
-} from 'lucide-react';
-import './AddTask.css';
+  X,
+} from "lucide-react";
+import { toast } from "react-toastify";
+import "./AddTask.css";
 
 const AddTask = () => {
   const [taskData, setTaskData] = useState({
-    title: '',
-    description: '',
-    type: 'assignment',
-    batch: '',
-    dueDate: '',
-    dueTime: '',
-    priority: 'medium',
-    attachments: []
+    title: "",
+    description: "",
+    category: "teaching", // Changed from type to category to match backend
+    batch: "",
+    dueDate: "",
+    dueTime: "",
+    priority: "medium",
+    attachments: [],
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [batches, setBatches] = useState([]);
+  const [loadingBatches, setLoadingBatches] = useState(true);
 
-  const taskTypes = [
-    { value: 'assignment', label: 'Assignment', icon: <BookOpen size={16} /> },
-    { value: 'exam', label: 'Exam', icon: <AlertCircle size={16} /> },
-    { value: 'project', label: 'Project', icon: <Users size={16} /> },
-    { value: 'homework', label: 'Homework', icon: <BookOpen size={16} /> },
-    { value: 'quiz', label: 'Quiz', icon: <CheckCircle size={16} /> }
+  // Fetch batches from backend
+  useEffect(() => {
+    fetchBatches();
+  }, []);
+
+  const fetchBatches = async () => {
+    const token = localStorage.getItem("Token");
+
+    if (!token) {
+      toast.error("No token found. Please login again.");
+      setLoadingBatches(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/teacher/batches", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setBatches(result.batches || []);
+      } else {
+        toast.error(result.message || "Failed to fetch batches");
+      }
+    } catch (error) {
+      console.error("Fetch batches error:", error);
+      toast.error("Failed to load batches");
+    } finally {
+      setLoadingBatches(false);
+    }
+  };
+
+  const taskCategories = [
+    { value: "teaching", label: "Teaching", icon: <BookOpen size={16} /> },
+    {
+      value: "administrative",
+      label: "Administrative",
+      icon: <AlertCircle size={16} />,
+    },
+    { value: "grading", label: "Grading", icon: <CheckCircle size={16} /> },
+    { value: "meeting", label: "Meeting", icon: <Users size={16} /> },
+    { value: "other", label: "Other", icon: <BookOpen size={16} /> },
   ];
 
   const priorityLevels = [
-    { value: 'low', label: 'Low', color: '#22c55e' },
-    { value: 'medium', label: 'Medium', color: '#f59e0b' },
-    { value: 'high', label: 'High', color: '#ef4444' }
-  ];
-
-  const batches = [
-    'Batch A - Mathematics',
-    'Batch B - Physics',
-    'Batch C - Chemistry',
-    'Batch D - Biology',
-    'Batch E - Computer Science'
+    { value: "low", label: "Low", color: "#22c55e" },
+    { value: "medium", label: "Medium", color: "#f59e0b" },
+    { value: "high", label: "High", color: "#ef4444" },
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setTaskData(prev => ({
+    setTaskData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    setTaskData(prev => ({
+    setTaskData((prev) => ({
       ...prev,
-      attachments: [...prev.attachments, ...files]
+      attachments: [...prev.attachments, ...files],
     }));
   };
 
   const removeAttachment = (index) => {
-    setTaskData(prev => ({
+    setTaskData((prev) => ({
       ...prev,
-      attachments: prev.attachments.filter((_, i) => i !== index)
+      attachments: prev.attachments.filter((_, i) => i !== index),
     }));
   };
 
@@ -75,33 +111,71 @@ const AddTask = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
+    const token = localStorage.getItem("Token");
+
+    if (!token) {
+      toast.error("No token found. Please login again.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        // Reset form
-        setTaskData({
-          title: '',
-          description: '',
-          type: 'assignment',
-          batch: '',
-          dueDate: '',
-          dueTime: '',
-          priority: 'medium',
-          attachments: []
-        });
-      }, 3000);
+      // Prepare task data for backend
+      const taskPayload = {
+        title: taskData.title,
+        description: taskData.description,
+        category: taskData.category,
+        priority: taskData.priority,
+        dueDate: taskData.dueDate
+          ? new Date(
+              `${taskData.dueDate}${
+                taskData.dueTime ? "T" + taskData.dueTime : ""
+              }`
+            ).toISOString()
+          : null,
+      };
+
+      const response = await fetch("http://localhost:3000/teacher/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskPayload),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Task created successfully!");
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          // Reset form
+          setTaskData({
+            title: "",
+            description: "",
+            category: "teaching",
+            batch: "",
+            dueDate: "",
+            dueTime: "",
+            priority: "medium",
+            attachments: [],
+          });
+        }, 3000);
+      } else {
+        toast.error(result.message || "Failed to create task");
+      }
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error("Error creating task:", error);
+      toast.error("Failed to create task. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isFormValid = taskData.title && taskData.description && taskData.batch && taskData.dueDate;
+  const isFormValid =
+    taskData.title && taskData.description && taskData.dueDate;
 
   if (showSuccess) {
     return (
@@ -109,7 +183,7 @@ const AddTask = () => {
         <div className="success-message">
           <CheckCircle size={48} color="#22c55e" />
           <h2>Task Created Successfully!</h2>
-          <p>Your task has been assigned to {taskData.batch}</p>
+          <p>Your task has been added to your task list</p>
         </div>
       </div>
     );
@@ -141,16 +215,16 @@ const AddTask = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="type">Task Type</label>
+            <label htmlFor="category">Task Category</label>
             <select
-              id="type"
-              name="type"
-              value={taskData.type}
+              id="category"
+              name="category"
+              value={taskData.category}
               onChange={handleInputChange}
             >
-              {taskTypes.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
+              {taskCategories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
                 </option>
               ))}
             </select>
@@ -172,18 +246,25 @@ const AddTask = () => {
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="batch">Select Batch *</label>
+            <label htmlFor="batch">Select Batch (Optional)</label>
             <select
               id="batch"
               name="batch"
               value={taskData.batch}
               onChange={handleInputChange}
-              required
+              disabled={loadingBatches}
             >
-              <option value="">Choose a batch</option>
-              {batches.map(batch => (
-                <option key={batch} value={batch}>
-                  {batch}
+              <option value="">
+                {loadingBatches
+                  ? "Loading batches..."
+                  : "Choose a batch (optional)"}
+              </option>
+              {batches.map((batch) => (
+                <option
+                  key={batch.id || batch._id}
+                  value={batch.batchName || batch.name}
+                >
+                  {batch.batchName || batch.name} - {batch.subject}
                 </option>
               ))}
             </select>
@@ -197,7 +278,7 @@ const AddTask = () => {
               value={taskData.priority}
               onChange={handleInputChange}
             >
-              {priorityLevels.map(priority => (
+              {priorityLevels.map((priority) => (
                 <option key={priority.value} value={priority.value}>
                   {priority.label}
                 </option>
@@ -245,7 +326,7 @@ const AddTask = () => {
               id="attachments"
               multiple
               onChange={handleFileUpload}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
             <label htmlFor="attachments" className="file-upload-label">
               <Plus size={20} />
@@ -276,20 +357,20 @@ const AddTask = () => {
             className="btn-secondary"
             onClick={() => {
               setTaskData({
-                title: '',
-                description: '',
-                type: 'assignment',
-                batch: '',
-                dueDate: '',
-                dueTime: '',
-                priority: 'medium',
-                attachments: []
+                title: "",
+                description: "",
+                category: "teaching",
+                batch: "",
+                dueDate: "",
+                dueTime: "",
+                priority: "medium",
+                attachments: [],
               });
             }}
           >
             Clear Form
           </button>
-          
+
           <button
             type="submit"
             className="btn-primary"

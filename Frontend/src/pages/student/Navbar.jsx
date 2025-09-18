@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap,
@@ -20,13 +20,13 @@ import { toast } from "react-toastify";
 export default function Navbar({ isHandleMargin = () => {} }) {
   const [isMobile] = useState(window.innerWidth <= 768);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [currentView, setCurrentView] = useState("student-profile");
+  const [currentView, setCurrentView] = useState("profile");
 
   const Navigate = useNavigate();
 
   const menuItems = [
     {
-      id: "student-profile",
+      id: "profile",
       label: "Profile",
       icon: <User />,
       color: "#8b5cf6",
@@ -62,8 +62,8 @@ export default function Navbar({ isHandleMargin = () => {} }) {
       color: "#3b82f6",
     },
     {
-      id: "student-management",
-      label: "Student Management",
+      id: "doubt-requests",
+      label: "Doubt Requests",
       icon: <Settings />,
       color: "#6366f1",
     },

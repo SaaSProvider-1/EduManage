@@ -673,3 +673,59 @@
     padding: 18px 15px 20px 15px;
   }
 }
+
+/* Academic Performance Styles */
+.grade-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  background: #6b7280;
+}
+
+.grade-badge.grade-a-plus {
+  background: #059669;
+}
+
+.grade-badge.grade-a {
+  background: #10b981;
+}
+
+.grade-badge.grade-b-plus {
+  background: #3b82f6;
+}
+
+.grade-badge.grade-b {
+  background: #6366f1;
+}
+
+.grade-badge.grade-c {
+  background: #f59e0b;
+}
+
+.sub-progress-bar.red .sub-progress-fill {
+  background: #ef4444;
+}
+
+.sub-progress-bar.orange .sub-progress-fill {
+  background: #f59e0b;
+}
+
+.sub-progress-bar.blue .sub-progress-fill {
+  background: #3b82f6;
+}
+
+.no-performance-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.no-performance-data p {
+  margin: 0;
+  font-size: 1rem;
+}
