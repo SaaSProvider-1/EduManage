@@ -1,0 +1,341 @@
+/* EduPortal Login Component Styles */
+.edu-login-container {
+  min-height: 100vh;
+  background: #ebf5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.edu-login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px 30px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Header Section */
+.edu-login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edu-login-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  background: linear-gradient(135deg, blue 0%, #ff00ff 100%);
+  border-radius: 50%;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.edu-login-header h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, blue 0%, #00ffdd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.edu-login-header p {
+  margin: 0;
+  color: #A0AEC0;
+  font-size: 16px;
+}
+
+/* User Type Selection */
+.user-type-selection {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.log-user-type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid #E2E8F0;
+  border-radius: 5px;
+  background: #F7FAFC;
+  color: #718096;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.log-user-type-btn:hover {
+  background: #EDF2F7;
+}
+
+.log-user-type-btn.active.student {
+  background: blue;
+  color: white;
+}
+
+.log-user-type-btn.active.teacher {
+  background: #9500ff;
+  color: white;
+}
+
+/* Form Styles */
+.edu-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.log-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.log-form-group label {
+  font-weight: 600;
+  color: #4A5568;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+/* Input Container */
+.log-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.log-input-icon {
+  position: absolute;
+  left: 18px;
+  color: #A0AEC0;
+  z-index: 1;
+}
+
+.log-input-container input {
+  width: 100%;
+  padding: 12px 18px 12px 52px;
+  border: 2px solid #5da3ff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background: white;
+  color: #4A5568;
+}
+
+.log-input-container input::placeholder {
+  color: #A0AEC0;
+}
+
+.log-input-container input:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.log-input-container input.error {
+  border-color: #E53E3E;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+/* Password Toggle */
+.password-toggle {
+  position: absolute;
+  right: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #A0AEC0;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #4A5568;
+}
+
+/* Error Messages */
+.log-error-message {
+  color: #E53E3E;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Login Button */
+.login-btn {
+  padding: 13px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  color: white;
+}
+
+.login-btn.student {
+  background: blue;
+}
+
+.login-btn.student:hover {
+  background: #357ABD;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.login-btn.teacher {
+  background: #9500ff;
+}
+
+.login-btn.teacher:hover {
+  background: #319795;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 178, 172, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+/* Footer */
+.edu-login-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.forgot-link {
+  color: #A0AEC0;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+  color: #718096;
+}
+
+.edu-login-footer p {
+  margin: 20px 0 0 0;
+  color: #A0AEC0;
+  font-size: 15px;
+}
+
+.edu-login-footer a {
+  color: #4A90E2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.edu-login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .edu-login-container {
+    padding: 16px;
+  }
+
+  .edu-login-card {
+    padding: 36px 28px;
+  }
+
+  .edu-login-header h1 {
+    font-size: 30px;
+  }
+
+  .edu-login-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .user-type-btn {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+
+  .input-container input {
+    padding: 14px 16px 14px 48px;
+    font-size: 15px;
+  }
+
+  .input-icon {
+    left: 16px;
+  }
+
+  .password-toggle {
+    right: 16px;
+  }
+
+  .login-btn {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .edu-login-card {
+    padding: 28px 24px;
+  }
+
+  .edu-login-header h1 {
+    font-size: 26px;
+  }
+
+  .edu-login-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .user-type-btn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .input-container input {
+    padding: 12px 14px 12px 44px;
+    font-size: 14px;
+  }
+
+  .input-icon {
+    left: 14px;
+  }
+
+  .password-toggle {
+    right: 14px;
+  }
+}
+
+/* Focus styles for accessibility */
+.user-type-btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+}
+
+.login-btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+}

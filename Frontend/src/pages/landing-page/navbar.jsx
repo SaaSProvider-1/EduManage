@@ -32,13 +32,13 @@ export default function Navbar() {
             </Link>
           </ul>
           <div className="auth-buttons">
-            <Link to={"/student-login"}>
-              <button className="login-btn" title="Student Login">
+            <Link to={"/login"}>
+              <button className="land-login-btn" title="Student Login">
                 <span>Login</span>
               </button>
             </Link>
-            <Link to={"/student-register"}>
-              <button className="register-btn" title="Student Register">
+            <Link to={"/register"}>
+              <button className="land-register-btn" title="Student Register">
                 <span>Register</span>
               </button>
             </Link>

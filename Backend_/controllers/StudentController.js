@@ -1,18 +1,17 @@
-
 const UserStudent = require("../models/User-Student");
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 
 const StudentRegister = async (req, res) => {
-  console.log("Received registration data:", req.body);
-  console.log("Received registration files:", req.files);
-
+  console.log("Student registration data received:", req.body);
   const {
     // Personal Info
+    role,
     name,
     email,
-    studentPhone,
+    phone,
     dateOfJoining,
-    photo,
+    profilePicture,
     bloodGroup,
     // Academic Info
     class: studentClass,
@@ -27,8 +26,7 @@ const StudentRegister = async (req, res) => {
     aadharDocument,
     completeAddress,
     // Password Info
-    password,
-    confirmPassword,
+    password
   } = req.body;
 
   function validatePassword(password) {
@@ -84,31 +82,41 @@ const StudentRegister = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     // get uploaded file URLs from Cloudinary
-    const photoUrl = req.files?.photo ? req.files.photo[0].path : null;
+    const photoUrl = req.files?.profilePicture ? req.files.profilePicture[0].path : null;
     const aadharUrl = req.files?.aadharDocument
       ? req.files.aadharDocument[0].path
       : null;
 
     // Save new user
     const newStudent = new UserStudent({
+      role,
       name,
-      email,
-      studentPhone,
-      dateOfJoining: new Date(dateOfJoining),
       bloodGroup,
-      // Save file paths
-      photo: photoUrl,
+      profilePic: photoUrl,
+
+      contact: {
+        email,
+        phone,
+        parentPhone: guardianPhone,
+      },
+      
+      dateOfJoining: new Date(dateOfJoining),
       class: studentClass,
-      schoolName,
-      lastSchoolAttended,
-      fatherName,
-      motherName,
-      guardianPhone,
-      aadharNumber,
-      aadharDocument: aadharUrl,
-      completeAddress,
+      currSchool: schoolName,
+      lastSchool: lastSchoolAttended,
+
+      parents: {
+        father: fatherName,
+        mother: motherName,
+      },
+
+      aadhar: {
+        number: aadharNumber,
+        url: aadharUrl,
+      },
+
+      address: completeAddress,
       password: hashPassword,
-      confirmPassword: hashPassword,
     });
     await newStudent.save();
 
@@ -125,8 +133,69 @@ const StudentRegister = async (req, res) => {
   }
 };
 
-module.exports = StudentRegister;
+const StudentLogin = async (req, res) => {
+  console.log("Student login data received:", req.body);
+  const { email, password } = req.body;
+  try {
+    // Check for the User
+    const IsUserExist = await UserStudent.findOne({ email });
+    if (!IsUserExist) {
+      return res.status(403).json({
+        success: false,
+        message: "User is not Exist",
+      });
+    }
 
-// const StudentLogin = async (req, res) => {
+    // Compare Password Hash to Original
+    const OrgPassword = await bcrypt.compare(password, IsUserExist.password);
+    if (!OrgPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect Password",
+      });
+    }
 
-// }
+    const token = jwt.sign(
+      {
+        id: IsUserExist._id,
+        email: IsUserExist.email,
+        name: IsUserExist.name,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      user: {
+        id: IsUserExist._id,
+        name: IsUserExist.name,
+        email: IsUserExist.email,
+      },
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const StudentProfile = async (req, res) => {
+  try {
+    const student = await UserStudent.findById(req.user.id).select(
+      "-password, -confirmPassword"
+    );
+    res.json({ success: true, student });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+}
+
+module.exports = { StudentRegister, StudentLogin, StudentProfile };

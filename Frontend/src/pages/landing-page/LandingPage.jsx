@@ -37,10 +37,7 @@ const LandingPage = () => {
       <HeroSection />
       <FeaturesSection />
       <HowItWorksSection />
-      <BenefitsSection />
-      <ScreenshotsSection />
       <PricingSection />
-      <TestimonialsSection />
       <Footer />
     </div>
   );

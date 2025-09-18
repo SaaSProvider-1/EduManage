@@ -44,8 +44,8 @@ export default function Student() {
         }}
       >
         <Routes>
-          <Route path="/" element={<Navigate to="student-profile" replace />} />
-          <Route path="student-profile" element={<StudentProfile />} />
+          <Route path="/" element={<Navigate to="profile" replace />} />
+          <Route path="profile" element={<StudentProfile />} />
           <Route path="check-attendance" element={<CheckAttendance />} />
           <Route path="exam-results" element={<ExamResult />} />
           <Route path="make-request" element={<MakeRequest />} />

@@ -35,7 +35,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="how-it-works-section section section-light">
+    <section className="how-it-works-section section-light">
       <div className="how-container">
         <div className="section-header text-center animate-on-scroll">
           <span className="section-badge">How It Works</span>
@@ -78,9 +78,6 @@ const HowItWorksSection = () => {
               <div className="window-content">
                 {activeFeature === 0 && (
                   <div className="setup-demo">
-                    {/* <div className="progress-bar">
-                      <div className="progress-fill" style={{width: '100%'}}></div>
-                    </div> */}
                     <div className="setup-steps">
                       {features[0].demo.steps.map((step, index) => (
                         <div key={index} className={`setup-step completed`}>
@@ -171,34 +168,6 @@ const HowItWorksSection = () => {
           </div>
         </div>
 
-        <div className="success-metrics animate-on-scroll">
-          <div className="metrics-header">
-            <h3>Trusted by <span className="stat-number">350+</span> Coaching Centers Across India</h3>
-          </div>
-          <div className="metrics-grid">
-            <div className="metric-card">
-              <div className="metric-icon">�</div>
-              <div className="metric-value stat-number">25,000+</div>
-              <div className="metric-label">Students Managed</div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-icon">📝</div>
-              <div className="metric-value stat-number">1.2M+</div>
-              <div className="metric-label">Exams Conducted</div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-icon">⏰</div>
-              <div className="metric-value stat-number">20hrs</div>
-              <div className="metric-label">Weekly Time Saved</div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-icon">�</div>
-              <div className="metric-value stat-number">98%</div>
-              <div className="metric-label">Accuracy Rate</div>
-            </div>
-          </div>
-        </div>
-
         <div className="coaching-benefits animate-on-scroll">
           <h3>Why Coaching Centers Choose EduManage</h3>
           <div className="benefits-grid">
@@ -239,18 +208,6 @@ const HowItWorksSection = () => {
             <p>Join hundreds of successful coaching centers already using EduManage</p>
             <div className="cta-buttons">
               <button className="btn btn-primary">Get Started</button>
-            </div>
-          </div>
-          <div className="cta-testimonial">
-            <div className="testimonial-content">
-              <p>"EduManage simplified everything - from attendance to exam results. My administrative work is now 70% faster!"</p>
-              <div className="testimonial-author">
-                <div className="author-avatar"></div>
-                <div className="author-info">
-                  <div className="author-name">Rajesh Kumar</div>
-                  <div className="author-title">Director, Excel Coaching Institute</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

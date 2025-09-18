@@ -104,8 +104,8 @@ export default function Navbar({ isHandleMargin = () => {} }) {
   };
 
   const handleLogout = () => {
-    const name = localStorage.getItem("Name");
-    toast.success(`See you soon ${name}`);
+    const user = localStorage.getItem("User");
+    toast.success(`See you soon ${user.name}`);
     
     setTimeout(() => {
       localStorage.removeItem("Name");

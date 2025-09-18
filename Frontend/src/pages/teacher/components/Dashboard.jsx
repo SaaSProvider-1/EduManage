@@ -12,10 +12,11 @@ import {
   ChevronDown,
 } from "lucide-react";
 import "./Dashboard.css";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
+  const [teacherData, setTeacherData] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [teacherName] = useState("Ms. Johnson");
   const [customTime, setCustomTime] = useState("");
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [newTask, setNewTask] = useState("");
@@ -26,14 +27,19 @@ export default function Dashboard() {
   const [selectedSubject, setSelectedSubject] = useState("Select Subject");
   const [showBatchDropdown, setShowBatchDropdown] = useState(false);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
-  
+
   // Refs for dropdown containers
   const batchDropdownRef = useRef(null);
   const subjectDropdownRef = useRef(null);
-  
+
   const batchOptions = ["Batch A", "Batch B", "Batch C"];
-  const subjectOptions = ["Mathematics", "Physics", "Chemistry", "Computer Science"];
-  
+  const subjectOptions = [
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Computer Science",
+  ];
+
   const [students] = useState([
     { id: 1, name: "Alice Johnson", rollNo: "CS001", status: null },
     { id: 2, name: "Bob Smith", rollNo: "CS002", status: "present" },
@@ -41,7 +47,7 @@ export default function Dashboard() {
     { id: 4, name: "David Wilson", rollNo: "CS004", status: null },
   ]);
   const [attendanceData, setAttendanceData] = useState({
-    2: "present" // Bob Smith is marked present
+    2: "present",
   });
 
   const [tasks] = useState([
@@ -72,6 +78,42 @@ export default function Dashboard() {
     },
   ]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("Token");
+
+    if (!token) {
+      setError("No token found. Please login again.");
+      setIsLoading(false);
+      return;
+    }
+
+    fetch("http://localhost:3000/teacher/dashboard", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setTeacherData(data.teacher);
+          console.log(data.teacher);
+        } else {
+          toast.error(data.message || "Failed to fetch profile");
+        }
+      })
+      .catch((err) => {
+        console.error("Profile fetch error:", err);
+        setError("Something went wrong while fetching profile.");
+      })
+      // .finally(() => {
+      //   setTimeout(() => {
+      //     setIsLoading(false);
+      //   }, 2000);
+      // });
+  }, []);
+
   // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
@@ -84,17 +126,23 @@ export default function Dashboard() {
   // Handle click outside dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (batchDropdownRef.current && !batchDropdownRef.current.contains(event.target)) {
+      if (
+        batchDropdownRef.current &&
+        !batchDropdownRef.current.contains(event.target)
+      ) {
         setShowBatchDropdown(false);
       }
-      if (subjectDropdownRef.current && !subjectDropdownRef.current.contains(event.target)) {
+      if (
+        subjectDropdownRef.current &&
+        !subjectDropdownRef.current.contains(event.target)
+      ) {
         setShowSubjectDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -158,16 +206,16 @@ export default function Dashboard() {
 
   // Attendance Management Functions
   const markAttendance = (studentId, status) => {
-    setAttendanceData(prev => ({
+    setAttendanceData((prev) => ({
       ...prev,
-      [studentId]: status
+      [studentId]: status,
     }));
   };
 
   const markAllPresent = () => {
     const allPresentData = {};
-    students.forEach(student => {
-      allPresentData[student.id] = 'present';
+    students.forEach((student) => {
+      allPresentData[student.id] = "present";
     });
     setAttendanceData(allPresentData);
   };
@@ -194,12 +242,15 @@ export default function Dashboard() {
   };
 
   const toggleBatchDropdown = () => {
-    console.log('Batch dropdown clicked, current state:', showBatchDropdown);
+    console.log("Batch dropdown clicked, current state:", showBatchDropdown);
     setShowBatchDropdown(!showBatchDropdown);
   };
 
   const toggleSubjectDropdown = () => {
-    console.log('Subject dropdown clicked, current state:', showSubjectDropdown);
+    console.log(
+      "Subject dropdown clicked, current state:",
+      showSubjectDropdown
+    );
     setShowSubjectDropdown(!showSubjectDropdown);
   };
 
@@ -209,7 +260,10 @@ export default function Dashboard() {
       <div className="teacher-dashboard-header">
         <div className="header-left">
           <span className="dash-icon-container">
-            <GraduationCap size={isMobile ? 40 : 32} className="dash-header-icon" />
+            <GraduationCap
+              size={isMobile ? 40 : 32}
+              className="dash-header-icon"
+            />
           </span>
           <div className="dash-header-text">
             <h1>Teacher Dashboard</h1>
@@ -231,7 +285,7 @@ export default function Dashboard() {
             </div>
             <div className="welcome-text">
               <h2>
-                {getGreeting()}, {teacherName}!
+                {getGreeting()}, {teacherData?.name}!
               </h2>
               <p>
                 Ready to make today a great learning experience? Let's check
@@ -369,17 +423,19 @@ export default function Dashboard() {
               </div>
               <div className="attendance-selectors">
                 <div className="batch-custom-dropdown" ref={batchDropdownRef}>
-                  <div 
-                    className="batch-selector"
-                    onClick={toggleBatchDropdown}
-                  >
+                  <div className="batch-selector" onClick={toggleBatchDropdown}>
                     <span>{selectedBatch}</span>
-                    <ChevronDown size={16} className={`dropdown-arrow ${showBatchDropdown ? 'open' : ''}`} />
+                    <ChevronDown
+                      size={16}
+                      className={`dropdown-arrow ${
+                        showBatchDropdown ? "open" : ""
+                      }`}
+                    />
                   </div>
                   {showBatchDropdown && (
                     <div className="batch-dropdown-options">
                       {batchOptions.map((batch) => (
-                        <div 
+                        <div
                           key={batch}
                           className="batch-dropdown-option"
                           onClick={() => handleBatchSelect(batch)}
@@ -390,19 +446,24 @@ export default function Dashboard() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="batch-custom-dropdown" ref={subjectDropdownRef}>
-                  <div 
+                  <div
                     className="subject-selector"
                     onClick={toggleSubjectDropdown}
                   >
                     <span>{selectedSubject}</span>
-                    <ChevronDown size={16} className={`dropdown-arrow ${showSubjectDropdown ? 'open' : ''}`} />
+                    <ChevronDown
+                      size={16}
+                      className={`dropdown-arrow ${
+                        showSubjectDropdown ? "open" : ""
+                      }`}
+                    />
                   </div>
                   {showSubjectDropdown && (
                     <div className="batch-dropdown-options">
                       {subjectOptions.map((subject) => (
-                        <div 
+                        <div
                           key={subject}
                           className="batch-dropdown-option"
                           onClick={() => handleSubjectSelect(subject)}
@@ -421,7 +482,10 @@ export default function Dashboard() {
                 <h4>Mark Attendance</h4>
               </div>
               <div className="bulk-actions">
-                <button className="mark-all-present-btn" onClick={markAllPresent}>
+                <button
+                  className="mark-all-present-btn"
+                  onClick={markAllPresent}
+                >
                   Mark All Present
                 </button>
                 <button className="clear-all-btn" onClick={clearAll}>
@@ -438,15 +502,19 @@ export default function Dashboard() {
                     <div className="att-student-roll">{student.rollNo}</div>
                   </div>
                   <div className="attendance-buttons">
-                    <button 
-                      className={`attendance-action-btn present-btn ${attendanceData[student.id] === 'present' ? 'active' : ''}`}
-                      onClick={() => markAttendance(student.id, 'present')}
+                    <button
+                      className={`attendance-action-btn present-btn ${
+                        attendanceData[student.id] === "present" ? "active" : ""
+                      }`}
+                      onClick={() => markAttendance(student.id, "present")}
                     >
                       <UserCheck size={16} />
                     </button>
-                    <button 
-                      className={`attendance-action-btn absent-btn ${attendanceData[student.id] === 'absent' ? 'active' : ''}`}
-                      onClick={() => markAttendance(student.id, 'absent')}
+                    <button
+                      className={`attendance-action-btn absent-btn ${
+                        attendanceData[student.id] === "absent" ? "active" : ""
+                      }`}
+                      onClick={() => markAttendance(student.id, "absent")}
                     >
                       <UserX size={16} />
                     </button>
@@ -458,7 +526,8 @@ export default function Dashboard() {
             <div className="save-attendance">
               <button className="save-attendance-btn">
                 <Clock size={16} />
-                Save Attendance ({getAttendanceCount().marked}/{getAttendanceCount().total})
+                Save Attendance ({getAttendanceCount().marked}/
+                {getAttendanceCount().total})
               </button>
             </div>
           </div>

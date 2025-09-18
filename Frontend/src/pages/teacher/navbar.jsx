@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   GraduationCap,
   CircleUserRound,
@@ -17,8 +17,10 @@ import {
   Plus,
 } from "lucide-react";
 import "./navbar.css";
+import { toast } from "react-toastify";
 
 export default function Navbar({ isHandleMargin }) {
+  const Navigate = useNavigate();
   const [isMobile] = useState(window.innerWidth <= 768);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [currentView, setCurrentView] = useState("dashboard");
@@ -108,6 +110,17 @@ export default function Navbar({ isHandleMargin }) {
     }
   };
 
+  const handleLogout = () => {
+    const user = localStorage.getItem("User");
+    const name = user ? JSON.parse(user).name : null;
+    toast.success(`See you soon ${name}`);
+    setTimeout(() => {
+      localStorage.removeItem("User");
+      localStorage.removeItem("Token");
+      Navigate("/");
+    }, 2000);
+  };
+
   if (!isMobile) {
     return (
       <nav className={`teacher-navbar ${isCollapsed ? "collapsed" : ""}`}>
@@ -177,7 +190,7 @@ export default function Navbar({ isHandleMargin }) {
           })}
         </div>
         <div className="nav-footer">
-          <button className="logout-btn">
+          <button className="logout-btn" onClick={handleLogout}>
             <span className="out-icon">
               {React.cloneElement(<LogOut />, { color: "red" })}
             </span>

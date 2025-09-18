@@ -237,55 +237,6 @@ const TestimonialsSection = () => {
             ))}
           </div>
         </div>
-
-        <div className="testimonials-grid animate-on-scroll">
-          <h3 className="grid-title heading-md text-center">
-            More Success Stories
-          </h3>
-          <div className="mini-testimonials grid grid-3">
-            <div className="mini-testimonial card">
-              <div className="mini-quote">
-                "Student engagement has increased significantly since we started
-                using EduManage."
-              </div>
-              <div className="mini-author">
-                <div className="mini-avatar"></div>
-                <div className="mini-info">
-                  <div className="mini-name">Sarah Johnson</div>
-                  <div className="mini-role">English Teacher</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mini-testimonial card">
-              <div className="mini-quote">
-                "The reporting features have made our audits so much easier.
-                Everything is well-organized."
-              </div>
-              <div className="mini-author">
-                <div className="mini-avatar"></div>
-                <div className="mini-info">
-                  <div className="mini-name">Michael Chen</div>
-                  <div className="mini-role">Admin Officer</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mini-testimonial card">
-              <div className="mini-quote">
-                "Parents love getting real-time updates about their children's
-                attendance and grades."
-              </div>
-              <div className="mini-author">
-                <div className="mini-avatar"></div>
-                <div className="mini-info">
-                  <div className="mini-name">Lisa Rodriguez</div>
-                  <div className="mini-role">Class Coordinator</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

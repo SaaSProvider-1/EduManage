@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./PricingSection.css";
+import { Link } from "react-router-dom";
 
 const PricingSection = () => {
   const [isYearly, setIsYearly] = useState(false);
@@ -68,12 +69,11 @@ const PricingSection = () => {
 
   const formatSavings = (savings) => {
     if (!savings || savings <= 0) return null;
-    // Format the number with commas for better readability
     return savings.toLocaleString("en-IN");
   };
 
   return (
-    <section id="pricing" className="pricing-section section section-white">
+    <section id="pricing" className="pricing-section section-white">
       <div className="pricing-container">
         <div className="section-header text-center animate-on-scroll">
           <h2 className="heading-lg">
@@ -201,7 +201,8 @@ const PricingSection = () => {
 
                 <div className="plan-highlight">{plan.highlight}</div>
 
-                <button
+                <Link
+                  to={`/tutor-register?plan=${plan.name.toLowerCase()}`}
                   className={`plan-cta choose-btn ${
                     plan.popular ? "choose-btn-primary" : "choose-btn-outline"
                   } choose-btn-large`}
@@ -228,7 +229,7 @@ const PricingSection = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </button>
+                </Link>
 
                 <div className="plan-features">
                   <h4 className="plan-features-title">Everything included:</h4>

@@ -5,12 +5,9 @@ require("dotenv").config();
 const Express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 const StudentRouter = require("./Router/StudentRouter");
-const UserStudent = require("./models/User-Student");
-const StudentAuth = require("./middleware/StudentAuth");
+const TeacherRouter = require("./Router/TeacherRouter");
 
 // Express app setup
 const app = Express();
@@ -38,73 +35,17 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Student Registration Route
+// Student Route
 app.use("/student", StudentRouter);
 
-app.post("/student/login", async (req, res) => {
-  console.log("Response from Req.Body", req.body);
-  const { email, password } = req.body;
-  try {
-    // Check for the User
-    const IsUserExist = await UserStudent.findOne({ email });
-    if (!IsUserExist) {
-      return res.status(403).json({
-        success: false,
-        message: "User is not Exist",
-      });
-    }
+// Teacher Route
+app.use("/teacher", TeacherRouter);
 
-    // Compare Password Hash to Original
-    const OrgPassword = await bcrypt.compare(password, IsUserExist.password);
-    if (!OrgPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect Password",
-      });
-    }
 
-    const token = jwt.sign(
-      {
-        id: IsUserExist._id,
-        email: IsUserExist.email,
-        name: IsUserExist.name,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "30d" }
-    );
+app.post("/tenant/register", async(req, res) => {
+  console.log(req.body);
+})
 
-    res.status(200).json({
-      success: true,
-      message: "Login Successful",
-      user: {
-        id: IsUserExist._id,
-        name: IsUserExist.name,
-        email: IsUserExist.email,
-      },
-      token,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-});
-
-app.get("/student/profile", StudentAuth, async (req, res) => {
-  try {
-    const student = await UserStudent.findById(req.user.id).select(
-      "-password, -confirmPassword"
-    );
-    res.json({ success: true, student });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
-  }
-});
 
 // 404 handler for undefined routes
 app.use((req, res) => {

@@ -1,0 +1,567 @@
+input {
+  font-size: 15px;
+}
+
+.register {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(227, 242, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.register-container {
+  height: 100%;
+  width: 100%;
+  max-width: 850px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+}
+
+.register-header {
+  width: 100%;
+  border-bottom: 2px solid rgb(220, 220, 220);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.register-header-icon {
+  border-radius: 0.6rem;
+  background: linear-gradient(135deg, blue, rgb(0, 179, 238));
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+}
+
+.register-header h2 {
+  font-size: 1.7rem;
+  background: linear-gradient(165deg, rgb(0, 255, 162), blue);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  letter-spacing: 0.7px;
+}
+
+.register-header p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(127, 127, 127);
+  letter-spacing: 0.4px;
+}
+
+.register-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.person-toggle {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.person-toggle p {
+  width: 100%;
+}
+
+.toggle-buttons {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+}
+
+.toggle-buttons button {
+  border: none;
+  border-radius: 0.4rem;
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-buttons button:hover {
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.505);
+}
+
+.teacher-toggle-btn.select {
+  color: white;
+  background: blue;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.505);
+  transform: translateY(-3px);
+}
+
+.student-toggle-btn.select {
+  color: black;
+  background: rgb(0, 179, 238);
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.505);
+  transform: translateY(-3px);
+}
+
+button span {
+  font-size: 1rem;
+}
+
+.basic-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.image-container {
+  width: 100%;
+  height: 115px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+}
+
+.image-preview-container {
+  flex: 0 0 150px;
+  height: 115px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.image-preview span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.preview-placeholder {
+  height: 80px;
+  width: auto;
+  flex: 1;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.preview-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
+
+.preview-placeholder p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+}
+
+.imp {
+  color: red;
+}
+
+.image-input {
+  height: 80px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.upload-field {
+  width: 100%;
+  height: 80px;
+  border: 3px dashed gray;
+  border-radius: 10px;
+  background-color: rgb(240, 240, 240);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-field:hover {
+  border-color: #5DADE2;
+  background-color: #f0f8ff;
+}
+
+.input-fields {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.input-component {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.input-field {
+  height: 40px;
+  border: 2px solid rgb(221, 221, 221);
+  border-radius: 6px;
+  background-color:rgb(245, 245, 245);
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border: 2px solid blue;
+  outline: none;
+  background-color: rgba(0, 0, 255, 0.1);
+}
+
+/* Extra Fields */
+.extra-field-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  background-color: rgb(241, 243, 255);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.extra-header {
+  width: 100%;
+  color: blue;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.extra-header span {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.teacher-field {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.extra-info {
+  flex: 1 1 48%;
+  width: 100%;
+}
+
+.select-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select-field {
+  border-radius: 0.4rem;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+}
+
+.select-field, .input-field {
+  border: 2px solid rgb(102, 153, 255);
+  background-color: rgb(209, 215, 255);
+}
+
+input.select-field {
+  height: 40px;
+  font-size: 0.9rem;
+}
+
+input.select-field::placeholder {
+  color: black;
+}
+
+/* Custom Dropdown Styling */
+.reg-custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.reg-dropdown-trigger {
+  height: 40px;
+  border: 2px solid rgb(102, 153, 255);
+  border-radius: 0.4rem;
+  background-color: rgba(0, 0, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.reg-dropdown-trigger:hover {
+  background-color: rgb(190, 205, 255);
+}
+
+.reg-dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.reg-dropdown-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.reg-dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid rgb(102, 153, 255);
+  border-top: none;
+  border-radius: 0 0 0.4rem 0.4rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reg-dropdown-option {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgb(230, 235, 255);
+}
+
+.reg-dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.reg-dropdown-option:hover {
+  background-color: rgb(240, 245, 255);
+  color: rgb(92, 132, 255);
+}
+
+.reg-dropdown-option:active {
+  background-color: rgb(209, 215, 255);
+}
+
+/* Student Field Styling */
+.student-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.class-school-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.class-school-row .select-cont,
+.class-school-row .input-cont {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.guardian-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.guardian-row .input-cont {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-cont label {
+  font-weight: 600;
+  color: #333;
+}
+
+.last-school .input-field,
+.complete-address .input-field {
+  width: 100%;
+}
+
+.address-field {
+  min-height: 80px;
+  resize: vertical;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+/* Mobile Responsiveness for Student Fields */
+@media (max-width: 768px) {
+  .class-school-row,
+  .guardian-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .class-school-row .select-cont,
+  .class-school-row .input-cont,
+  .guardian-row .input-cont {
+    width: 100%;
+  }
+}
+
+/* Footer */
+.register-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Create Button */
+.create-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.create-container button {
+  width: 80%;
+  border: none;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, blue, rgb(0, 238, 83));
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+}
+
+.have-acc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.login-link:hover .left-arr {
+  animation: moveLeft 1s ease infinite;
+}
+
+.login-link:hover .right-arr {
+  animation: moveRight 1s ease infinite;
+}
+
+@keyframes moveLeft {
+  0%, 100% {transform: translateX(0px);}
+  50% {transform: translateX(-5px);}
+}
+
+@keyframes moveRight {
+  0%, 100% {transform: translateX(0px);}
+  50% {transform: translateX(5px);}
+}
+
+/* Mobile Responsiveness for Image Container */
+@media (max-width: 768px) {
+  .image-container {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+  }
+  
+  .upload-section {
+    width: 100%;
+  }
+  
+  .image-preview-container {
+    flex: none;
+    width: 100%;
+    height: 100px;
+  }
+  
+  .preview-placeholder {
+    height: 80px;
+  }
+}

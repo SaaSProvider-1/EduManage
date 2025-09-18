@@ -262,6 +262,7 @@
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
+  text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,7 +306,7 @@
 }
 
 .choose-btn-large {
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 /* Plan Features */

@@ -107,8 +107,8 @@
 }
 
 /* Particle Explosion 3D Button Styles */
-.login-btn,
-.register-btn {
+.land-login-btn,
+.land-register-btn {
   position: relative;
   padding: 13px 0px;
   font-size: 15px;
@@ -125,15 +125,15 @@
 }
 
 /* Login Button - Particle Explosion Effect */
-.login-btn {
+.land-login-btn {
   background: radial-gradient(circle, #2563eb, #1d4ed8);
   color: white;
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 /* Login Button Particles */
-.login-btn::before,
-.login-btn::after {
+.land-login-btn::before,
+.land-login-btn::after {
   content: "";
   position: absolute;
   width: 8px;
@@ -145,18 +145,18 @@
   box-shadow: 0 0 6px rgba(219, 234, 254, 0.8);
 }
 
-.login-btn::before {
+.land-login-btn::before {
   top: 25%;
   left: 25%;
 }
 
-.login-btn::after {
+.land-login-btn::after {
   bottom: 25%;
   right: 25%;
 }
 
 /* Additional particles using box-shadow */
-.login-btn {
+.land-login-btn {
   --particle1-x: 0;
   --particle1-y: 0;
   --particle2-x: 0;
@@ -167,7 +167,7 @@
   --particle4-y: 0;
 }
 
-.login-btn:hover {
+.land-login-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5), 0 0 30px rgba(37, 99, 235, 0.3);
   --particle1-x: -25px;
@@ -180,28 +180,28 @@
   --particle4-y: 25px;
 }
 
-.login-btn:hover::before {
+.land-login-btn:hover::before {
   opacity: 1;
   transform: translate(-30px, -30px) scale(2);
   animation: particleBurst1 0.6s ease-out;
 }
 
-.login-btn:hover::after {
+.land-login-btn:hover::after {
   opacity: 1;
   transform: translate(30px, 30px) scale(2);
   animation: particleBurst2 0.6s ease-out;
 }
 
 /* Register Button - Particle Explosion Effect */
-.register-btn {
+.land-register-btn {
   background: radial-gradient(circle, #f97316, #ea580c);
   color: white;
   box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
 }
 
 /* Register Button Particles */
-.register-btn::before,
-.register-btn::after {
+.land-register-btn::before,
+.land-register-btn::after {
   content: "";
   position: absolute;
   width: 8px;
@@ -213,29 +213,29 @@
   box-shadow: 0 0 6px rgba(254, 215, 170, 0.8);
 }
 
-.register-btn::before {
+.land-register-btn::before {
   top: 30%;
   left: 20%;
 }
 
-.register-btn::after {
+.land-register-btn::after {
   bottom: 30%;
   right: 20%;
 }
 
-.register-btn:hover {
+.land-register-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(249, 115, 22, 0.5),
     0 0 30px rgba(249, 115, 22, 0.3);
 }
 
-.register-btn:hover::before {
+.land-register-btn:hover::before {
   opacity: 1;
   transform: translate(-35px, -20px) scale(2);
   animation: particleBurst3 0.6s ease-out;
 }
 
-.register-btn:hover::after {
+.land-register-btn:hover::after {
   opacity: 1;
   transform: translate(35px, 20px) scale(2);
   animation: particleBurst4 0.6s ease-out;
@@ -303,50 +303,50 @@
 }
 
 /* Active state */
-.login-btn:active,
-.register-btn:active {
+.land-login-btn:active,
+.land-register-btn:active {
   transform: scale(0.98);
   transition: all 0.1s ease;
 }
 
 /* Additional particle effects using pseudo-elements for more particles */
-.login-btn:hover,
-.register-btn:hover {
+.land-login-btn:hover,
+.land-register-btn:hover {
   position: relative;
 }
 
-.login-btn:hover::before,
-.login-btn:hover::after,
-.register-btn:hover::before,
-.register-btn:hover::after {
+.land-login-btn:hover::before,
+.land-login-btn:hover::after,
+.land-register-btn:hover::before,
+.land-register-btn:hover::after {
   box-shadow: 0 0 0 2px rgba(219, 234, 254, 0.6),
     0 0 10px rgba(219, 234, 254, 0.4), 0 0 20px rgba(219, 234, 254, 0.2);
 }
 
 /* Orange particles for register button */
-.register-btn:hover::before,
-.register-btn:hover::after {
+.land-register-btn:hover::before,
+.land-register-btn:hover::after {
   box-shadow: 0 0 0 2px rgba(254, 215, 170, 0.6),
     0 0 10px rgba(254, 215, 170, 0.4), 0 0 20px rgba(254, 215, 170, 0.2);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .login-btn,
-  .register-btn {
+  .land-login-btn,
+  .land-register-btn {
     padding: 12px 24px;
     font-size: 14px;
     min-width: 120px;
     letter-spacing: 0.5px;
   }
 
-  .login-btn:hover::before,
-  .register-btn:hover::before {
+  .land-login-btn:hover::before,
+  .land-register-btn:hover::before {
     transform: translate(-20px, -20px) scale(1.5);
   }
 
-  .login-btn:hover::after,
-  .register-btn:hover::after {
+  .land-login-btn:hover::after,
+  .land-register-btn:hover::after {
     transform: translate(20px, 20px) scale(1.5);
   }
 }

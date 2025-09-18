@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
 import {
   User,
   Calendar,
-  School,
-  FileText,
   MapPin,
   Phone,
   Mail,
   Users,
   GraduationCap,
-  Edit3,
-  Eye,
-  Download,
-  Camera,
-  IdCard,
   BookOpen,
-  Shield,
   SquarePen,
 } from "lucide-react";
 import "./Student-Profile.css";
