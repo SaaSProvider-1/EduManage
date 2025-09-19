@@ -13,6 +13,7 @@ import {
   Bell,
   LogOut,
   ArrowRight,
+  Users,
 } from "lucide-react";
 import "./Navbar.css";
 import { toast } from "react-toastify";
@@ -48,6 +49,12 @@ export default function Navbar({ isHandleMargin = () => {} }) {
       label: "Make Request",
       icon: <MessageSquare />,
       color: "#f59e0b",
+    },
+    {
+      id: "batches",
+      label: "My Batches",
+      icon: <Users />,
+      color: "#8b5cf6",
     },
     {
       id: "payment-history",
@@ -106,7 +113,7 @@ export default function Navbar({ isHandleMargin = () => {} }) {
   const handleLogout = () => {
     const user = localStorage.getItem("User");
     toast.success(`See you soon ${user.name}`);
-    
+
     setTimeout(() => {
       localStorage.removeItem("Name");
       localStorage.removeItem("Token");

@@ -27,6 +27,7 @@ const StudentSchema = new mongoose.Schema({
   },
 
   // Academic Details
+  coachingCenterId: { type: mongoose.Schema.Types.ObjectId, ref: 'CoachingCenter', required: true },
   dateOfJoining: { type: Date, default: Date.now },
   class: { type: String, required: true },
   currSchool: { type: String, required: true },
@@ -43,6 +44,7 @@ const StudentSchema = new mongoose.Schema({
     }],
     overallGPA: { type: Number, min: 0, max: 10 },
     overallPercentage: { type: Number, min: 0, max: 100 },
+    attendancePercentage: { type: Number, min: 0, max: 100, default: 0 },
     rank: { type: Number },
     totalStudents: { type: Number }
   },

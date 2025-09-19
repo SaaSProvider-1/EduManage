@@ -11,6 +11,7 @@ const UserStudent = require("./models/User-Student");
 
 const StudentRouter = require("./Router/StudentRouter");
 const TeacherRouter = require("./Router/TeacherRouter");
+const TenantRouter = require("./Router/TenantRouter");
 
 // Express app setup
 const app = Express();
@@ -231,10 +232,8 @@ app.use("/student", StudentRouter);
 // Teacher Route
 app.use("/teacher", TeacherRouter);
 
-
-app.post("/tenant/register", async(req, res) => {
-  console.log(req.body);
-})
+// Tenant Route
+app.use("/tenant", TenantRouter);
 
 
 // 404 handler for undefined routes

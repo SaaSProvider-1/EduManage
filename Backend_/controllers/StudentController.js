@@ -1,4 +1,5 @@
 const UserStudent = require("../models/User-Student");
+const CoachingCenter = require("../models/CoachingCenter");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const { sendStudentWelcomeEmail, generateVerificationToken, sendStudentVerificationEmail, generatePasswordResetToken, sendStudentPasswordResetEmail } = require("../config/emailService");
@@ -14,6 +15,7 @@ const StudentRegister = async (req, res) => {
     dateOfJoining,
     profilePicture,
     bloodGroup,
+    licenseKey, // Added license key
     // Academic Info
     class: studentClass,
     schoolName,
@@ -54,6 +56,39 @@ const StudentRegister = async (req, res) => {
   }
 
   try {
+    // Validate license key
+    if (!licenseKey || licenseKey.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "License key is required",
+      });
+    }
+
+    // Clean and validate license key format
+    const cleanLicenseKey = licenseKey.replace(/-/g, '').toUpperCase();
+    if (!/^[A-F0-9]{64}$/.test(cleanLicenseKey)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid license key format",
+      });
+    }
+
+    // Find coaching center with this license key
+    const coachingCenter = await CoachingCenter.findOne({ licenseKey: cleanLicenseKey });
+    if (!coachingCenter) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid license key. Please contact your coaching center for the correct key.",
+      });
+    }
+
+    if (coachingCenter.status !== 'active') {
+      return res.status(400).json({
+        success: false,
+        message: "This coaching center is not currently active. Please contact support.",
+      });
+    }
+
     // Validate email is not empty
     if (!email || email.trim().length === 0) {
       return res.status(400).json({
@@ -107,6 +142,7 @@ const StudentRegister = async (req, res) => {
       name,
       bloodGroup,
       profilePic: photoUrl,
+      coachingCenterId: coachingCenter._id, // Link to the coaching center
 
       contact: {
         email: email.trim(),
@@ -308,20 +344,16 @@ const StudentProfile = async (req, res) => {
       aadharNumber: student.aadhar?.number,
       completeAddress: student.address,
       status: student.status || "Active",
-      // Academic Performance - use real data if available, otherwise provide sample data
-      academicPerformance: student.academicPerformance || {
-        subjects: [
-          { name: "Mathematics", score: 85, grade: "A", semester: "Current", year: "2025" },
-          { name: "Science", score: 78, grade: "B+", semester: "Current", year: "2025" },
-          { name: "English", score: 92, grade: "A+", semester: "Current", year: "2025" },
-          { name: "Social Studies", score: 74, grade: "B", semester: "Current", year: "2025" },
-          { name: "Hindi", score: 81, grade: "A-", semester: "Current", year: "2025" }
-        ],
-        overallGPA: 8.2,
-        overallPercentage: 82,
-        rank: 5,
-        totalStudents: 45
-      }
+      // Academic Performance - use real data if available, otherwise return empty structure
+      academicPerformance: student.academicPerformance && student.academicPerformance.subjects && student.academicPerformance.subjects.length > 0 
+        ? student.academicPerformance 
+        : {
+            subjects: [],
+            overallGPA: 0,
+            overallPercentage: 0,
+            rank: 0,
+            totalStudents: 0
+          }
     };
 
     console.log("Transformed profile data:", JSON.stringify(profileData, null, 2));
@@ -490,4 +522,516 @@ const StudentResetPassword = async (req, res) => {
   }
 };
 
-module.exports = { StudentRegister, StudentLogin, StudentProfile, StudentForgotPassword, StudentResetPassword };
+const StudentUpdateProfile = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const {
+      name,
+      phone,
+      bloodGroup,
+      class: studentClass,
+      schoolName,
+      lastSchoolAttended,
+      fatherName,
+      motherName,
+      guardianPhone,
+      completeAddress
+    } = req.body;
+
+    // Get uploaded file URL from Cloudinary (if new profile picture is uploaded)
+    const photoUrl = req.files?.profilePicture ? req.files.profilePicture[0].path : undefined;
+
+    // Find the student
+    const student = await UserStudent.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    // Update fields only if they are provided
+    if (name) student.name = name;
+    if (phone) student.contact.phone = phone;
+    if (bloodGroup) student.bloodGroup = bloodGroup;
+    if (studentClass) student.class = studentClass;
+    if (schoolName) student.currSchool = schoolName;
+    if (lastSchoolAttended) student.lastSchool = lastSchoolAttended;
+    if (fatherName) student.parents.father = fatherName;
+    if (motherName) student.parents.mother = motherName;
+    if (guardianPhone) student.contact.parentPhone = guardianPhone;
+    if (completeAddress) student.address = completeAddress;
+    if (photoUrl) student.profilePic = photoUrl;
+
+    await student.save();
+
+    // Return updated profile data
+    const updatedProfileData = {
+      name: student.name,
+      email: student.contact?.email,
+      phone: student.contact?.phone,
+      guardianPhone: student.contact?.parentPhone,
+      bloodGroup: student.bloodGroup,
+      photo: student.profilePic,
+      dateOfJoining: student.dateOfJoining,
+      class: student.class,
+      schoolName: student.currSchool,
+      lastSchoolAttended: student.lastSchool,
+      fatherName: student.parents?.father,
+      motherName: student.parents?.mother,
+      aadharNumber: student.aadhar?.number,
+      completeAddress: student.address,
+      status: student.status || "Active"
+    };
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      student: updatedProfileData
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to update profile'
+    });
+  }
+};
+
+// Update Academic Performance (for admins/teachers)
+const UpdateAcademicPerformance = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { subjects, overallGPA, overallPercentage, rank, totalStudents, semester, year } = req.body;
+
+    // Find the student
+    const student = await UserStudent.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    // Initialize academic performance if it doesn't exist
+    if (!student.academicPerformance) {
+      student.academicPerformance = {
+        subjects: [],
+        overallGPA: 0,
+        overallPercentage: 0,
+        rank: 0,
+        totalStudents: 0
+      };
+    }
+
+    // Update academic performance
+    if (subjects) {
+      // Add semester and year to each subject if provided
+      const updatedSubjects = subjects.map(subject => ({
+        ...subject,
+        semester: semester || subject.semester || 'Current',
+        year: year || subject.year || new Date().getFullYear().toString(),
+        updatedAt: new Date()
+      }));
+      student.academicPerformance.subjects = updatedSubjects;
+    }
+    
+    if (overallGPA !== undefined) student.academicPerformance.overallGPA = overallGPA;
+    if (overallPercentage !== undefined) student.academicPerformance.overallPercentage = overallPercentage;
+    if (rank !== undefined) student.academicPerformance.rank = rank;
+    if (totalStudents !== undefined) student.academicPerformance.totalStudents = totalStudents;
+
+    student.academicPerformance.lastUpdated = new Date();
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Academic performance updated successfully",
+      academicPerformance: student.academicPerformance
+    });
+  } catch (error) {
+    console.error("Update academic performance error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to update academic performance'
+    });
+  }
+};
+
+// Get Available Batches for Students to Join
+const getAvailableBatches = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { Batch } = require("../models/TeacherDashboard");
+    
+    // Get all active batches
+    const allBatches = await Batch.find({ status: 'active' })
+      .populate('teacher', 'name email organization')
+      .populate('students', '_id')
+      .lean();
+
+    // Filter out batches the student is already in
+    const availableBatches = allBatches.filter(batch => 
+      !batch.students.some(student => student._id.toString() === studentId)
+    );
+
+    const batchesWithDetails = availableBatches.map(batch => ({
+      id: batch._id,
+      batchName: batch.batchName,
+      subject: batch.subject,
+      teacher: {
+        name: batch.teacher.name,
+        organization: batch.teacher.organization
+      },
+      schedule: batch.schedule,
+      studentsCount: batch.students.length,
+      status: batch.status
+    }));
+
+    res.status(200).json({
+      success: true,
+      batches: batchesWithDetails
+    });
+  } catch (error) {
+    console.error("Get available batches error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch available batches'
+    });
+  }
+};
+
+// Request to Join a Batch
+const requestJoinBatch = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { batchId, message } = req.body;
+    const { Batch } = require("../models/TeacherDashboard");
+
+    if (!batchId) {
+      return res.status(400).json({
+        success: false,
+        message: "Batch ID is required"
+      });
+    }
+
+    // Check if batch exists and is active
+    const batch = await Batch.findById(batchId);
+    if (!batch) {
+      return res.status(404).json({
+        success: false,
+        message: "Batch not found"
+      });
+    }
+
+    if (batch.status !== 'active') {
+      return res.status(400).json({
+        success: false,
+        message: "This batch is not accepting new students"
+      });
+    }
+
+    // Check if student is already in the batch
+    if (batch.students.includes(studentId)) {
+      return res.status(400).json({
+        success: false,
+        message: "You are already in this batch"
+      });
+    }
+
+    // Get student details
+    const student = await UserStudent.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    // Initialize join requests array if it doesn't exist
+    if (!batch.joinRequests) {
+      batch.joinRequests = [];
+    }
+
+    // Check if student has already requested to join
+    const existingRequest = batch.joinRequests.find(
+      request => request.student.toString() === studentId
+    );
+
+    if (existingRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already requested to join this batch"
+      });
+    }
+
+    // Add join request
+    batch.joinRequests.push({
+      student: studentId,
+      message: message || '',
+      requestDate: new Date(),
+      status: 'pending'
+    });
+
+    await batch.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Join request sent successfully. You will be notified when the teacher responds."
+    });
+  } catch (error) {
+    console.error("Request join batch error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to send join request'
+    });
+  }
+};
+
+// Get Student's Batch Join Requests
+const getMyBatchRequests = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { Batch } = require("../models/TeacherDashboard");
+
+    const batchesWithRequests = await Batch.find({
+      'joinRequests.student': studentId
+    })
+    .populate('teacher', 'name email')
+    .lean();
+
+    const requests = batchesWithRequests.map(batch => {
+      const request = batch.joinRequests.find(
+        req => req.student.toString() === studentId
+      );
+      
+      return {
+        id: request._id,
+        batchId: batch._id,
+        batchName: batch.batchName,
+        subject: batch.subject,
+        teacher: batch.teacher,
+        message: request.message,
+        status: request.status,
+        requestDate: request.requestDate,
+        responseDate: request.responseDate,
+        responseMessage: request.responseMessage
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      requests: requests
+    });
+  } catch (error) {
+    console.error("Get batch requests error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch batch requests'
+    });
+  }
+};
+
+// Get Student's Current Batches
+const getMyBatches = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { Batch } = require("../models/TeacherDashboard");
+
+    const batches = await Batch.find({
+      students: studentId,
+      status: 'active'
+    })
+    .populate('teacher', 'name email organization')
+    .lean();
+
+    const batchesWithDetails = batches.map(batch => ({
+      id: batch._id,
+      batchName: batch.batchName,
+      subject: batch.subject,
+      teacher: {
+        name: batch.teacher.name,
+        email: batch.teacher.email,
+        organization: batch.teacher.organization
+      },
+      schedule: batch.schedule,
+      studentsCount: batch.students.length,
+      status: batch.status
+    }));
+
+    res.status(200).json({
+      success: true,
+      batches: batchesWithDetails
+    });
+  } catch (error) {
+    console.error("Get my batches error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch your batches'
+    });
+  }
+};
+
+// Get all students (for admin to view and manage academic performance)
+const GetAllStudents = async (req, res) => {
+  try {
+    const students = await UserStudent.find({})
+      .select('-password -emailVerificationToken -passwordResetToken')
+      .sort({ createdAt: -1 });
+
+    const studentsData = students.map(student => ({
+      id: student._id,
+      name: student.name,
+      email: student.contact?.email,
+      phone: student.contact?.phone,
+      class: student.class,
+      schoolName: student.currSchool,
+      status: student.status || "Active",
+      profilePic: student.profilePic,
+      dateOfJoining: student.dateOfJoining,
+      academicPerformance: student.academicPerformance || null
+    }));
+
+    res.status(200).json({
+      success: true,
+      students: studentsData,
+      total: studentsData.length
+    });
+  } catch (error) {
+    console.error("Get all students error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch students'
+    });
+  }
+};
+
+// Add academic performance for a specific student (Admin only)
+const AddAcademicPerformance = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { subject, score, grade, maxScore, semester, year, examType } = req.body;
+
+    if (!subject || score === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Subject and score are required"
+      });
+    }
+
+    const student = await UserStudent.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    // Initialize academic performance if it doesn't exist
+    if (!student.academicPerformance) {
+      student.academicPerformance = {
+        subjects: [],
+        overallGPA: 0,
+        overallPercentage: 0,
+        rank: 0,
+        totalStudents: 0
+      };
+    }
+
+    // Create new subject entry
+    const newSubjectEntry = {
+      name: subject,
+      score: score,
+      maxScore: maxScore || 100,
+      grade: grade || calculateGrade(score, maxScore || 100),
+      semester: semester || 'Current',
+      year: year || new Date().getFullYear().toString(),
+      examType: examType || 'Regular',
+      addedAt: new Date()
+    };
+
+    // Check if subject already exists for this semester/year
+    const existingSubjectIndex = student.academicPerformance.subjects.findIndex(
+      sub => sub.name === subject && sub.semester === newSubjectEntry.semester && sub.year === newSubjectEntry.year
+    );
+
+    if (existingSubjectIndex !== -1) {
+      // Update existing subject
+      student.academicPerformance.subjects[existingSubjectIndex] = newSubjectEntry;
+    } else {
+      // Add new subject
+      student.academicPerformance.subjects.push(newSubjectEntry);
+    }
+
+    // Calculate overall performance
+    const subjects = student.academicPerformance.subjects;
+    const totalScore = subjects.reduce((sum, sub) => sum + sub.score, 0);
+    const totalMaxScore = subjects.reduce((sum, sub) => sum + sub.maxScore, 0);
+    const overallPercentage = totalMaxScore > 0 ? (totalScore / totalMaxScore) * 100 : 0;
+    
+    student.academicPerformance.overallPercentage = Math.round(overallPercentage * 100) / 100;
+    student.academicPerformance.overallGPA = calculateGPA(overallPercentage);
+    student.academicPerformance.lastUpdated = new Date();
+
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Academic performance added successfully",
+      academicPerformance: student.academicPerformance
+    });
+  } catch (error) {
+    console.error("Add academic performance error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Failed to add academic performance'
+    });
+  }
+};
+
+// Helper function to calculate grade
+function calculateGrade(score, maxScore = 100) {
+  const percentage = (score / maxScore) * 100;
+  if (percentage >= 90) return 'A+';
+  if (percentage >= 80) return 'A';
+  if (percentage >= 70) return 'B+';
+  if (percentage >= 60) return 'B';
+  if (percentage >= 50) return 'C+';
+  if (percentage >= 40) return 'C';
+  return 'D';
+}
+
+// Helper function to calculate GPA
+function calculateGPA(percentage) {
+  if (percentage >= 90) return 10.0;
+  if (percentage >= 80) return 8.0;
+  if (percentage >= 70) return 7.0;
+  if (percentage >= 60) return 6.0;
+  if (percentage >= 50) return 5.0;
+  if (percentage >= 40) return 4.0;
+  return 0.0;
+}
+
+module.exports = { 
+  StudentRegister, 
+  StudentLogin, 
+  StudentProfile, 
+  StudentForgotPassword, 
+  StudentResetPassword, 
+  StudentUpdateProfile, 
+  UpdateAcademicPerformance, 
+  GetAllStudents, 
+  AddAcademicPerformance,
+  getAvailableBatches,
+  requestJoinBatch,
+  getMyBatchRequests,
+  getMyBatches
+};

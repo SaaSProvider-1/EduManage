@@ -9,7 +9,9 @@ export default function Navbar() {
       <div className="nav-container">
         <div className="nav-logo">
           <Link to="/" className="logo-link">
-            <span className="logo"><GraduationCap size={40} /></span>
+            <span className="logo">
+              <GraduationCap size={40} />
+            </span>
             <span className="logo-des">EduManage</span>
           </Link>
         </div>
@@ -32,6 +34,14 @@ export default function Navbar() {
             </Link>
           </ul>
           <div className="auth-buttons">
+            <Link to={"/tutor-register"}>
+              <button
+                className="land-login-btn"
+                title="Register Your Coaching Center"
+              >
+                <span>For Centers</span>
+              </button>
+            </Link>
             <Link to={"/login"}>
               <button className="land-login-btn" title="Student Login">
                 <span>Login</span>

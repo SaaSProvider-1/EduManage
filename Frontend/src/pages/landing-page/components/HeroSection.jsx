@@ -1,5 +1,6 @@
-import React from 'react';
-import './HeroSection.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./HeroSection.css";
 
 const HeroSection = () => {
   return (
@@ -8,16 +9,27 @@ const HeroSection = () => {
         <div className="hero-content">
           <div className="hero-text animate-on-scroll fade-in-up">
             <h1 className="heading-xl">
-              Smart Education Management <span className="text-primary">Made Easy</span>
+              Smart Education Management{" "}
+              <span className="text-primary">Made Easy</span>
             </h1>
             <p className="text-lg hero-subtitle">
-              Manage teachers, students, batches, fees, attendance, and exams from one simple dashboard. 
-              Streamline your educational institution with our comprehensive management platform.
+              Manage teachers, students, batches, fees, attendance, and exams
+              from one simple dashboard. Streamline your educational institution
+              with our comprehensive management platform.
             </p>
             <div className="hero-buttons">
-              <a href="#pricing" className="start-btn start-btn-primary btn-large">
+              <a
+                href="#pricing"
+                className="start-btn start-btn-primary btn-large"
+              >
                 Get Started
               </a>
+              <Link
+                to="/tutor-register"
+                className="center-btn btn-secondary btn-large"
+              >
+                Register Coaching Center
+              </Link>
               <a href="#contact" className="req-btn btn-outline btn-large">
                 Request Demo
               </a>
@@ -103,12 +115,12 @@ const HeroSection = () => {
                   </div>
                   <div className="chart-placeholder">
                     <div className="chart-bars">
-                      <div className="bar" style={{height: '60%'}}></div>
-                      <div className="bar" style={{height: '80%'}}></div>
-                      <div className="bar" style={{height: '40%'}}></div>
-                      <div className="bar" style={{height: '90%'}}></div>
-                      <div className="bar" style={{height: '70%'}}></div>
-                      <div className="bar" style={{height: '85%'}}></div>
+                      <div className="bar" style={{ height: "60%" }}></div>
+                      <div className="bar" style={{ height: "80%" }}></div>
+                      <div className="bar" style={{ height: "40%" }}></div>
+                      <div className="bar" style={{ height: "90%" }}></div>
+                      <div className="bar" style={{ height: "70%" }}></div>
+                      <div className="bar" style={{ height: "85%" }}></div>
                     </div>
                   </div>
                 </div>

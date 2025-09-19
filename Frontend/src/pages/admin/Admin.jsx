@@ -10,6 +10,7 @@ import UploadResources from "./components/UploadResources";
 import ReportsAnalytics from "./components/ReportsAnalytics";
 import Approval from "./components/Approval";
 import Settings from "./components/Settings";
+import AcademicPerformance from "./components/AcademicPerformance";
 import "./Admin.css";
 
 export default function Admin() {
@@ -55,6 +56,10 @@ export default function Admin() {
           <Route path="resources" element={<UploadResources />} />
           <Route path="reports" element={<ReportsAnalytics />} />
           <Route path="approval" element={<Approval />} />
+          <Route
+            path="academic-performance"
+            element={<AcademicPerformance />}
+          />
           <Route path="settings" element={<Settings />} />
         </Routes>
       </main>

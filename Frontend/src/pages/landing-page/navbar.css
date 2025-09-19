@@ -83,7 +83,7 @@
 }
 
 .nav-menu ul .link li::before {
-  content: '';
+  content: "";
   height: 3px;
   border-radius: 1rem;
   background-color: black;
@@ -108,7 +108,8 @@
 
 /* Particle Explosion 3D Button Styles */
 .land-login-btn,
-.land-register-btn {
+.land-register-btn,
+.coaching-center-btn {
   position: relative;
   padding: 13px 0px;
   font-size: 15px;
@@ -122,6 +123,57 @@
   overflow: visible;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Coaching Center Button - Unique Green Gradient */
+.coaching-center-btn {
+  background: radial-gradient(circle, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  min-width: 160px;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+}
+
+.coaching-center-btn::before,
+.coaching-center-btn::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #a7f3d0;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 0 6px rgba(167, 243, 208, 0.8);
+}
+
+.coaching-center-btn::before {
+  top: 25%;
+  left: 25%;
+}
+
+.coaching-center-btn::after {
+  bottom: 25%;
+  right: 25%;
+}
+
+.coaching-center-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5),
+    0 0 30px rgba(16, 185, 129, 0.3);
+}
+
+.coaching-center-btn:hover::before {
+  opacity: 1;
+  transform: translate(-30px, -30px) scale(2);
+  animation: particleBurstGreen1 0.6s ease-out;
+}
+
+.coaching-center-btn:hover::after {
+  opacity: 1;
+  transform: translate(30px, 30px) scale(2);
+  animation: particleBurstGreen2 0.6s ease-out;
 }
 
 /* Login Button - Particle Explosion Effect */
@@ -302,16 +354,48 @@
   }
 }
 
+@keyframes particleBurstGreen1 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-20px, -20px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-40px, -40px) scale(2);
+  }
+}
+
+@keyframes particleBurstGreen2 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(20px, 20px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(40px, 40px) scale(2);
+  }
+}
+
 /* Active state */
 .land-login-btn:active,
-.land-register-btn:active {
+.land-register-btn:active,
+.coaching-center-btn:active {
   transform: scale(0.98);
   transition: all 0.1s ease;
 }
 
 /* Additional particle effects using pseudo-elements for more particles */
 .land-login-btn:hover,
-.land-register-btn:hover {
+.land-register-btn:hover,
+.coaching-center-btn:hover {
   position: relative;
 }
 
@@ -323,21 +407,27 @@
     0 0 10px rgba(219, 234, 254, 0.4), 0 0 20px rgba(219, 234, 254, 0.2);
 }
 
-/* Orange particles for register button */
-.land-register-btn:hover::before,
-.land-register-btn:hover::after {
-  box-shadow: 0 0 0 2px rgba(254, 215, 170, 0.6),
-    0 0 10px rgba(254, 215, 170, 0.4), 0 0 20px rgba(254, 215, 170, 0.2);
+/* Green particles for coaching center button */
+.coaching-center-btn:hover::before,
+.coaching-center-btn:hover::after {
+  box-shadow: 0 0 0 2px rgba(167, 243, 208, 0.6),
+    0 0 10px rgba(167, 243, 208, 0.4), 0 0 20px rgba(167, 243, 208, 0.2);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .land-login-btn,
-  .land-register-btn {
+  .land-register-btn,
+  .coaching-center-btn {
     padding: 12px 24px;
     font-size: 14px;
     min-width: 120px;
     letter-spacing: 0.5px;
+  }
+
+  .coaching-center-btn {
+    min-width: 140px;
+    font-size: 12px;
   }
 
   .land-login-btn:hover::before,

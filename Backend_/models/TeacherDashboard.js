@@ -29,6 +29,25 @@ const BatchSchema = new mongoose.Schema({
     enum: ["active", "inactive", "completed"],
     default: "active",
   },
+  joinRequests: [{
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserStudent",
+      required: true,
+    },
+    message: String,
+    requestDate: {
+      type: Date,
+      default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    responseDate: Date,
+    responseMessage: String,
+  }],
 }, { timestamps: true });
 
 // Attendance Schema

@@ -48,17 +48,29 @@ export default function TutorRegister() {
   const [formError, setFormError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    centerName: "",
+    // Owner Information
     ownerName: "",
     email: "",
     phone: "",
+    password: "",
+
+    // Coaching Center Information
+    centerName: "",
     address: "",
     city: "",
     state: "",
     pinCode: "",
     yearEstablished: "",
     coachingType: "",
+
+    // Files
     logoFile: null,
+
+    // Payment Information
+    cardholderName: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
   });
 
   useEffect(() => {
@@ -89,12 +101,12 @@ export default function TutorRegister() {
   // Form validation function
   const validateForm = () => {
     // Required field validations
-    if (!formData.centerName.trim()) {
-      setFormError("Center Name is required");
-      return false;
-    }
     if (!formData.ownerName.trim()) {
       setFormError("Owner/Director Name is required");
+      return false;
+    }
+    if (!formData.centerName.trim()) {
+      setFormError("Center Name is required");
       return false;
     }
     if (!formData.email.trim()) {
@@ -117,6 +129,14 @@ export default function TutorRegister() {
       setFormError("Please enter a valid 10-digit phone number");
       return false;
     }
+    if (!formData.password.trim()) {
+      setFormError("Password is required");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      setFormError("Password must be at least 6 characters long");
+      return false;
+    }
     if (!formData.address.trim()) {
       setFormError("Address is required");
       return false;
@@ -135,6 +155,75 @@ export default function TutorRegister() {
     }
     setFormError("");
     return true;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("Form submission started");
+    console.log("Form data:", formData);
+
+    if (!validateForm()) {
+      console.log("Form validation failed");
+      return;
+    }
+
+    setIsLoading(true);
+    setFormError("");
+
+    try {
+      const submitData = new FormData();
+
+      // Add all form fields
+      Object.keys(formData).forEach((key) => {
+        if (key === "logoFile" && formData[key]) {
+          console.log("Adding logo file:", formData[key]);
+          submitData.append("logo", formData[key]);
+        } else if (formData[key] !== null && formData[key] !== "") {
+          console.log(`Adding field ${key}:`, formData[key]);
+          submitData.append(key, formData[key]);
+        }
+      });
+
+      // Add plan type
+      submitData.append("planType", selectedPlan);
+      console.log("Selected plan:", selectedPlan);
+
+      console.log(
+        "Sending request to:",
+        "http://localhost:3000/tenant/register"
+      );
+
+      const response = await fetch("http://localhost:3000/tenant/register", {
+        method: "POST",
+        body: submitData,
+      });
+
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (data.success) {
+        const licenseKey = data.data?.licenseKey || "Not available";
+        alert(
+          `Registration successful! 🎉\n\n` +
+            `Your License Key: ${licenseKey}\n\n` +
+            `📧 We've sent your license key to your email.\n` +
+            `🔑 Students will need this key to register for your coaching center.\n` +
+            `💡 Keep this key secure and share only with your students.`
+        );
+        // You can redirect to a success page or login page here
+        // navigate('/login');
+      } else {
+        setFormError(data.message || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setFormError("An error occurred during registration. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -202,10 +291,22 @@ export default function TutorRegister() {
               </div>
             </div>
 
-            <form
-              className="registration-form"
-              onSubmit={(e) => handleSubmit(e)}
-            >
+            <form className="registration-form" onSubmit={handleSubmit}>
+              {formError && (
+                <div
+                  className="error-message"
+                  style={{
+                    backgroundColor: "#fee",
+                    color: "#c33",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "15px",
+                    textAlign: "center",
+                  }}
+                >
+                  {formError}
+                </div>
+              )}
               <div className="plan-form-row">
                 <div className="plan-form-field">
                   <label htmlFor="centerName">
@@ -260,8 +361,27 @@ export default function TutorRegister() {
                     type="tel"
                     id="phone"
                     name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     placeholder="9876543210"
-                    max="10"
+                    maxLength="10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="plan-form-row">
+                <div className="plan-form-field full-width">
+                  <label htmlFor="password">
+                    Password <span className="required">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter a secure password"
                     required
                   />
                 </div>
@@ -275,6 +395,8 @@ export default function TutorRegister() {
                   <textarea
                     id="address"
                     name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
                     placeholder="Street Address"
                     rows="3"
                     required
@@ -284,16 +406,31 @@ export default function TutorRegister() {
 
               <div className="plan-form-row">
                 <div className="plan-form-field">
-                  <label htmlFor="city">City</label>
-                  <input type="text" id="city" name="city" placeholder="City" />
+                  <label htmlFor="city">
+                    City <span className="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    placeholder="City"
+                    required
+                  />
                 </div>
                 <div className="plan-form-field">
-                  <label htmlFor="state">State</label>
+                  <label htmlFor="state">
+                    State <span className="required">*</span>
+                  </label>
                   <input
                     type="text"
                     id="state"
                     name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
                     placeholder="State"
+                    required
                   />
                 </div>
               </div>
@@ -305,6 +442,8 @@ export default function TutorRegister() {
                     type="text"
                     id="pinCode"
                     name="pinCode"
+                    value={formData.pinCode}
+                    onChange={handleInputChange}
                     placeholder="PIN Code"
                   />
                 </div>
@@ -314,6 +453,8 @@ export default function TutorRegister() {
                     type="number"
                     id="yearEstablished"
                     name="yearEstablished"
+                    value={formData.yearEstablished}
+                    onChange={handleInputChange}
                     placeholder="2025"
                     min="1900"
                     max="2025"
@@ -326,7 +467,13 @@ export default function TutorRegister() {
                   <label htmlFor="coachingType">
                     Type of Coaching <span className="required">*</span>
                   </label>
-                  <select id="coachingType" name="coachingType" required>
+                  <select
+                    id="coachingType"
+                    name="coachingType"
+                    value={formData.coachingType}
+                    onChange={handleInputChange}
+                    required
+                  >
                     <option value="">Select coaching type</option>
                     <option value="academic">Academic Coaching</option>
                     <option value="competitive">Competitive Exams</option>
@@ -337,138 +484,151 @@ export default function TutorRegister() {
                   </select>
                 </div>
               </div>
-            </form>
-          </div>
 
-          {/* Center Logo Upload Section */}
-          <div className="logo-upload-form">
-            <div className="plan-form-header">
-              <div className="form-header-icon">
-                <Upload size={20} />
-              </div>
-              <div className="form-header-text">
-                <h2>
-                  Center Logo <span className="required">*</span>
-                </h2>
-                <p>Upload your coaching center's logo (max 5MB)</p>
-              </div>
-            </div>
-
-            <div className="logo-upload-container">
-              <input
-                type="file"
-                id="logoFile"
-                name="logoFile"
-                accept="image/*"
-                className="file-input"
-                // required
-              />
-              <label htmlFor="logoFile" className="file-upload-area">
-                <div className="upload-placeholder">
-                  <Upload size={48} />
-                  <div className="upload-text">
-                    <p className="upload-primary">Click to upload</p>
-                    <p className="upload-secondary">or drag and drop</p>
+              {/* Logo Upload Section inside the form */}
+              <div className="logo-upload-section">
+                <div className="plan-form-header">
+                  <div className="form-header-icon">
+                    <Upload size={20} />
                   </div>
-                  <p className="upload-info">PNG, JPG, SVG up to 5MB</p>
+                  <div className="form-header-text">
+                    <h2>
+                      Center Logo <span className="required">*</span>
+                    </h2>
+                    <p>Upload your coaching center's logo (max 5MB)</p>
+                  </div>
                 </div>
-              </label>
-            </div>
-          </div>
 
-          {/* Payment Information Section */}
-          <div className="payment-info-form">
-            <div className="plan-form-header">
-              <div className="form-header-icon">
-                <Lock size={24} />
-              </div>
-              <div className="form-header-text">
-                <h2>Payment Information</h2>
-                <p>Secure payment processing powered by industry standards</p>
-              </div>
-            </div>
-
-            <form className="payment-form">
-              <div className="plan-form-row">
-                <div className="plan-form-field full-width">
-                  <label htmlFor="cardholderName">
-                    Cardholder Name <span className="required">*</span>
-                  </label>
+                <div className="logo-upload-container">
                   <input
-                    type="text"
-                    id="cardholderName"
-                    name="cardholderName"
-                    placeholder="Name as on card"
-                    // required
+                    type="file"
+                    id="logoFile"
+                    name="logoFile"
+                    accept="image/*"
+                    className="file-input"
+                    onChange={handleInputChange}
                   />
-                </div>
-              </div>
-
-              <div className="plan-form-row">
-                <div className="plan-form-field full-width">
-                  <label htmlFor="cardNumber">
-                    Card Number <span className="required">*</span>
+                  <label htmlFor="logoFile" className="file-upload-area">
+                    <div className="upload-placeholder">
+                      <Upload size={48} />
+                      <div className="upload-text">
+                        <p className="upload-primary">Click to upload</p>
+                        <p className="upload-secondary">or drag and drop</p>
+                      </div>
+                      <p className="upload-info">PNG, JPG, SVG up to 5MB</p>
+                      {formData.logoFile && (
+                        <p className="upload-success">
+                          Selected: {formData.logoFile.name}
+                        </p>
+                      )}
+                    </div>
                   </label>
-                  <input
-                    type="text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    placeholder="1234 5678 9012 3456"
-                    // required
-                  />
                 </div>
               </div>
 
-              <div className="plan-form-row">
-                <div className="plan-form-field">
-                  <label htmlFor="expiryDate">
-                    Expiry Date <span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="expiryDate"
-                    name="expiryDate"
-                    placeholder="MM/YY"
-                    // required
-                  />
+              {/* Payment Information Section inside the form */}
+              <div className="payment-info-section">
+                <div className="plan-form-header">
+                  <div className="form-header-icon">
+                    <Lock size={24} />
+                  </div>
+                  <div className="form-header-text">
+                    <h2>Payment Information</h2>
+                    <p>
+                      Secure payment processing powered by industry standards
+                    </p>
+                  </div>
                 </div>
-                <div className="plan-form-field">
-                  <label htmlFor="cvv">
-                    CVV <span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="cvv"
-                    name="cvv"
-                    placeholder="123"
-                    // required
-                  />
-                </div>
-              </div>
 
-              <div className="payment-summary">
-                <div className="summary-row">
-                  <span className="summary-label">Total Amount:</span>
-                  <span className="summary-amount">
-                    ₹{planDetails.price}/month
-                  </span>
-                </div>
-                <p className="summary-note">
-                  You can cancel anytime. No setup fees.
-                </p>
-              </div>
+                <div className="payment-form">
+                  <div className="plan-form-row">
+                    <div className="plan-form-field full-width">
+                      <label htmlFor="cardholderName">
+                        Cardholder Name <span className="required">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="cardholderName"
+                        name="cardholderName"
+                        value={formData.cardholderName}
+                        onChange={handleInputChange}
+                        placeholder="Name as on card"
+                      />
+                    </div>
+                  </div>
 
-              <div className="plan-form-actions">
-                <button
-                  type="submit"
-                  className="submit-btn"
-                  onClick={(e) => handleSubmit(e)}
-                >
-                  Complete Payment & Register
-                </button>
-                <p className="terms-text">
-                  Your payment information is secure and encrypted
-                </p>
+                  <div className="plan-form-row">
+                    <div className="plan-form-field full-width">
+                      <label htmlFor="cardNumber">
+                        Card Number <span className="required">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="cardNumber"
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleInputChange}
+                        placeholder="1234 5678 9012 3456"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="plan-form-row">
+                    <div className="plan-form-field">
+                      <label htmlFor="expiryDate">
+                        Expiry Date <span className="required">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="expiryDate"
+                        name="expiryDate"
+                        value={formData.expiryDate}
+                        onChange={handleInputChange}
+                        placeholder="MM/YY"
+                      />
+                    </div>
+                    <div className="plan-form-field">
+                      <label htmlFor="cvv">
+                        CVV <span className="required">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="cvv"
+                        name="cvv"
+                        value={formData.cvv}
+                        onChange={handleInputChange}
+                        placeholder="123"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="payment-summary">
+                    <div className="summary-row">
+                      <span className="summary-label">Total Amount:</span>
+                      <span className="summary-amount">
+                        ₹{planDetails.price}/month
+                      </span>
+                    </div>
+                    <p className="summary-note">
+                      You can cancel anytime. No setup fees.
+                    </p>
+                  </div>
+
+                  <div className="plan-form-actions">
+                    <button
+                      type="submit"
+                      className="submit-btn"
+                      disabled={isLoading}
+                    >
+                      {isLoading
+                        ? "Processing..."
+                        : "Complete Payment & Register"}
+                    </button>
+                    <p className="terms-text">
+                      Your payment information is secure and encrypted
+                    </p>
+                  </div>
+                </div>
               </div>
             </form>
           </div>

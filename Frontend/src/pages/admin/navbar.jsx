@@ -11,6 +11,7 @@ import {
   FolderOpen,
   ClipboardPlus,
   BookCheck,
+  BarChart3,
   Cog,
   LogOut,
   ArrowRight,
@@ -44,6 +45,12 @@ const menuItems = [
     label: "Reports",
     icon: <ClipboardPlus />,
     color: "#6366f1",
+  },
+  {
+    id: "academic-performance",
+    label: "Academic Performance",
+    icon: <BarChart3 />,
+    color: "#059669",
   },
   {
     id: "approval",

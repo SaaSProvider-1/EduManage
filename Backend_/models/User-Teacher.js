@@ -28,6 +28,11 @@ const TeacherSchema = new mongoose.Schema(
       default: "teacher",
       required: true,
     },
+    coachingCenterId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CoachingCenter',
+      required: true,
+    },
     organization: {
       type: String,
       required: true,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   User,
   Calendar,
@@ -13,6 +14,7 @@ import {
 import "./Student-Profile.css";
 
 export default function StudentProfile() {
+  const navigate = useNavigate();
   const [studentData, setStudentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -51,8 +53,8 @@ export default function StudentProfile() {
       .finally(() => {
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000)
-      })
+        }, 2000);
+      });
   }, []);
 
   const formatDate = (dateString) => {
@@ -64,21 +66,21 @@ export default function StudentProfile() {
   };
 
   const getGradeBadgeClass = (grade) => {
-    if (!grade) return 'grade-badge';
+    if (!grade) return "grade-badge";
     const gradeUpper = grade.toUpperCase();
-    if (gradeUpper.includes('A+')) return 'grade-badge grade-a-plus';
-    if (gradeUpper.includes('A')) return 'grade-badge grade-a';
-    if (gradeUpper.includes('B+')) return 'grade-badge grade-b-plus';
-    if (gradeUpper.includes('B')) return 'grade-badge grade-b';
-    if (gradeUpper.includes('C')) return 'grade-badge grade-c';
-    return 'grade-badge';
+    if (gradeUpper.includes("A+")) return "grade-badge grade-a-plus";
+    if (gradeUpper.includes("A")) return "grade-badge grade-a";
+    if (gradeUpper.includes("B+")) return "grade-badge grade-b-plus";
+    if (gradeUpper.includes("B")) return "grade-badge grade-b";
+    if (gradeUpper.includes("C")) return "grade-badge grade-c";
+    return "grade-badge";
   };
 
   const getProgressBarClass = (score) => {
-    if (score >= 90) return 'sub-progress-bar';
-    if (score >= 80) return 'sub-progress-bar blue';
-    if (score >= 70) return 'sub-progress-bar orange';
-    return 'sub-progress-bar red';
+    if (score >= 90) return "sub-progress-bar";
+    if (score >= 80) return "sub-progress-bar blue";
+    if (score >= 70) return "sub-progress-bar orange";
+    return "sub-progress-bar red";
   };
 
   if (isLoading) {
@@ -125,18 +127,23 @@ export default function StudentProfile() {
               </div>
               <div className="user-details">
                 <span className="name-status">
-                  <h2 className="student-name">{studentData?.name || 'N/A'}</h2>
-                  <p className="status-badge-new">{studentData?.status || "Active Student"}</p>
+                  <h2 className="student-name">{studentData?.name || "N/A"}</h2>
+                  <p className="status-badge-new">
+                    {studentData?.status || "Active Student"}
+                  </p>
                 </span>
                 <div className="detail-item">
                   <Calendar size={16} color="#6b7280" />
                   <span style={{ color: "#6b7280" }}>
-                    Joined: {studentData?.dateOfJoining ? formatDate(studentData.dateOfJoining) : 'N/A'}
+                    Joined:{" "}
+                    {studentData?.dateOfJoining
+                      ? formatDate(studentData.dateOfJoining)
+                      : "N/A"}
                   </span>
                 </div>
               </div>
               <div className="profile-edit-btn">
-                <button>
+                <button onClick={() => navigate("/student/edit-profile")}>
                   <span className="profile-edit-icon">
                     <SquarePen />
                   </span>
@@ -151,45 +158,109 @@ export default function StudentProfile() {
                   <BookOpen size={20} /> <h3>Academic Performance</h3>
                 </div>
                 <div className="performance-grid">
-                  {studentData?.academicPerformance?.subjects?.map((subject, index) => (
-                    <div key={index} className="subject-performance">
-                      <div className="subject-info">
-                        <span className="subject-name">{subject.name || 'N/A'}</span>
-                        <span className={getGradeBadgeClass(subject.grade)}>{subject.grade || 'N/A'}</span>
+                  {studentData?.academicPerformance?.subjects?.length > 0 ? (
+                    <>
+                      {studentData.academicPerformance.subjects.map(
+                        (subject, index) => (
+                          <div key={index} className="subject-performance">
+                            <div className="subject-info">
+                              <span className="subject-name">
+                                {subject.name || "N/A"}
+                              </span>
+                              <span
+                                className={getGradeBadgeClass(subject.grade)}
+                              >
+                                {subject.grade || "N/A"}
+                              </span>
+                            </div>
+                            <div className={getProgressBarClass(subject.score)}>
+                              <div
+                                className="sub-progress-fill"
+                                style={{ width: `${subject.score || 0}%` }}
+                              ></div>
+                            </div>
+                            <span className="percentage">
+                              {subject.score || 0}%
+                            </span>
+                          </div>
+                        )
+                      )}
+
+                      {/* Overall GPA Section */}
+                      {studentData.academicPerformance.overallGPA && (
+                        <div className="subject-performance">
+                          <div className="subject-info">
+                            <span className="subject-name">Overall GPA</span>
+                            <span className="grade-badge grade-a">
+                              {studentData.academicPerformance.overallGPA >= 8
+                                ? "A"
+                                : studentData.academicPerformance.overallGPA >=
+                                  7
+                                ? "B"
+                                : studentData.academicPerformance.overallGPA >=
+                                  6
+                                ? "C"
+                                : "D"}
+                            </span>
+                          </div>
+                          <div className="sub-progress-bar blue">
+                            <div
+                              className="sub-progress-fill blue"
+                              style={{
+                                width: `${
+                                  (studentData.academicPerformance.overallGPA /
+                                    10) *
+                                  100
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                          <span className="percentage">
+                            {studentData.academicPerformance.overallGPA}/10
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* Default subjects with 0 values when no data available */}
+                      {[
+                        "Mathematics",
+                        "Science",
+                        "English",
+                        "Social Studies",
+                        "Hindi",
+                      ].map((subjectName, index) => (
+                        <div key={index} className="subject-performance">
+                          <div className="subject-info">
+                            <span className="subject-name">{subjectName}</span>
+                            <span className="grade-badge">-</span>
+                          </div>
+                          <div className="sub-progress-bar red">
+                            <div
+                              className="sub-progress-fill"
+                              style={{ width: "0%" }}
+                            ></div>
+                          </div>
+                          <span className="percentage">0%</span>
+                        </div>
+                      ))}
+
+                      {/* Overall GPA Section with 0 */}
+                      <div className="subject-performance">
+                        <div className="subject-info">
+                          <span className="subject-name">Overall GPA</span>
+                          <span className="grade-badge">-</span>
+                        </div>
+                        <div className="sub-progress-bar red">
+                          <div
+                            className="sub-progress-fill"
+                            style={{ width: "0%" }}
+                          ></div>
+                        </div>
+                        <span className="percentage">0/10</span>
                       </div>
-                      <div className={getProgressBarClass(subject.score)}>
-                        <div
-                          className="sub-progress-fill"
-                          style={{ width: `${subject.score || 0}%` }}
-                        ></div>
-                      </div>
-                      <span className="percentage">{subject.score || 0}%</span>
-                    </div>
-                  )) || (
-                    <div className="no-performance-data">
-                      <p>No academic performance data available</p>
-                    </div>
-                  )}
-                  
-                  {/* Overall GPA Section */}
-                  {studentData?.academicPerformance?.overallGPA && (
-                    <div className="subject-performance">
-                      <div className="subject-info">
-                        <span className="subject-name">Overall GPA</span>
-                        <span className="grade-badge grade-a">
-                          {studentData.academicPerformance.overallGPA >= 8 ? 'A' : 
-                           studentData.academicPerformance.overallGPA >= 7 ? 'B' : 
-                           studentData.academicPerformance.overallGPA >= 6 ? 'C' : 'D'}
-                        </span>
-                      </div>
-                      <div className="sub-progress-bar blue">
-                        <div
-                          className="sub-progress-fill blue"
-                          style={{ width: `${(studentData.academicPerformance.overallGPA / 10) * 100}%` }}
-                        ></div>
-                      </div>
-                      <span className="percentage">{studentData.academicPerformance.overallGPA}/10</span>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -206,23 +277,27 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Full Name</span>
-                  <span className="value">{studentData?.name || 'N/A'}</span>
+                  <span className="value">{studentData?.name || "N/A"}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Blood Group</span>
-                  <span className="value">{studentData?.bloodGroup || 'N/A'}</span>
+                  <span className="value">
+                    {studentData?.bloodGroup || "N/A"}
+                  </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Aadhaar Number</span>
                   <span className="value">
-                    {studentData?.aadharNumber || 'N/A'}
-                    {studentData?.aadharNumber && <span className="verified-badge">Verified</span>}
+                    {studentData?.aadharNumber || "N/A"}
+                    {studentData?.aadharNumber && (
+                      <span className="verified-badge">Verified</span>
+                    )}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Email</span>
                   <span className="value email-value">
-                    <Mail size={14} /> {studentData?.email || 'N/A'}
+                    <Mail size={14} /> {studentData?.email || "N/A"}
                   </span>
                 </div>
               </div>
@@ -236,23 +311,27 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Current School</span>
-                  <span className="value">{studentData?.schoolName || 'N/A'}</span>
+                  <span className="value">
+                    {studentData?.schoolName || "N/A"}
+                  </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Current Class</span>
-                  <span className="value">{studentData?.class || 'N/A'}</span>
+                  <span className="value">{studentData?.class || "N/A"}</span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Last School Attended</span>
                   <span className="value">
-                    {studentData?.lastSchoolAttended || 'N/A'}
+                    {studentData?.lastSchoolAttended || "N/A"}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Date of Joining</span>
                   <span className="value">
                     <Calendar size={14} />
-                    {studentData?.dateOfJoining ? formatDate(studentData.dateOfJoining) : 'N/A'}
+                    {studentData?.dateOfJoining
+                      ? formatDate(studentData.dateOfJoining)
+                      : "N/A"}
                   </span>
                 </div>
               </div>
@@ -266,22 +345,26 @@ export default function StudentProfile() {
               <div className="card-content-new">
                 <div className="card-info-item">
                   <span className="label">Father's Name</span>
-                  <span className="value">{studentData?.fatherName || 'N/A'}</span>
+                  <span className="value">
+                    {studentData?.fatherName || "N/A"}
+                  </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Mother's Name</span>
-                  <span className="value">{studentData?.motherName || 'N/A'}</span>
+                  <span className="value">
+                    {studentData?.motherName || "N/A"}
+                  </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Guardian Contact</span>
                   <span className="value phone-value">
-                    <Phone size={14} /> {studentData?.guardianPhone || 'N/A'}
+                    <Phone size={14} /> {studentData?.guardianPhone || "N/A"}
                   </span>
                 </div>
                 <div className="card-info-item">
                   <span className="label">Address</span>
                   <span className="value address-value">
-                    <MapPin size={14} /> {studentData?.completeAddress || 'N/A'}
+                    <MapPin size={14} /> {studentData?.completeAddress || "N/A"}
                   </span>
                 </div>
               </div>

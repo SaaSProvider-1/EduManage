@@ -1,8 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../config/upload");
-const { StudentRegister, StudentLogin, StudentProfile, StudentForgotPassword, StudentResetPassword } = require("../controllers/StudentController");
-const { StudentAuth } = require('../middleware/RoleBasedAuth');
+const UserStudent = require("../models/User-Student");
+const { 
+  StudentRegister, 
+  StudentLogin, 
+  StudentProfile, 
+  StudentForgotPassword, 
+  StudentResetPassword, 
+  StudentUpdateProfile, 
+  UpdateAcademicPerformance, 
+  GetAllStudents, 
+  AddAcademicPerformance,
+  getAvailableBatches,
+  requestJoinBatch,
+  getMyBatchRequests,
+  getMyBatches
+} = require("../controllers/StudentController");
+const { StudentAuth, AdminAuth } = require('../middleware/RoleBasedAuth');
 
 router.post(
   "/register",
@@ -21,42 +36,19 @@ router.post("/reset-password", StudentResetPassword);
 
 router.get("/profile", StudentAuth, StudentProfile);
 
-// Update academic performance (for testing/admin purposes)
-router.put("/academic-performance", StudentAuth, async (req, res) => {
-  try {
-    const studentId = req.user.id;
-    const { subjects, overallGPA, overallPercentage, rank, totalStudents } = req.body;
+router.put("/profile", StudentAuth, upload.fields([
+  { name: "profilePicture", maxCount: 1 }
+]), StudentUpdateProfile);
 
-    const student = await UserStudent.findById(studentId);
-    if (!student) {
-      return res.status(404).json({
-        success: false,
-        message: "Student not found"
-      });
-    }
+// Admin routes for managing students and academic performance
+router.get("/all", AdminAuth, GetAllStudents);
+router.put("/academic-performance/:studentId", AdminAuth, UpdateAcademicPerformance);
+router.post("/academic-performance/:studentId", AdminAuth, AddAcademicPerformance);
 
-    student.academicPerformance = {
-      subjects: subjects || [],
-      overallGPA: overallGPA || 0,
-      overallPercentage: overallPercentage || 0,
-      rank: rank || 0,
-      totalStudents: totalStudents || 0
-    };
-
-    await student.save();
-
-    res.json({
-      success: true,
-      message: "Academic performance updated successfully",
-      academicPerformance: student.academicPerformance
-    });
-  } catch (error) {
-    console.error("Update academic performance error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to update academic performance"
-    });
-  }
-});
+// Batch management routes for students
+router.get("/available-batches", StudentAuth, getAvailableBatches);
+router.post("/join-batch", StudentAuth, requestJoinBatch);
+router.get("/batch-requests", StudentAuth, getMyBatchRequests);
+router.get("/my-batches", StudentAuth, getMyBatches);
 
 module.exports = router;

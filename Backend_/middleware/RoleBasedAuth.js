@@ -31,4 +31,19 @@ function TeacherAuth(req, res, next) {
   next();
 }
 
-module.exports = { StudentAuth, TeacherAuth };
+function AdminAuth(req, res, next) {
+  const result = verifyToken(req, res);
+  if (!result.valid) return res.status(result.response.status).json(result.response.json);
+
+  if (result.decode.role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied: Admins only",
+    });
+  }
+
+  req.user = result.decode;
+  next();
+}
+
+module.exports = { StudentAuth, TeacherAuth, AdminAuth };
