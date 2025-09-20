@@ -279,6 +279,24 @@ export default function TutorRegister() {
             </div>
           </div>
 
+          <div className="owner-det">
+            <h3 className="verify-header">Verify Your Email First</h3>
+            <div className="verify-field">
+              <label htmlFor="email">
+                Owner Email <span className="required">*</span>
+              </label>
+              <input
+                type="email"
+                placeholder="Enter valid email for verification"
+              />
+            </div>
+            <span className="verify-note">
+              A verification message will be sent to this email. Please verify
+              before proceeding.
+            </span>
+            <button className="verify-btn">Verify the Email</button>
+          </div>
+
           {/* Coaching Center Registration Form */}
           <div className="coaching-center-form">
             <div className="plan-form-header">
@@ -292,6 +310,48 @@ export default function TutorRegister() {
             </div>
 
             <form className="registration-form" onSubmit={handleSubmit}>
+              {/* Logo Upload Section inside the form */}
+              <div className="logo-upload-section">
+                <div className="logo-upload-container">
+                  <input
+                    type="file"
+                    id="logoFile"
+                    name="logoFile"
+                    accept="image/*"
+                    className="file-input"
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="logoFile" className="file-upload-area">
+                    <div className="upload-placeholder">
+                      <Upload size={48} />
+                      <div className="upload-text">
+                        <p className="upload-primary">
+                          Click to upload your profile image
+                        </p>
+                        <p className="upload-secondary">or drag and drop</p>
+                      </div>
+                      <p className="upload-info">PNG, JPG, SVG up to 5MB</p>
+                      {formData.logoFile && (
+                        <p className="upload-success">
+                          Selected: {formData.logoFile.name}
+                        </p>
+                      )}
+                    </div>
+                  </label>
+                </div>
+
+                <div className="logo-preview">
+                  {formData.logoFile ? (
+                    <img
+                      src={URL.createObjectURL(formData.logoFile)}
+                      alt="Logo Preview"
+                    />
+                  ) : (
+                    <span className="no-logo">No logo uploaded yet</span>
+                  )}
+                </div>
+              </div>
+
               {formError && (
                 <div
                   className="error-message"
@@ -349,7 +409,7 @@ export default function TutorRegister() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="admin@excellencecoaching.com"
+                    placeholder="Enter your verified email"
                     required
                   />
                 </div>
@@ -374,6 +434,21 @@ export default function TutorRegister() {
                 <div className="plan-form-field full-width">
                   <label htmlFor="password">
                     Password <span className="required">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter a secure password"
+                    required
+                  />
+                </div>
+
+                <div className="plan-form-field full-width">
+                  <label htmlFor="password">
+                    Confirm Password <span className="required">*</span>
                   </label>
                   <input
                     type="password"
@@ -482,47 +557,6 @@ export default function TutorRegister() {
                     <option value="skill">Skill Development</option>
                     <option value="other">Other</option>
                   </select>
-                </div>
-              </div>
-
-              {/* Logo Upload Section inside the form */}
-              <div className="logo-upload-section">
-                <div className="plan-form-header">
-                  <div className="form-header-icon">
-                    <Upload size={20} />
-                  </div>
-                  <div className="form-header-text">
-                    <h2>
-                      Center Logo <span className="required">*</span>
-                    </h2>
-                    <p>Upload your coaching center's logo (max 5MB)</p>
-                  </div>
-                </div>
-
-                <div className="logo-upload-container">
-                  <input
-                    type="file"
-                    id="logoFile"
-                    name="logoFile"
-                    accept="image/*"
-                    className="file-input"
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="logoFile" className="file-upload-area">
-                    <div className="upload-placeholder">
-                      <Upload size={48} />
-                      <div className="upload-text">
-                        <p className="upload-primary">Click to upload</p>
-                        <p className="upload-secondary">or drag and drop</p>
-                      </div>
-                      <p className="upload-info">PNG, JPG, SVG up to 5MB</p>
-                      {formData.logoFile && (
-                        <p className="upload-success">
-                          Selected: {formData.logoFile.name}
-                        </p>
-                      )}
-                    </div>
-                  </label>
                 </div>
               </div>
 

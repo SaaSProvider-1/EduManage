@@ -34,14 +34,6 @@ export default function Navbar() {
             </Link>
           </ul>
           <div className="auth-buttons">
-            <Link to={"/tutor-register"}>
-              <button
-                className="land-login-btn"
-                title="Register Your Coaching Center"
-              >
-                <span>For Centers</span>
-              </button>
-            </Link>
             <Link to={"/login"}>
               <button className="land-login-btn" title="Student Login">
                 <span>Login</span>

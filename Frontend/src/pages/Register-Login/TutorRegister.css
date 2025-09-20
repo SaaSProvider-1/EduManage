@@ -190,6 +190,90 @@ h2 svg {
   gap: 0.5rem;
 }
 
+/* Owner Verify */
+.owner-det {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.8rem;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.3rem 1.7rem;
+  margin-top: 1.5rem;
+}
+
+.verify-header {
+  width: 100%;
+  border-bottom: 2px solid #e2e8f0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.verify-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.verify-password {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+}
+
+.verify-field label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.3rem;
+}
+
+.verify-field input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.verify-note {
+  width: 100%;
+  border-left: 4px solid orange;
+  border-radius: 0.7rem;
+  font-size: 0.9rem;
+  text-align: center;
+  background-color: rgba(255, 180, 40, 0.5);
+  padding: 0.7rem 1rem;
+  margin-top: 0.5rem;
+  align-self: center;
+}
+
+.owner-det button {
+  width: 60%;
+  background: linear-gradient(135deg, #0066ff 0%, #00fff2 100%);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px 0 rgba(0, 102, 255, 0.3);
+  align-self: center;
+  margin-top: 0.5rem;
+}
+
 /* Coaching Center Form */
 .coaching-center-form {
   background: white;
@@ -241,18 +325,16 @@ h2 svg {
 }
 
 .plan-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 24px;
 }
 
 .plan-form-field {
+  flex: 1 1 45%;
   display: flex;
   flex-direction: column;
-}
-
-.plan-form-field.full-width {
-  grid-column: span 2;
 }
 
 .plan-form-field label {
@@ -393,17 +475,16 @@ h2 svg {
 }
 
 /* Logo Upload Section */
-.logo-upload-form {
-  background: white;
-  border-radius: 12px;
-  padding: 24px 30px;
-  margin-top: 24px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+.logo-upload-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
 }
 
 .logo-upload-container {
-  margin-top: 20px;
+  width: 70%;
   position: relative;
 }
 
@@ -465,6 +546,28 @@ h2 svg {
   color: #9ca3af;
   font-size: 14px;
   margin: 0;
+}
+
+.logo-preview {
+  width: 30%;
+  height: 165px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 /* Payment Information Section */

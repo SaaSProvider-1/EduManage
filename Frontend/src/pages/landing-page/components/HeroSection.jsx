@@ -24,12 +24,6 @@ const HeroSection = () => {
               >
                 Get Started
               </a>
-              <Link
-                to="/tutor-register"
-                className="center-btn btn-secondary btn-large"
-              >
-                Register Coaching Center
-              </Link>
               <a href="#contact" className="req-btn btn-outline btn-large">
                 Request Demo
               </a>
