@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const Tenant = require('../models/Tenant');
+const Tenant = require('../models/CoachingCenter');
 const CoachingCenter = require('../models/CoachingCenter');
 const cloudinary = require('../config/Cloudinary');
 const { generateLicenseKey, generateSimpleLicenseKey } = require('../utils/licenseUtils');
