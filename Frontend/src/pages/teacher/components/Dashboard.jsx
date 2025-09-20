@@ -77,8 +77,9 @@ export default function Dashboard() {
         setDashboardData(result.data);
         // Initialize attendance data based on fetched batches
         if (result.data.batches && result.data.batches.length > 0) {
-          setSelectedBatch(result.data.batches[0]);
-          setSelectedSubject(result.data.batches[0].subject);
+          const firstBatch = result.data.batches[0];
+          setSelectedBatch(firstBatch);
+          setSelectedSubject(firstBatch?.subject || firstBatch?.subjectName || '');
         }
         console.log("Dashboard data loaded:", result.data);
         console.log("Recent tasks:", result.data.recentTasks);
@@ -393,7 +394,7 @@ export default function Dashboard() {
   };
 
   const handleSubjectSelect = (subject) => {
-    setSelectedSubject(subject);
+    setSelectedSubject(subject?.name || subject);
     setShowSubjectDropdown(false);
   };
 
@@ -659,7 +660,7 @@ export default function Dashboard() {
               <div className="attendance-selectors">
                 <div className="batch-custom-dropdown" ref={batchDropdownRef}>
                   <div className="batch-selector" onClick={toggleBatchDropdown}>
-                    <span>{selectedBatch}</span>
+                    <span>{selectedBatch?.name || selectedBatch?.batchName || 'Select Batch'}</span>
                     <ChevronDown
                       size={16}
                       className={`dropdown-arrow ${
@@ -669,13 +670,13 @@ export default function Dashboard() {
                   </div>
                   {showBatchDropdown && (
                     <div className="batch-dropdown-options">
-                      {batchOptions.map((batch) => (
+                      {batchOptions.map((batch, index) => (
                         <div
-                          key={batch}
+                          key={batch?.id || batch?.name || index}
                           className="batch-dropdown-option"
                           onClick={() => handleBatchSelect(batch)}
                         >
-                          {batch}
+                          {batch?.name || batch?.batchName || batch}
                         </div>
                       ))}
                     </div>
@@ -687,7 +688,7 @@ export default function Dashboard() {
                     className="subject-selector"
                     onClick={toggleSubjectDropdown}
                   >
-                    <span>{selectedSubject}</span>
+                    <span>{selectedSubject || 'Select Subject'}</span>
                     <ChevronDown
                       size={16}
                       className={`dropdown-arrow ${
@@ -697,13 +698,13 @@ export default function Dashboard() {
                   </div>
                   {showSubjectDropdown && (
                     <div className="batch-dropdown-options">
-                      {subjectOptions.map((subject) => (
+                      {subjectOptions.map((subject, index) => (
                         <div
-                          key={subject}
+                          key={subject?.id || subject?.name || index}
                           className="batch-dropdown-option"
                           onClick={() => handleSubjectSelect(subject)}
                         >
-                          {subject}
+                          {subject?.name || subject}
                         </div>
                       ))}
                     </div>
@@ -730,26 +731,26 @@ export default function Dashboard() {
             </div>
 
             <div className="students-attendance-list">
-              {students.map((student) => (
-                <div key={student.id} className="student-attendance-item">
+              {students.map((student, index) => (
+                <div key={student?.id || student?._id || index} className="student-attendance-item">
                   <div className="student-details">
-                    <div className="att-student-name">{student.name}</div>
-                    <div className="att-student-roll">{student.rollNo}</div>
+                    <div className="att-student-name">{student?.name || 'Unknown Student'}</div>
+                    <div className="att-student-roll">{student?.rollNo || student?.rollNumber || 'N/A'}</div>
                   </div>
                   <div className="attendance-buttons">
                     <button
                       className={`attendance-action-btn present-btn ${
-                        attendanceData[student.id] === "present" ? "active" : ""
+                        attendanceData[student?.id || student?._id] === "present" ? "active" : ""
                       }`}
-                      onClick={() => markAttendance(student.id, "present")}
+                      onClick={() => markAttendance(student?.id || student?._id, "present")}
                     >
                       <UserCheck size={16} />
                     </button>
                     <button
                       className={`attendance-action-btn absent-btn ${
-                        attendanceData[student.id] === "absent" ? "active" : ""
+                        attendanceData[student?.id || student?._id] === "absent" ? "active" : ""
                       }`}
-                      onClick={() => markAttendance(student.id, "absent")}
+                      onClick={() => markAttendance(student?.id || student?._id, "absent")}
                     >
                       <UserX size={16} />
                     </button>

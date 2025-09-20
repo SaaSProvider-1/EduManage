@@ -49,7 +49,9 @@ app.get("/api/health", (req, res) => {
     environment: process.env.NODE_ENV || "development",
   });
 });
-
+app.post('/get', (req, res) => {
+  console.log(req.body);
+})
 // Email verification for admins
 app.post("/admin/verify-email", async (req, res) => {
   const { email } = req.body;
@@ -102,7 +104,7 @@ app.post("/admin/verify-email", async (req, res) => {
     const token = new Admin({ email, emailVerificationToken: tokenString });
     await token.save();
 
-    const link = `http://localhost:5173/admin/verify-email?token=${tokenString}&email=${email}`;
+    const link = `http://localhost:3000/admin/verify-email/${tokenString}?email=${email}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -134,17 +136,101 @@ app.post("/admin/verify-email", async (req, res) => {
 });
 
 app.get("/admin/verify-email/:token", async (req, res) => {
-  const { token } = req.params;
-  const admin = await Admin.findOne({ emailVerificationToken: token });
-  if(!admin) {
-    return res.status(400).json({ message: "Invalid or Expired token" });
+  try {
+    const { token } = req.params;
+    const { email } = req.query;
+    
+    if (!token || !email) {
+      return res.status(400).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1 style="color: #e74c3c;">❌ Verification Failed</h1>
+            <p>Invalid verification link. Token or email is missing.</p>
+            <a href="http://localhost:5173/admin-register" style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Registration</a>
+          </body>
+        </html>
+      `);
+    }
+
+    const admin = await Admin.findOne({ 
+      email: email,
+      emailVerificationToken: token
+    });
+    
+    if (!admin) {
+      return res.status(400).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1 style="color: #e74c3c;">❌ Verification Failed</h1>
+            <p>Invalid or expired verification token. Please try again.</p>
+            <a href="http://localhost:5173/admin-register" style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Registration</a>
+          </body>
+        </html>
+      `);
+    }
+
+    admin.isEmailVerified = true;
+    admin.emailVerificationToken = undefined;
+    await admin.save();
+
+    res.send(`
+      <html>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+          <h1 style="color: #27ae60;">✅ Email Verified Successfully!</h1>
+          <p>Your email has been verified. You can now complete your admin registration.</p>
+          <a href="http://localhost:5173/admin-register" style="background-color: #5c84ff; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 10px;">Complete Registration</a>
+        </body>
+      </html>
+    `);
+  } catch (error) {
+    console.error("Admin verification error:", error);
+    res.status(500).send(`
+      <html>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+          <h1 style="color: #e74c3c;">❌ Server Error</h1>
+          <p>Something went wrong during verification. Please try again.</p>
+          <a href="http://localhost:5173/admin-register" style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Back to Registration</a>
+        </body>
+      </html>
+    `);
   }
+});
 
-  admin.isEmailVerified = true;
-  admin.emailVerificationToken = undefined;
-  await admin.save();
+// Check verification status endpoint
+app.get("/admin/check-verification", async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required"
+      });
+    }
 
-  res.status(200).json({ message: "Email verified successfully" });
+    const admin = await Admin.findOne({ email });
+    
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        verified: false,
+        message: "Admin not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      verified: admin.isEmailVerified
+    });
+    
+  } catch (error) {
+    console.error("Check verification error:", error);
+    res.status(500).json({
+      success: false,
+      verified: false,
+      message: "Internal server error"
+    });
+  }
 });
 
 // Test email route for debugging

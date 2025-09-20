@@ -5,6 +5,7 @@ import ImageUpload from "./components/ImageInput";
 const AdminRegister = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const [formData, setFormData] = useState({
     role: "admin",
@@ -91,7 +92,10 @@ const AdminRegister = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert("✅ Verification email sent! Please check your inbox.");
+        alert(
+          "✅ Verification email sent! Please check your inbox and click the verification link. After clicking the link, come back here and click 'I have verified my email' button."
+        );
+        setVerificationSent(true);
         setErrors({});
       } else {
         setErrors({
@@ -106,11 +110,42 @@ const AdminRegister = () => {
     }
   };
 
+  // Function to manually verify email status
+  const checkEmailVerification = async () => {
+    try {
+      // Check if email is verified using the correct endpoint
+      const response = await fetch(
+        `http://localhost:3000/admin/check-verification?email=${encodeURIComponent(formData.email)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success && data.verified) {
+        setEmailVerified(true);
+        alert(
+          "✅ Email verified successfully! You can now proceed to complete your registration."
+        );
+      } else {
+        alert(
+          "❌ Email not yet verified. Please check your inbox and click the verification link first."
+        );
+      }
+    } catch (err) {
+      console.log("Verification check error:", err);
+      alert(
+        "❌ Unable to check verification status. Please make sure you clicked the verification link in your email."
+      );
+    }
+  };
+
   const goToStep1 = () => {
     setCurrentStep(1);
     setEmailVerified(false);
-    setVerificationCode("");
-    setSentCode("");
+    setVerificationSent(false);
   };
 
   const validateForm = () => {
@@ -182,9 +217,22 @@ const AdminRegister = () => {
         method: "POST",
         body: submitData,
       });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(
+          "✅ Admin registration successful! You can now login to your account."
+        );
+        // Optionally redirect to login page
+        window.location.href = "/login";
+      } else {
+        alert("❌ Registration failed: " + (data.message || "Unknown error"));
+        console.error("Registration failed:", data);
+      }
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Something went wrong. Please try again.");
+      alert("❌ Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -251,6 +299,26 @@ const AdminRegister = () => {
                 <span className="admin-error-text">{errors.email}</span>
               )}
             </div>
+
+            {verificationSent && !emailVerified && (
+              <div className="verification-pending">
+                <p>
+                  📬 Verification email sent to:{" "}
+                  <strong>{formData.email}</strong>
+                </p>
+                <p>
+                  Please check your inbox and click the verification link, then
+                  click the button below:
+                </p>
+                <button
+                  type="button"
+                  onClick={checkEmailVerification}
+                  className="verify-status-btn"
+                >
+                  I have verified my email
+                </button>
+              </div>
+            )}
 
             {emailVerified && (
               <div className="verification-success">

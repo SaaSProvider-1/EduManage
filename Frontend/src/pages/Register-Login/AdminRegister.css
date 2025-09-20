@@ -361,6 +361,43 @@
   background: #059669;
 }
 
+/* Verification Pending Styles */
+.verification-pending {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.verification-pending p {
+  margin: 0 0 8px 0;
+  color: #1e40af;
+}
+
+.verification-pending p:last-of-type {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #3730a3;
+}
+
+.verify-status-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.verify-status-btn:hover {
+  background: #2563eb;
+}
+
 /* Step 2 Styles */
 .step-header {
   display: flex;
@@ -433,42 +470,42 @@
     margin: 16px 0;
     padding: 0 10px;
   }
-  
+
   .step-divider {
     width: 60px;
     margin: 0 8px;
     margin-bottom: 28px;
   }
-  
+
   .step-number {
     width: 32px;
     height: 32px;
     font-size: 14px;
   }
-  
+
   .step-label {
     font-size: 11px;
   }
-  
+
   .step-content {
     padding: 16px;
   }
-  
+
   .email-input-container {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .verification-input-container {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .step-header {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .edit-email-btn {
     margin-left: 0;
     align-self: flex-start;
