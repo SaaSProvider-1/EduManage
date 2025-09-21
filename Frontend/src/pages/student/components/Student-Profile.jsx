@@ -28,7 +28,7 @@ export default function StudentProfile() {
       return;
     }
 
-    fetch("http://localhost:3000/student/profile", {
+    fetch("https://edu-manage-backend.onrender.com/student/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -119,11 +119,11 @@ export default function StudentProfile() {
           <div className="profile-grid">
             <div className="basic-info-section">
               <div className="profile-photo-section">
-                <img
-                  src={studentData.photo || "/images/student-1-profile.png"}
+                {/* <img
+                  // src={studentData.photo || "/images/student-1-profile.png"}
                   alt={studentData.name}
                   className="profile-photo-new"
-                />
+                /> */}
               </div>
               <div className="user-details">
                 <span className="name-status">

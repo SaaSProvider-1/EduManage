@@ -61,7 +61,7 @@ export default function Dashboard() {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/teacher/dashboard-data",
+        "https://edu-manage-backend.onrender.com/teacher/dashboard-data",
         {
           method: "GET",
           headers: {
