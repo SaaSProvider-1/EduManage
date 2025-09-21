@@ -2,20 +2,25 @@ input {
   font-size: 15px;
 }
 
-/* Back Button */
-.back-button-container {
-  margin-bottom: 20px;
+.icon-back {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-.back-button {
+.reg-back-button {
   display: flex;
   align-items: center;
   gap: 8px;
+  position: absolute;
+  left: 0;
   padding: 8px 16px;
   background: transparent;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  color: #718096;
+  color: #556171;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -23,18 +28,18 @@ input {
   font-family: inherit;
 }
 
-.back-button:hover {
+.reg-back-button:hover {
   background: #f7fafc;
   color: #4a5568;
   border-color: #cbd5e0;
   transform: translateX(-2px);
 }
 
-.back-button:active {
+.reg-back-button:active {
   transform: translateX(0);
 }
 
-.back-button:focus {
+.reg-back-button:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
@@ -153,6 +158,14 @@ input {
   transform: translateY(-3px);
 }
 
+.license-verification-section {
+  width: 100%;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  transition: all 0.3s ease;
+}
+
 button span {
   font-size: 1rem;
 }
@@ -164,6 +177,19 @@ button span {
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+.step2-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.basic-info-inner {
+  width: 100%;
 }
 
 .image-container {
@@ -173,9 +199,18 @@ button span {
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
+  margin-bottom: 2rem;
+}
+
+.box-container {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  gap: 20px;
 }
 
 .upload-section {
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -256,7 +291,7 @@ button span {
 
 .upload-field {
   width: 100%;
-  height: 80px;
+  height: 100%;
   border: 3px dashed gray;
   border-radius: 10px;
   background-color: rgb(240, 240, 240);
@@ -279,6 +314,7 @@ button span {
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+  margin-bottom: 1rem;
 }
 
 .input-component {
@@ -299,17 +335,20 @@ button span {
 }
 
 .input-field:focus {
-  border: 2px solid blue;
+  border: 2px solid rgb(102, 153, 255);
   outline: none;
-  background-color: rgba(0, 0, 255, 0.1);
 }
 
 /* Extra Fields */
+.select-cont .select-field {
+  border: 2px solid rgb(102, 153, 255);
+  outline: none;
+}
+
 .extra-field-container {
   width: 100%;
   height: 100%;
   border-radius: 0.5rem;
-  background-color: rgb(241, 243, 255);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -363,12 +402,6 @@ button span {
   cursor: pointer;
 }
 
-.select-field,
-.input-field {
-  border: 2px solid rgb(102, 153, 255);
-  background-color: rgb(209, 215, 255);
-}
-
 input.select-field {
   height: 40px;
   font-size: 0.9rem;
@@ -388,7 +421,6 @@ input.select-field::placeholder {
   height: 40px;
   border: 2px solid rgb(102, 153, 255);
   border-radius: 0.4rem;
-  background-color: rgba(0, 0, 255, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -622,5 +654,67 @@ input.select-field::placeholder {
 
   .preview-placeholder {
     height: 80px;
+  }
+}
+
+/* Password Toggle Styles */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 45px; /* Make room for the toggle button */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  border-radius: 4px;
+}
+
+.password-toggle-btn:hover {
+  color: #374151;
+  background-color: #f9fafb;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+  color: #4f46e5;
+  background-color: #f0f9ff;
+}
+
+.password-toggle-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Ensure proper positioning for password containers */
+.pass-field,
+.conf-pass-field {
+  position: relative;
+}
+
+/* Mobile adjustments for password toggle */
+@media (max-width: 768px) {
+  .password-toggle-btn {
+    right: 10px;
+    padding: 6px;
+  }
+  
+  .password-input-container input {
+    padding-right: 40px;
   }
 }

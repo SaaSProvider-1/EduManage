@@ -13,7 +13,7 @@ const TenantSchema = new Schema(
     planType: { type: String, required: true, enum: ["standard", "premium"] },
     subscriptionStatus: {
       type: String,
-      default: "inactive",
+      default: "active",
       enum: ["active", "inactive", "expired"],
     },
     subscriptionStartDate: { type: Date, default: Date.now },

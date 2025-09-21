@@ -194,15 +194,12 @@ h2 svg {
 .owner-det {
   border: 1px solid #e2e8f0;
   border-radius: 0.8rem;
-  background-color: white;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   gap: 0.5rem;
-  padding: 1.3rem 1.7rem;
   margin-top: 1.5rem;
 }
 

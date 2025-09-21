@@ -49,9 +49,7 @@ app.get("/api/health", (req, res) => {
     environment: process.env.NODE_ENV || "development",
   });
 });
-app.post('/get', (req, res) => {
-  console.log(req.body);
-})
+
 // Email verification for admins
 app.post("/admin/verify-email", async (req, res) => {
   const { email } = req.body;
@@ -431,7 +429,7 @@ app.use("/teacher", TeacherRouter);
 // Tenant Route
 app.use("/tenant", TenantRouter);
 
-app.post("/admin/register", AdminRouter);
+app.use("/admin", AdminRouter);
 
 // 404 handler for undefined routes
 app.use((req, res) => {

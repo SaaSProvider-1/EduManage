@@ -6,6 +6,8 @@ import {
   ArrowLeft,
   ArrowRight,
   ChevronDown,
+  Eye,
+  EyeOff,
   GraduationCap,
   Upload,
   UserRoundPen,
@@ -77,6 +79,8 @@ export default function Register() {
     completeAddress: "",
   });
   const [previewImage, setPreviewImage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [dropdownStates, setDropdownStates] = useState({
     qualification: false,
     experience: false,
@@ -469,6 +473,14 @@ export default function Register() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleGoBack = () => {
     navigate("/");
   };
@@ -476,23 +488,22 @@ export default function Register() {
   return (
     <div className="register">
       <div className="register-container">
-        {/* Back Button */}
-        <div className="back-button-container">
-          <button
-            type="button"
-            className="back-button"
-            onClick={handleGoBack}
-            title="Go back to home"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Home</span>
-          </button>
-        </div>
-
         <div className="register-header">
-          <span className="register-header-icon">
-            <GraduationCap strokeWidth={2.2} size={40} color="white" />
-          </span>
+          {/* Back Button */}
+          <div className="icon-back">
+            <button
+              type="button"
+              className="reg-back-button"
+              onClick={handleGoBack}
+              title="Go back to home"
+            >
+              <ArrowLeft size={20} />
+              <span>Back to Home</span>
+            </button>
+            <span className="register-header-icon">
+              <GraduationCap strokeWidth={2.2} size={35} color="white" />
+            </span>
+          </div>
           <h2>EduManage</h2>
           <p>Teacher / Student Register Form</p>
         </div>
@@ -533,10 +544,6 @@ export default function Register() {
                   : "#f8fffe",
               border:
                 currentStep === 1 ? "2px solid #3b82f6" : "2px solid #10b981",
-              borderRadius: "12px",
-              padding: "20px",
-              margin: "20px 0",
-              transition: "all 0.3s ease",
             }}
           >
             <div
@@ -709,21 +716,16 @@ export default function Register() {
           {/* Step 2: Profile and Registration */}
           <div
             className="basic-info"
-            style={{
-              opacity: licenseKeyVerification.isVerified ? 1 : 0.5,
-              pointerEvents: licenseKeyVerification.isVerified
-                ? "auto"
-                : "none",
-              transition: "opacity 0.3s ease",
-            }}
+            style={
+              {
+                opacity: licenseKeyVerification.isVerified ? 1 : 0.5,
+                pointerEvents: licenseKeyVerification.isVerified
+                  ? "auto"
+                  : "none",
+              }
+            }
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "20px",
-              }}
-            >
+            <div className="step2-header">
               <div
                 style={{
                   width: "30px",
@@ -761,27 +763,29 @@ export default function Register() {
                   <label htmlFor="profilePicture">
                     Profile Picture <span className="imp">*</span>
                   </label>
-                  <input
-                    id="profilePicture"
-                    name="profilePicture"
-                    type="file"
-                    className="image-input"
-                    accept="image/*jpg, image/png, image/jpeg"
-                    onChange={handleInputChange}
-                  />
-                  <div className="upload-field">
-                    <Upload size={25} />
-                    <p>Click to Upload Your Image</p>
-                  </div>
-                </div>
-                <div className="image-preview-container">
-                  <div className="image-preview">
-                    <div className="preview-placeholder">
-                      {previewImage ? (
-                        <img src={previewImage} alt="Preview" />
-                      ) : (
-                        <p>No image selected</p>
-                      )}
+                  <div className="box-container">
+                    <input
+                      id="profilePicture"
+                      name="profilePicture"
+                      type="file"
+                      className="image-input"
+                      accept="image/*jpg, image/png, image/jpeg"
+                      onChange={handleInputChange}
+                    />
+                    <div className="upload-field">
+                      <Upload size={25} />
+                      <p>Click to Upload Your Image</p>
+                    </div>
+                    <div className="image-preview-container">
+                      <div className="image-preview">
+                        <div className="preview-placeholder">
+                          {previewImage ? (
+                            <img src={previewImage} alt="Preview" />
+                          ) : (
+                            <p>No image selected</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -795,6 +799,7 @@ export default function Register() {
                     id="name"
                     name="name"
                     type="text"
+                    placeholder="eg. John Doe"
                     className="input-field name-inp"
                     onChange={handleInputChange}
                   />
@@ -807,6 +812,7 @@ export default function Register() {
                     id="phone"
                     name="phone"
                     type="text"
+                    placeholder="9876543210"
                     className="input-field phone-inp"
                     onChange={handleInputChange}
                     maxLength="10"
@@ -823,26 +829,10 @@ export default function Register() {
                     id="email"
                     name="email"
                     type="text"
+                    placeholder="johndoe@email.com"
                     className="input-field email-inp"
                     onChange={handleInputChange}
                   />
-                </div>
-                <div className="org-field input-component">
-                  <label htmlFor="licenseKey">
-                    Coaching Center License Key <span className="imp">*</span>
-                  </label>
-                  <input
-                    id="licenseKey"
-                    name="licenseKey"
-                    type="text"
-                    className="input-field org-inp"
-                    placeholder="Enter 64-character license key (XXXXXXXX-XXXXXXXX-...)"
-                    onChange={handleInputChange}
-                    style={{ fontFamily: "monospace", letterSpacing: "1px" }}
-                  />
-                  <small style={{ color: "#666", fontSize: "12px" }}>
-                    Enter the license key provided by your coaching center
-                  </small>
                 </div>
               </div>
               <div className="password-container input-fields">
@@ -850,25 +840,47 @@ export default function Register() {
                   <label htmlFor="password">
                     Password <span className="imp">*</span>
                   </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="text"
-                    className="input-field pass-inp"
-                    onChange={handleInputChange}
-                  />
+                  <div className="password-input-container">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      className="input-field pass-inp"
+                      placeholder="Enter your password"
+                      onChange={handleInputChange}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={togglePasswordVisibility}
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
                 <div className="conf-pass-field input-component">
                   <label htmlFor="confirmPassword">
                     Confirm Password <span className="imp">*</span>
                   </label>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="text"
-                    className="input-field conf-inp"
-                    onChange={handleInputChange}
-                  />
+                  <div className="password-input-container">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="input-field conf-inp"
+                      placeholder="Confirm your password"
+                      onChange={handleInputChange}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={toggleConfirmPasswordVisibility}
+                      title={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

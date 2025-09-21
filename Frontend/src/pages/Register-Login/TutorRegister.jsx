@@ -12,6 +12,7 @@ import {
 import "./TutorRegister.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import AdminRegister from "./AdminRegister";
 
 // Details for selected plan.
 const standardPlan = {
@@ -53,6 +54,7 @@ export default function TutorRegister() {
     email: "",
     phone: "",
     password: "",
+    confirmPassword: "",
 
     // Coaching Center Information
     centerName: "",
@@ -62,6 +64,7 @@ export default function TutorRegister() {
     pinCode: "",
     yearEstablished: "",
     coachingType: "",
+    planType: selectedPlan,
 
     // Files
     logoFile: null,
@@ -179,7 +182,7 @@ export default function TutorRegister() {
       Object.keys(formData).forEach((key) => {
         if (key === "logoFile" && formData[key]) {
           console.log("Adding logo file:", formData[key]);
-          submitData.append("logo", formData[key]);
+          submitData.append("logoFile", formData[key]);
         } else if (formData[key] !== null && formData[key] !== "") {
           console.log(`Adding field ${key}:`, formData[key]);
           submitData.append(key, formData[key]);
@@ -280,7 +283,9 @@ export default function TutorRegister() {
           </div>
 
           <div className="owner-det">
-            <h3 className="verify-header">Verify Your Email First</h3>
+            <AdminRegister />
+
+            {/* <h3 className="verify-header">Verify Your Email First</h3>
             <div className="verify-field">
               <label htmlFor="email">
                 Owner Email <span className="required">*</span>
@@ -294,7 +299,7 @@ export default function TutorRegister() {
               A verification message will be sent to this email. Please verify
               before proceeding.
             </span>
-            <button className="verify-btn">Verify the Email</button>
+            <button className="verify-btn">Verify the Email</button> */}
           </div>
 
           {/* Coaching Center Registration Form */}
@@ -409,7 +414,7 @@ export default function TutorRegister() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="Enter your verified email"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>
@@ -447,16 +452,16 @@ export default function TutorRegister() {
                 </div>
 
                 <div className="plan-form-field full-width">
-                  <label htmlFor="password">
+                  <label htmlFor="confirmPassword">
                     Confirm Password <span className="required">*</span>
                   </label>
                   <input
                     type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    placeholder="Enter a secure password"
+                    placeholder="Enter a secure confirm password"
                     required
                   />
                 </div>
@@ -557,6 +562,19 @@ export default function TutorRegister() {
                     <option value="skill">Skill Development</option>
                     <option value="other">Other</option>
                   </select>
+                </div>
+
+                <div className="plan-form-field full-width">
+                  <label htmlFor="planType">
+                    Plan type <span className="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="planType"
+                    name="planType"
+                    value={planDetails.name}
+                    disabled
+                  />
                 </div>
               </div>
 

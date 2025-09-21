@@ -138,23 +138,22 @@ export default function Login() {
   return (
     <div className="edu-login-container">
       <div className="edu-login-card">
-        {/* Back Button */}
-        <div className="back-button-container">
-          <button
-            type="button"
-            className="back-button"
-            onClick={handleGoBack}
-            title="Go back to home"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Home</span>
-          </button>
-        </div>
-
         {/* Header Section */}
         <div className="edu-login-header">
-          <div className="edu-login-icon">
-            <GraduationCap size={32} />
+          {/* Back Button */}
+          <div className="back-button-container">
+            <button
+              type="button"
+              className="reg-back-button"
+              onClick={handleGoBack}
+              title="Go back to home"
+            >
+              <ArrowLeft size={20} />
+              <span>Back to Home</span>
+            </button>
+            <div className="edu-login-icon">
+              <GraduationCap size={32} />
+            </div>
           </div>
           <h1>EduPortal</h1>
           <p>Sign in to your account</p>

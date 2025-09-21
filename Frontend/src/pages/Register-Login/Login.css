@@ -21,7 +21,11 @@
 
 /* Back Button */
 .back-button-container {
-  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .back-button {

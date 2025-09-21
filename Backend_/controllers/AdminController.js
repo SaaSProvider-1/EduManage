@@ -7,10 +7,10 @@ const AdminRegister = async (req, res) => {
   const { role, fullname, phone, email, password } = req.body;
   try {
     const existingAdmin = await Admin.findOne({ email: email });
-    if (!existingAdmin || !existingAdmin.isEmailVerified) {
+    if (existingAdmin) {
       return res.status(400).json({
         success: false,
-        message: "Admin isn't exists or email isn't verified",
+        message: "Admin's email is exists",
       });
     }
 
