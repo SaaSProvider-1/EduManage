@@ -58,7 +58,7 @@ export default function Navbar({ isHandleMargin = () => {} }) {
     },
     {
       id: "payment-history",
-      label: "Payment History",
+      label: "Payment",
       icon: <CreditCard />,
       color: "#ef4444",
     },

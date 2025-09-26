@@ -14,6 +14,7 @@ import Login from "./pages/Register-Login/Login";
 import ForgotPassword from "./pages/Register-Login/ForgotPassword";
 import ResetPassword from "./pages/Register-Login/ResetPassword";
 import TutorRegister from "./pages/Register-Login/TutorRegister";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFoundPage from "./NotFoundPage";
 import AdminRegister from "./pages/Register-Login/AdminRegister";
 export default function App() {
@@ -28,20 +29,21 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/tutor-register" element={<TutorRegister />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/admin-register" element={<AdminRegister />} />
 
           {/* Protected Routes */}
           {/* <Route element={<ProtectRoute allowedRoles={["admin"]} />}> */}
-            <Route path="/admin/*" element={<Admin />} />
+          <Route path="/admin/*" element={<Admin />} />
           {/* </Route> */}
 
           {/* <Route element={<ProtectRoute allowedRoles={["student"]} />}> */}
-            <Route path="/student/*" element={<Student />} />
+          <Route path="/student/*" element={<Student />} />
           {/* </Route> */}
 
           {/* <Route element={<ProtectRoute allowedRoles={["teacher"]} />}> */}
-            <Route path="/teacher/*" element={<Teacher />} />
+          <Route path="/teacher/*" element={<Teacher />} />
           {/* </Route> */}
         </Routes>
       </Router>

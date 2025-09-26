@@ -22,6 +22,7 @@ const StudentRouter = require("./Router/StudentRouter");
 const TeacherRouter = require("./Router/TeacherRouter");
 const TenantRouter = require("./Router/TenantRouter");
 const AdminRouter = require("./Router/AdminRouter");
+const PaymentRouter = require("./Router/PaymentRouter");
 const upload = require("./config/upload");
 
 // Express app setup
@@ -430,6 +431,9 @@ app.use("/teacher", TeacherRouter);
 app.use("/tenant", TenantRouter);
 
 app.use("/admin", AdminRouter);
+
+// Payment Route
+app.use("/api/payment", PaymentRouter);
 
 // 404 handler for undefined routes
 app.use((req, res) => {

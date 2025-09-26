@@ -64,7 +64,6 @@ export default function TutorRegister() {
     pinCode: "",
     yearEstablished: "",
     coachingType: "",
-    planType: selectedPlan,
 
     // Files
     logoFile: null,
@@ -98,6 +97,115 @@ export default function TutorRegister() {
     // Clear form errors when user starts typing
     if (formError) {
       setFormError("");
+    }
+  };
+
+  // Handle payment processing with REAL Cashfree integration
+  const handlePaymentProcessing = async () => {
+    try {
+      console.log("Starting REAL payment processing...");
+
+      // Step 1: Create payment order via backend
+      const orderData = {
+        amount: planDetails.price,
+        paymentType: "TUTOR_REGISTRATION",
+        description: `${planDetails.name} Plan Subscription - ${formData.centerName}`,
+        customerDetails: {
+          name: formData.ownerName,
+          email: formData.email,
+          phone: formData.phone,
+        },
+        planDetails: {
+          planName: planDetails.name,
+          planType: selectedPlan,
+        },
+      };
+
+      console.log("Creating payment order:", orderData);
+
+      const orderResponse = await fetch(
+        "http://localhost:3000/api/payment/create-tutor-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.message || "Failed to create payment order");
+      }
+
+      const orderResult = await orderResponse.json();
+      console.log("Payment order created:", orderResult);
+
+      if (!orderResult.success) {
+        throw new Error(
+          orderResult.message || "Failed to create payment order"
+        );
+      }
+
+      // Step 2: Redirect to Cashfree Payment Page (REAL PAYMENT)
+      if (orderResult.data.paymentUrl) {
+        console.log(
+          "Redirecting to Cashfree payment page:",
+          orderResult.data.paymentUrl
+        );
+
+        // Open Cashfree payment page in a new window/popup
+        const paymentWindow = window.open(
+          orderResult.data.paymentUrl,
+          "cashfree_payment",
+          "width=800,height=600,scrollbars=yes,resizable=yes"
+        );
+
+        // Wait for payment completion (check for window close or success callback)
+        return new Promise((resolve, reject) => {
+          const checkClosed = setInterval(() => {
+            if (paymentWindow.closed) {
+              clearInterval(checkClosed);
+              // Check payment status from backend
+              fetch(
+                `http://localhost:3000/api/payment/details/${orderResult.data.orderId}`
+              )
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.success && data.data.paymentStatus === "SUCCESS") {
+                    resolve({
+                      success: true,
+                      paymentId: data.data.paymentId,
+                      orderId: orderResult.data.orderId,
+                      amount: planDetails.price,
+                      planName: planDetails.name,
+                    });
+                  } else {
+                    reject(new Error("Payment not completed or failed"));
+                  }
+                })
+                .catch(() => {
+                  reject(new Error("Failed to verify payment status"));
+                });
+            }
+          }, 1000);
+
+          // Timeout after 10 minutes
+          setTimeout(() => {
+            clearInterval(checkClosed);
+            if (!paymentWindow.closed) {
+              paymentWindow.close();
+            }
+            reject(new Error("Payment timeout"));
+          }, 600000); // 10 minutes
+        });
+      } else {
+        throw new Error("No payment URL received from server");
+      }
+    } catch (error) {
+      console.error("Payment processing error:", error);
+      throw new Error(error.message || "Payment processing failed");
     }
   };
 
@@ -176,22 +284,41 @@ export default function TutorRegister() {
     setFormError("");
 
     try {
+      // First, process payment
+      console.log("Processing payment...");
+      const paymentResult = await handlePaymentProcessing();
+
+      if (!paymentResult.success) {
+        throw new Error("Payment processing failed");
+      }
+
+      console.log("Payment successful:", paymentResult);
+
+      // Proceed with registration after successful payment
       const submitData = new FormData();
 
-      // Add all form fields
+      // Add all form fields except planType (we'll add it separately)
       Object.keys(formData).forEach((key) => {
         if (key === "logoFile" && formData[key]) {
           console.log("Adding logo file:", formData[key]);
           submitData.append("logoFile", formData[key]);
-        } else if (formData[key] !== null && formData[key] !== "") {
+        } else if (
+          key !== "planType" &&
+          formData[key] !== null &&
+          formData[key] !== ""
+        ) {
           console.log(`Adding field ${key}:`, formData[key]);
           submitData.append(key, formData[key]);
         }
       });
 
-      // Add plan type
-      submitData.append("planType", selectedPlan);
+      // Add plan type as a single string value
+      submitData.append("planType", selectedPlan.toString());
+      submitData.append("paymentId", paymentResult.paymentId);
+      submitData.append("orderId", paymentResult.orderId);
+
       console.log("Selected plan:", selectedPlan);
+      console.log("Payment details added to registration");
 
       console.log(
         "Sending request to:",
@@ -210,11 +337,13 @@ export default function TutorRegister() {
       if (data.success) {
         const licenseKey = data.data?.licenseKey || "Not available";
         alert(
-          `Registration successful! 🎉\n\n` +
-            `Your License Key: ${licenseKey}\n\n` +
+          `Registration & Payment Successful! 🎉\n\n` +
+            `Your License Key: ${licenseKey}\n` +
+            `Payment ID: ${paymentResult.paymentId}\n\n` +
             `📧 We've sent your license key to your email.\n` +
             `🔑 Students will need this key to register for your coaching center.\n` +
-            `💡 Keep this key secure and share only with your students.`
+            `💡 Keep this key secure and share only with your students.\n\n` +
+            `💳 Your ${planDetails.name} plan subscription is now active!`
         );
         // You can redirect to a success page or login page here
         // navigate('/login');
@@ -222,8 +351,11 @@ export default function TutorRegister() {
         setFormError(data.message || "Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      setFormError("An error occurred during registration. Please try again.");
+      console.error("Registration/Payment error:", error);
+      setFormError(
+        error.message ||
+          "An error occurred during registration. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -673,7 +805,7 @@ export default function TutorRegister() {
                       disabled={isLoading}
                     >
                       {isLoading
-                        ? "Processing..."
+                        ? "Processing Payment & Registration..."
                         : "Complete Payment & Register"}
                     </button>
                     <p className="terms-text">

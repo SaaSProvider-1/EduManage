@@ -9,6 +9,17 @@ const TenantSchema = new Schema(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     licenseKey: { type: String, unique: true },
+    
+    // Coaching Center Information
+    centerName: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pinCode: { type: String },
+    yearEstablished: { type: Number },
+    coachingType: { type: String, required: true },
+    logoFile: { type: String }, // Path to uploaded logo
+    
     // Subscription Information
     planType: { type: String, required: true, enum: ["standard", "premium"] },
     subscriptionStatus: {
@@ -26,6 +37,8 @@ const TenantSchema = new Schema(
       enum: ["pending", "completed", "failed"],
     },
     lastPaymentDate: { type: Date },
+    paymentId: { type: String }, // Payment gateway payment ID
+    orderId: { type: String }, // Payment gateway order ID
 
     // Account Status
     status: {

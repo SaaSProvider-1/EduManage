@@ -6,6 +6,7 @@ import EditProfile from "./components/EditProfile";
 import CheckAttendance from "./components/CheckAttendance";
 import ExamResult from "./components/ExamResult";
 import MakeRequest from "./components/MakeRequest";
+import Payment from "./components/Payment";
 import FeeManagement from "./components/FeeManagement";
 import StudyMaterials from "./components/StudyMaterials";
 import DoubtRequests from "./components/DoubtRequests";
@@ -50,7 +51,7 @@ export default function Student() {
           <Route path="check-attendance" element={<CheckAttendance />} />
           <Route path="exam-results" element={<ExamResult />} />
           <Route path="make-request" element={<MakeRequest />} />
-          <Route path="payment-history" element={<FeeManagement />} />
+          <Route path="payment-history" element={<Payment />} />
           <Route path="study-materials" element={<StudyMaterials />} />
           <Route path="doubt-requests" element={<DoubtRequests />} />
           <Route path="notifications" element={<Notifications />} />

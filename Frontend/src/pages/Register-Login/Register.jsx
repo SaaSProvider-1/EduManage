@@ -165,13 +165,12 @@ export default function Register() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/tenant/verify-license-key`,
+        `http://localhost:3000/tenant/verify-license/${licenseKey}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ licenseKey: cleanKey }),
+          }
         }
       );
 
@@ -181,8 +180,8 @@ export default function Register() {
         setLicenseKeyVerification({
           isVerifying: false,
           isVerified: true,
-          verificationMessage: `✅ Valid license key for ${data.coachingCenter.centerName}`,
-          coachingCenterInfo: data.coachingCenter,
+          verificationMessage: `✅ Valid license key for ${data.data.centerName}`,
+          coachingCenterInfo: data.data,
           error: null,
         });
         setCurrentStep(2); // Move to next step
@@ -692,20 +691,20 @@ export default function Register() {
                     <div style={{ fontSize: "14px", color: "#166534" }}>
                       <p style={{ margin: "4px 0" }}>
                         <strong>Center:</strong>{" "}
-                        {licenseKeyVerification.coachingCenterInfo.centerName}
+                        {licenseKeyVerification.coachingCenterInfo?.centerName || 'Not specified'}
                       </p>
                       <p style={{ margin: "4px 0" }}>
                         <strong>Location:</strong>{" "}
-                        {licenseKeyVerification.coachingCenterInfo.city},{" "}
-                        {licenseKeyVerification.coachingCenterInfo.state}
+                        {licenseKeyVerification.coachingCenterInfo?.location || 
+                         `${licenseKeyVerification.coachingCenterInfo?.city || 'Not specified'}, ${licenseKeyVerification.coachingCenterInfo?.state || 'Not specified'}`}
                       </p>
                       <p style={{ margin: "4px 0" }}>
                         <strong>Type:</strong>{" "}
-                        {licenseKeyVerification.coachingCenterInfo.coachingType}
+                        {licenseKeyVerification.coachingCenterInfo?.coachingType || 'Not specified'}
                       </p>
                       <p style={{ margin: "4px 0" }}>
                         <strong>Owner:</strong>{" "}
-                        {licenseKeyVerification.coachingCenterInfo.owner}
+                        {licenseKeyVerification.coachingCenterInfo?.ownerName || 'Not specified'}
                       </p>
                     </div>
                   </div>
