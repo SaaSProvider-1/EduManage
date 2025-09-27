@@ -481,12 +481,12 @@
   background: #f3f0ff;
   padding: 8px;
   border-radius: 8px;
-  width: 40px;
-  height: 40px;
+  /* width: 40px;
+  height: 40px; */
 }
 
 .attendance-mgmt-title h3 {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
   color: #374151;
   margin: 0;
@@ -582,7 +582,7 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .attendance-section-title h4 {
@@ -657,6 +657,13 @@
 .students-attendance-list::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
+}
+
+.no-student {
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+  /* padding: 20px; */
 }
 
 .student-attendance-item {

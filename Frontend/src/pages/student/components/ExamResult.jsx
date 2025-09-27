@@ -150,7 +150,7 @@ export default function ExamResult() {
             {subjectPerformance.map((subject, index) => (
               <div key={index} className="subject-item">
                 <div className="subject-info">
-                  <span className="subject-name">{subject.subject}</span>
+                  <span className="subject-name">{subject.subject}</span> &nbsp;
                   <span className="subject-percentage">
                     {subject.percentage}%
                   </span>

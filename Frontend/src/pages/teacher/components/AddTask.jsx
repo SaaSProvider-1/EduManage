@@ -191,18 +191,20 @@ const AddTask = () => {
 
   return (
     <div className="add-task-container">
-      <div className="add-task-header">
-        <div className="header-content">
-          <Plus size={24} color="#16a34a" />
+      <div className="add-task-cont-header">
+        <div className="task-header-content">
+          <span className="task-header-icon">
+            <Plus size={24} color="#16a34a" />
+          </span>
           <h1>Create New Task</h1>
         </div>
         <p>Assign tasks, homework, and projects to your students</p>
       </div>
 
       <form onSubmit={handleSubmit} className="add-task-form">
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="title">Task Title *</label>
+        <div className="add-task-form-row">
+          <div className="add-task-form-group">
+            <label htmlFor="title">Task Title <span className="required">*</span></label>
             <input
               type="text"
               id="title"
@@ -214,7 +216,7 @@ const AddTask = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className="add-task-form-group">
             <label htmlFor="category">Task Category</label>
             <select
               id="category"
@@ -231,8 +233,8 @@ const AddTask = () => {
           </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="description">Description *</label>
+        <div className="add-task-form-group">
+          <label htmlFor="description">Description <span className="required">*</span></label>
           <textarea
             id="description"
             name="description"
@@ -244,8 +246,8 @@ const AddTask = () => {
           />
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
+        <div className="add-task-form-row">
+          <div className="add-task-form-group">
             <label htmlFor="batch">Select Batch (Optional)</label>
             <select
               id="batch"
@@ -270,7 +272,7 @@ const AddTask = () => {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className="add-task-form-group">
             <label htmlFor="priority">Priority Level</label>
             <select
               id="priority"
@@ -287,9 +289,9 @@ const AddTask = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="dueDate">Due Date *</label>
+        <div className="add-task-form-row">
+          <div className="add-task-form-group">
+            <label htmlFor="dueDate">Due Date <span className="required">*</span></label>
             <div className="input-with-icon">
               <Calendar size={18} />
               <input
@@ -303,7 +305,7 @@ const AddTask = () => {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="add-task-form-group">
             <label htmlFor="dueTime">Due Time</label>
             <div className="input-with-icon">
               <Clock size={18} />
@@ -318,9 +320,9 @@ const AddTask = () => {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className="add-task-form-group">
           <label htmlFor="attachments">Attachments</label>
-          <div className="file-upload-area">
+          <div className="add-task-file-upload-area">
             <input
               type="file"
               id="attachments"
@@ -328,7 +330,7 @@ const AddTask = () => {
               onChange={handleFileUpload}
               style={{ display: "none" }}
             />
-            <label htmlFor="attachments" className="file-upload-label">
+            <label htmlFor="attachments" className="add-task-file-upload-label">
               <Plus size={20} />
               Add Files
             </label>
@@ -351,10 +353,10 @@ const AddTask = () => {
           </div>
         </div>
 
-        <div className="form-actions">
+        <div className="add-task-form-actions">
           <button
             type="button"
-            className="btn-secondary"
+            className="add-task-btn-secondary"
             onClick={() => {
               setTaskData({
                 title: "",
@@ -373,7 +375,7 @@ const AddTask = () => {
 
           <button
             type="submit"
-            className="btn-primary"
+            className="add-task-btn-primary"
             disabled={!isFormValid || isSubmitting}
           >
             {isSubmitting ? (

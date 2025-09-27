@@ -28,7 +28,12 @@ export default function StudentProfile() {
       return;
     }
 
-    fetch("https://edu-manage-backend.onrender.com/student/profile", {
+    const URL =
+      import.meta.env.MODE === "production"
+        ? import.meta.env.VITE_API_BASE_URL_PROD
+        : import.meta.env.VITE_API_BASE_URL;
+
+    fetch(`${URL}/student/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -119,11 +124,11 @@ export default function StudentProfile() {
           <div className="profile-grid">
             <div className="basic-info-section">
               <div className="profile-photo-section">
-                {/* <img
-                  // src={studentData.photo || "/images/student-1-profile.png"}
+                <img
+                  src={studentData.photo || "/images/student-1-profile.png"}
                   alt={studentData.name}
                   className="profile-photo-new"
-                /> */}
+                />
               </div>
               <div className="user-details">
                 <span className="name-status">

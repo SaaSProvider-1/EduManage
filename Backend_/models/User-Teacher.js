@@ -33,10 +33,6 @@ const TeacherSchema = new mongoose.Schema(
       ref: 'CoachingCenter',
       required: true,
     },
-    organization: {
-      type: String,
-      required: true,
-    },
     qualifications: {
       type: String,
       required: true,

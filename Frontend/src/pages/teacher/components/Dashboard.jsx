@@ -28,7 +28,7 @@ export default function Dashboard() {
   const [updatingTaskId, setUpdatingTaskId] = useState(null);
 
   // Derived state from dashboard data
-  const tasks = dashboardData?.recentTasks || [];
+  const tasks = dashboardData?.recentTasks || ["Tasks data not found"];
   const students = dashboardData?.recentStudents || [];
   const batchOptions = dashboardData?.batches || [];
   const subjectOptions = dashboardData?.subjects || [];
@@ -59,17 +59,19 @@ export default function Dashboard() {
       return;
     }
 
+    const URL =
+      import.meta.env.MODE === "production"
+        ? import.meta.env.VITE_API_BASE_URL_PROD
+        : import.meta.env.VITE_API_BASE_URL;
+
     try {
-      const response = await fetch(
-        "https://edu-manage-backend.onrender.com/teacher/dashboard-data",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${URL}/teacher/dashboard-data`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const result = await response.json();
 
@@ -79,7 +81,9 @@ export default function Dashboard() {
         if (result.data.batches && result.data.batches.length > 0) {
           const firstBatch = result.data.batches[0];
           setSelectedBatch(firstBatch);
-          setSelectedSubject(firstBatch?.subject || firstBatch?.subjectName || '');
+          setSelectedSubject(
+            firstBatch?.subject || firstBatch?.subjectName || ""
+          );
         }
         console.log("Dashboard data loaded:", result.data);
         console.log("Recent tasks:", result.data.recentTasks);
@@ -654,13 +658,17 @@ export default function Dashboard() {
           <div className="attendance-management-card">
             <div className="attendance-management-header">
               <div className="attendance-mgmt-title">
-                <Users size={24} />
+                <Users size={isMobile ? 35 : 40} />
                 <h3>Attendance Management</h3>
               </div>
               <div className="attendance-selectors">
                 <div className="batch-custom-dropdown" ref={batchDropdownRef}>
                   <div className="batch-selector" onClick={toggleBatchDropdown}>
-                    <span>{selectedBatch?.name || selectedBatch?.batchName || 'Select Batch'}</span>
+                    <span>
+                      {selectedBatch?.name ||
+                        selectedBatch?.batchName ||
+                        "Select Batch"}
+                    </span>
                     <ChevronDown
                       size={16}
                       className={`dropdown-arrow ${
@@ -688,7 +696,7 @@ export default function Dashboard() {
                     className="subject-selector"
                     onClick={toggleSubjectDropdown}
                   >
-                    <span>{selectedSubject || 'Select Subject'}</span>
+                    <span>{selectedSubject || "Select Subject"}</span>
                     <ChevronDown
                       size={16}
                       className={`dropdown-arrow ${
@@ -731,32 +739,54 @@ export default function Dashboard() {
             </div>
 
             <div className="students-attendance-list">
-              {students.map((student, index) => (
-                <div key={student?.id || student?._id || index} className="student-attendance-item">
-                  <div className="student-details">
-                    <div className="att-student-name">{student?.name || 'Unknown Student'}</div>
-                    <div className="att-student-roll">{student?.rollNo || student?.rollNumber || 'N/A'}</div>
+              {students === "Students data not found" ||
+              students.length === 0 ? (
+                <div className="no-student">Students data not found</div>
+              ) : (
+                students.map((student, index) => (
+                  <div
+                    key={student?.id || student?._id || index}
+                    className="student-attendance-item"
+                  >
+                    <div className="student-details">
+                      <div className="att-student-name">
+                        {student?.name}
+                      </div>
+                      <div className="att-student-roll">
+                        {student?.rollNo || student?.rollNumber}
+                      </div>
+                    </div>
+                    <div className="attendance-buttons">
+                      <button
+                        className={`attendance-action-btn present-btn ${
+                          attendanceData[student?.id || student?._id] ===
+                          "present"
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          markAttendance(student?.id || student?._id, "present")
+                        }
+                      >
+                        <UserCheck size={16} />
+                      </button>
+                      <button
+                        className={`attendance-action-btn absent-btn ${
+                          attendanceData[student?.id || student?._id] ===
+                          "absent"
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          markAttendance(student?.id || student?._id, "absent")
+                        }
+                      >
+                        <UserX size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <div className="attendance-buttons">
-                    <button
-                      className={`attendance-action-btn present-btn ${
-                        attendanceData[student?.id || student?._id] === "present" ? "active" : ""
-                      }`}
-                      onClick={() => markAttendance(student?.id || student?._id, "present")}
-                    >
-                      <UserCheck size={16} />
-                    </button>
-                    <button
-                      className={`attendance-action-btn absent-btn ${
-                        attendanceData[student?.id || student?._id] === "absent" ? "active" : ""
-                      }`}
-                      onClick={() => markAttendance(student?.id || student?._id, "absent")}
-                    >
-                      <UserX size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
             <div className="save-attendance">

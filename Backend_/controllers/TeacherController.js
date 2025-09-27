@@ -92,7 +92,7 @@ const TeacherRegister = async (req, res) => {
 
     // Validate Password
     const validatePass = validatePassword(password);
-    if (!validatePass) {
+    if (!validatePass.valid) {
       return res.status(400).json({
         success: false,
         message: validatePass?.message,
