@@ -34,9 +34,9 @@ export default function App() {
           <Route path="/admin-register" element={<AdminRegister />} />
 
           {/* Protected Routes */}
-          <Route element={<ProtectRoute allowedRoles={["admin"]} />}>
+          {/* <Route element={<ProtectRoute allowedRoles={["admin"]} />}> */}
             <Route path="/admin/*" element={<Admin />} />
-          </Route>
+          {/* </Route> */}
 
           <Route element={<ProtectRoute allowedRoles={["student"]} />}>
             <Route path="/student/*" element={<Student />} />

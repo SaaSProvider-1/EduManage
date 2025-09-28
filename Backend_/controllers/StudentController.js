@@ -325,8 +325,6 @@ const StudentProfile = async (req, res) => {
       });
     }
 
-    console.log("Raw student data from DB:", JSON.stringify(student, null, 2));
-
     // Transform data to match frontend expectations
     const profileData = {
       name: student.name,
@@ -355,8 +353,6 @@ const StudentProfile = async (req, res) => {
             totalStudents: 0
           }
     };
-
-    console.log("Transformed profile data:", JSON.stringify(profileData, null, 2));
 
     res.json({ 
       success: true, 

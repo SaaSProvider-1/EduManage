@@ -86,7 +86,6 @@ const PaymentSchema = new mongoose.Schema({
 
 // Indexes for better query performance
 PaymentSchema.index({ student: 1, paymentStatus: 1 });
-PaymentSchema.index({ orderId: 1 });
 PaymentSchema.index({ createdAt: -1 });
 
 // Virtual for formatted amount
