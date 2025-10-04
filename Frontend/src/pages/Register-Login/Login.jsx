@@ -197,6 +197,7 @@ export default function Login() {
                 onChange={handleInputChange}
                 className={errors.email ? "error" : ""}
                 placeholder="Enter your email"
+                autoFocus
               />
             </div>
             {errors.email && (

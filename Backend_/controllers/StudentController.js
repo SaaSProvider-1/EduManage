@@ -184,7 +184,7 @@ const StudentRegister = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Student registration initiated! Please check your email and click the verification link to complete your registration.",
+      message: "Student registration complete.",
       user: {
         name,
         email: email.trim(),

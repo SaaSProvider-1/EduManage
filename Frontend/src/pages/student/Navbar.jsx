@@ -110,13 +110,15 @@ export default function Navbar({ isHandleMargin = () => {} }) {
     }
   };
 
-  const handleLogout = () => {
-    const user = localStorage.getItem("User");
-    toast.success(`See you soon ${user.name}`);
+  const handleLogout = async () => {
+    const user = JSON.parse(localStorage.getItem("User"));
+    toast.success(`See you soon ${user?.name || "User"}`);
 
     setTimeout(() => {
       localStorage.removeItem("Name");
+      localStorage.removeItem("User");
       localStorage.removeItem("Token");
+      localStorage.removeItem("UserType");
       Navigate("/");
     }, 2000);
   };
