@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   GraduationCap,
   CircleUserRound,
@@ -21,9 +21,24 @@ import { toast } from "react-toastify";
 
 export default function Navbar({ isHandleMargin }) {
   const Navigate = useNavigate();
+  const location = useLocation();
   const [isMobile] = useState(window.innerWidth <= 768);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [currentView, setCurrentView] = useState("dashboard");
+
+  // Set current view based on URL path
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/');
+    const currentPath = pathSegments[pathSegments.length - 1]; // Get the last segment
+    
+    // Check if the current path matches any menu item id
+    const matchingItem = menuItems.find(item => item.id === currentPath);
+    if (matchingItem) {
+      setCurrentView(currentPath);
+    } else if (location.pathname === '/teacher' || location.pathname === '/teacher/') {
+      setCurrentView("dashboard");
+    }
+  }, [location.pathname]);
 
   const menuItems = [
     {
@@ -31,6 +46,12 @@ export default function Navbar({ isHandleMargin }) {
       label: "Dashboard",
       icon: <LayoutDashboard />,
       color: "#3b82f6",
+    },
+    {
+      id: "my-attendance",
+      label: "My Attendance",
+      icon: <ClipboardList />,
+      color: "#8b5cf6",
     },
     {
       id: "pending-tasks",
@@ -158,13 +179,13 @@ export default function Navbar({ isHandleMargin }) {
             </p>
           </span>
         </div>
-        <div className={`nav-links ${isCollapsed ? "collapsed" : ""}`}>
+        <div className={`teacher-nav-links ${isCollapsed ? "collapsed" : ""}`}>
           {menuItems.map((item) => {
             const isActive = item.id === currentView;
             return (
               <Link
                 to={`/teacher/${item.id}`}
-                className="link-btn"
+                className="teacher-link-btn"
                 key={item.id}
                 onClick={() => handleViewChange(item.id)}
                 style={{

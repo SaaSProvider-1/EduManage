@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Plus,
   Calendar,
@@ -8,6 +8,8 @@ import {
   AlertCircle,
   CheckCircle,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import "./AddTask.css";
@@ -28,10 +30,29 @@ const AddTask = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [batches, setBatches] = useState([]);
   const [loadingBatches, setLoadingBatches] = useState(true);
+  
+  // Date picker states
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const datePickerRef = useRef(null);
 
   // Fetch batches from backend
   useEffect(() => {
     fetchBatches();
+  }, []);
+
+  // Close date picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+        setShowDatePicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const fetchBatches = async () => {
@@ -105,6 +126,67 @@ const AddTask = () => {
       ...prev,
       attachments: prev.attachments.filter((_, i) => i !== index),
     }));
+  };
+
+  // Date picker helper functions
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit"
+    });
+  };
+
+  const formatDateForInput = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    const formattedDate = formatDateForInput(date);
+    setTaskData(prev => ({
+      ...prev,
+      dueDate: formattedDate
+    }));
+    setShowDatePicker(false);
+  };
+
+  const navigateMonth = (direction) => {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() + direction);
+    setSelectedDate(newDate);
+  };
+
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+    
+    return days;
+  };
+
+  const isToday = (date) => {
+    const today = new Date();
+    return date && date.toDateString() === today.toDateString();
+  };
+
+  const isSameDay = (date1, date2) => {
+    return date1 && date2 && date1.toDateString() === date2.toDateString();
   };
 
   const handleSubmit = async (e) => {
@@ -204,7 +286,9 @@ const AddTask = () => {
       <form onSubmit={handleSubmit} className="add-task-form">
         <div className="add-task-form-row">
           <div className="add-task-form-group">
-            <label htmlFor="title">Task Title <span className="required">*</span></label>
+            <label htmlFor="title">
+              Task Title <span className="required">*</span>
+            </label>
             <input
               type="text"
               id="title"
@@ -216,37 +300,6 @@ const AddTask = () => {
             />
           </div>
 
-          <div className="add-task-form-group">
-            <label htmlFor="category">Task Category</label>
-            <select
-              id="category"
-              name="category"
-              value={taskData.category}
-              onChange={handleInputChange}
-            >
-              {taskCategories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="add-task-form-group">
-          <label htmlFor="description">Description <span className="required">*</span></label>
-          <textarea
-            id="description"
-            name="description"
-            value={taskData.description}
-            onChange={handleInputChange}
-            placeholder="Provide detailed instructions for the task"
-            rows="4"
-            required
-          />
-        </div>
-
-        <div className="add-task-form-row">
           <div className="add-task-form-group">
             <label htmlFor="batch">Select Batch (Optional)</label>
             <select
@@ -271,85 +324,166 @@ const AddTask = () => {
               ))}
             </select>
           </div>
+        </div>
 
+        <div className="add-task-form-row">
           <div className="add-task-form-group">
-            <label htmlFor="priority">Priority Level</label>
+            <label htmlFor="category">Task Category</label>
             <select
-              id="priority"
-              name="priority"
-              value={taskData.priority}
+              id="category"
+              name="category"
+              value={taskData.category}
               onChange={handleInputChange}
             >
-              {priorityLevels.map((priority) => (
-                <option key={priority.value} value={priority.value}>
-                  {priority.label}
+              {taskCategories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="add-task-form-group">
+            <label htmlFor="dueDate">
+              Due Date <span className="required">*</span>
+            </label>
+            <div className="custom-date-input-container" ref={datePickerRef}>
+              <div 
+                className="custom-date-input" 
+                onClick={() => setShowDatePicker(!showDatePicker)}
+              >
+                <Calendar size={18} />
+                <span className="date-text">
+                  {taskData.dueDate ? formatDate(new Date(taskData.dueDate)) : "Select Due Date"}
+                </span>
+              </div>
+              
+              {showDatePicker && (
+                <div className="custom-date-picker">
+                  <div className="date-picker-header">
+                    <button 
+                      className="nav-btn" 
+                      onClick={() => navigateMonth(-1)}
+                      type="button"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <span className="month-year">
+                      {selectedDate.toLocaleDateString("en-US", { 
+                        month: "long", 
+                        year: "numeric" 
+                      })}
+                    </span>
+                    <button 
+                      className="nav-btn" 
+                      onClick={() => navigateMonth(1)}
+                      type="button"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                  
+                  <div className="date-picker-grid">
+                    <div className="weekdays">
+                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                        <div key={day} className="weekday">{day}</div>
+                      ))}
+                    </div>
+                    
+                    <div className="days-grid">
+                      {getDaysInMonth(selectedDate).map((date, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          className={`day-btn ${
+                            date ? (isToday(date) ? 'today' : '') : 'empty'
+                          } ${
+                            date && taskData.dueDate && isSameDay(date, new Date(taskData.dueDate)) ? 'selected' : ''
+                          }`}
+                          onClick={() => date && handleDateSelect(date)}
+                          disabled={!date}
+                        >
+                          {date ? date.getDate() : ''}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="date-picker-footer">
+                    <button 
+                      className="today-btn" 
+                      onClick={() => handleDateSelect(new Date())}
+                      type="button"
+                    >
+                      Today
+                    </button>
+                    <button 
+                      className="clear-btn" 
+                      onClick={() => {
+                        setTaskData(prev => ({ ...prev, dueDate: "" }));
+                        setShowDatePicker(false);
+                      }}
+                      type="button"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="add-task-form-row">
           <div className="add-task-form-group">
-            <label htmlFor="dueDate">Due Date <span className="required">*</span></label>
-            <div className="input-with-icon">
-              <Calendar size={18} />
-              <input
-                type="date"
-                id="dueDate"
-                name="dueDate"
-                value={taskData.dueDate}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+            <label htmlFor="description">
+              Description <span className="required">*</span>
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={taskData.description}
+              onChange={handleInputChange}
+              placeholder="Provide detailed instructions for the task"
+              rows="4"
+              required
+            />
           </div>
 
           <div className="add-task-form-group">
-            <label htmlFor="dueTime">Due Time</label>
-            <div className="input-with-icon">
-              <Clock size={18} />
+            <label htmlFor="attachments">Attachments</label>
+            <div className="add-task-file-upload-area">
               <input
-                type="time"
-                id="dueTime"
-                name="dueTime"
-                value={taskData.dueTime}
-                onChange={handleInputChange}
+                type="file"
+                id="attachments"
+                multiple
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
               />
+              <label
+                htmlFor="attachments"
+                className="add-task-file-upload-label"
+              >
+                <Plus size={20} />
+                Add Files
+              </label>
+              {taskData.attachments.length > 0 && (
+                <div className="attachments-list">
+                  {taskData.attachments.map((file, index) => (
+                    <div key={index} className="attachment-item">
+                      <span>{file.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeAttachment(index)}
+                        className="remove-attachment"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="add-task-form-group">
-          <label htmlFor="attachments">Attachments</label>
-          <div className="add-task-file-upload-area">
-            <input
-              type="file"
-              id="attachments"
-              multiple
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
-            <label htmlFor="attachments" className="add-task-file-upload-label">
-              <Plus size={20} />
-              Add Files
-            </label>
-            {taskData.attachments.length > 0 && (
-              <div className="attachments-list">
-                {taskData.attachments.map((file, index) => (
-                  <div key={index} className="attachment-item">
-                    <span>{file.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeAttachment(index)}
-                      className="remove-attachment"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 

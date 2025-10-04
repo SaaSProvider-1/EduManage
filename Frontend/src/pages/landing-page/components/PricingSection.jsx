@@ -75,7 +75,7 @@ const PricingSection = () => {
   return (
     <section id="pricing" className="pricing-section section-white">
       <div className="pricing-container">
-        <div className="section-header text-center animate-on-scroll">
+        <div className="pricing-section-header text-center animate-on-scroll">
           <h2 className="heading-lg">
             Simple, <span className="text-primary">Transparent</span> Pricing
           </h2>
@@ -298,7 +298,7 @@ const PricingSection = () => {
 
         <div className="pricing-faq animate-on-scroll">
           <div className="faq-content">
-            <h3 className="heading-md">Frequently Asked Questions</h3>
+            <h3 className="heading-sm">Frequently Asked Questions</h3>
             <div className="faq-grid grid grid-2">
               <div className="faq-item">
                 <h4>Can I change plans anytime?</h4>
@@ -335,17 +335,62 @@ const PricingSection = () => {
           </div>
         </div>
 
-        <div className="enterprise-cta animate-on-scroll">
-          <div className="enterprise-content">
-            <h3 className="heading-md">Need a Custom Solution?</h3>
-            <p className="text-lg">
-              For large institutions or specific requirements, we offer
-              enterprise solutions with custom pricing and features.
-            </p>
-            <div className="enterprise-buttons">
-              <a href="#contact" className="btn btn-secondary btn-large">
-                Contact Us
-              </a>
+        <div className="last-section">
+          <div className="enterprise-cta animate-on-scroll">
+            <div className="enterprise-content">
+              <h3 className="heading-sm">Need a Custom Solution?</h3>
+              <p className="text-md">
+                For large institutions or specific requirements, we offer
+                enterprise solutions with custom pricing and features.
+              </p>
+              <div className="enterprise-buttons">
+                <a href="#contact" className="btn btn-secondary btn-large">
+                  Contact Us
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-newsletter">
+            <div className="newsletter-content">
+              <h4 className="newsletter-title">Stay Updated</h4>
+              <p className="newsletter-description">
+                By subscribing, you agree to our Privacy Policy and consent to
+                receive updates from us.
+              </p>
+              <form className="newsletter-form">
+                <div className="email-form-group">
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="newsletter-input"
+                    required
+                  />
+                  <button type="submit" className="newsletter-btn">
+                    <span>Subscribe</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 12H19"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12 5L19 12L12 19"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

@@ -1,0 +1,532 @@
+.teacher-attendance-container {
+  width: 100%;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.teacher-header-content {
+  border-bottom: 2px solid rgb(232, 232, 232);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 30px;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-header-icon {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacher-header-text h1 {
+  height: 30px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+.teacher-header-text p {
+  color: #545964;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.teacher-attendance-body {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 20px;
+}
+
+/* Statistics Grid */
+.teacher-stats-grid {
+  width: 30%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.teacher-stat-card {
+  background: linear-gradient(to bottom right, #ffffff, #f9fafb);
+  padding: 16px 24px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid #f1f5f9;
+}
+
+.teacher-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.teacher-stat-content {
+  flex: 1;
+}
+
+.teacher-stat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.teacher-stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  letter-spacing: 0.2px;
+}
+
+.teacher-stat-value {
+  height: 40px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin-top: -5px;
+}
+
+.teacher-stat-change {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.teacher-stat-change.positive {
+  color: #10b981; /* emerald green */
+}
+
+.teacher-stat-change.negative {
+  color: #ef4444; /* red */
+}
+
+.teacher-stat-icon {
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+}
+
+.teacher-stat-icon.green {
+  background: linear-gradient(135deg, #34d399, #059669);
+}
+
+.teacher-stat-icon.blue {
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+}
+
+.teacher-stat-icon.purple {
+  background: linear-gradient(135deg, #a78bfa, #6d28d9);
+}
+
+.teacher-stat-icon.orange {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+/* Attendance Records */
+.attendance-records {
+  height: 100%;
+  width: 70%;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.record-title-section {
+  flex: 1;
+}
+
+.record-count {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  display: block;
+}
+
+.rec-search-bar {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.rec-search-bar input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #374151;
+  width: 200px;
+}
+
+.attendance-records h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+.attendance-table th {
+  background: #f9fafb;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.attendance-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.attendance-table tr:hover {
+  background: #f9fafb;
+}
+
+.attendance-table tr:last-child td {
+  border-bottom: none;
+}
+
+.no-records {
+  text-align: center !important;
+  color: #64748b !important;
+  font-style: italic;
+  padding: 32px 16px !important;
+  background: #f8fafc !important;
+}
+
+.loading-cell {
+  text-align: center !important;
+  color: #3b82f6 !important;
+  font-weight: 500;
+  padding: 32px 16px !important;
+  background: #f0f9ff !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .teacher-attendance-container {
+    padding: 16px;
+  }
+
+  .current-time-section {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .current-time {
+    font-size: 24px;
+  }
+
+  .attendance-table {
+    font-size: 12px;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-table th,
+  .attendance-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .header-text h1 {
+    font-size: 20px;
+  }
+}
+
+/* Custom Date Picker Styles */
+.rec-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rec-search-bar:hover {
+  border-color: #3b82f6;
+  background: #f1f5f9;
+}
+
+.custom-date-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+  cursor: pointer;
+  color: #475569;
+  font-size: 14px;
+}
+
+.custom-date-input:hover {
+  color: #3b82f6;
+}
+
+.date-text {
+  font-weight: 500;
+}
+
+.custom-date-picker {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  min-width: 280px;
+  margin-top: 8px;
+}
+
+.date-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #f1f5f9;
+  color: #3b82f6;
+}
+
+.month-year {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 16px;
+}
+
+.date-picker-grid {
+  margin-bottom: 16px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 8px 4px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.day-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+  transition: all 0.2s ease;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-btn:hover:not(.empty):not(:disabled) {
+  background: #f1f5f9;
+  color: #3b82f6;
+}
+
+.day-btn.today {
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+}
+
+.day-btn.today:hover {
+  background: #2563eb;
+}
+
+.day-btn.selected {
+  background: #1e293b;
+  color: white;
+  font-weight: 600;
+}
+
+.day-btn.selected:hover {
+  background: #334155;
+}
+
+.day-btn.empty {
+  cursor: default;
+  opacity: 0;
+}
+
+.day-btn:disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+
+.date-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.today-btn, .clear-btn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.today-btn {
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.today-btn:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.clear-btn {
+  color: #64748b;
+}
+
+.clear-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Mobile responsiveness for date picker */
+@media (max-width: 768px) {
+  .custom-date-picker {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto;
+    margin-top: 0;
+    max-width: 90vw;
+  }
+  
+  .rec-search-bar {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .custom-date-input {
+    justify-content: center;
+    min-width: auto;
+  }
+
+  .record-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .record-count {
+    font-size: 12px;
+  }
+}

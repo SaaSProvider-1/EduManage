@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Clock,
   CheckCircle,
@@ -11,17 +12,21 @@ import {
   UserX,
   ChevronDown,
   RefreshCw,
+  CheckCheck,
+  Trash2,
+  X,
 } from "lucide-react";
 import "./Dashboard.css";
 import { toast } from "react-toastify";
 
 export default function Dashboard() {
+  const Navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [customTime, setCustomTime] = useState("");
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+  // const [newTaskTitle, setNewTaskTitle] = useState("");
   const [isMobile] = useState(window.innerWidth < 768);
 
   // Add state for task operations
@@ -238,43 +243,43 @@ export default function Dashboard() {
     ).length;
   };
 
-  const handleAddTask = async () => {
-    if (!newTaskTitle.trim()) {
-      toast.error("Please enter a task title");
-      return;
-    }
+  // const handleAddTask = async () => {
+  //   if (!newTaskTitle.trim()) {
+  //     toast.error("Please enter a task title");
+  //     return;
+  //   }
 
-    if (isLoading) return;
+  //   if (isLoading) return;
 
-    const token = localStorage.getItem("Token");
-    try {
-      const response = await fetch("http://localhost:3000/teacher/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: newTaskTitle,
-          priority: "medium",
-          category: "other",
-        }),
-      });
+  //   const token = localStorage.getItem("Token");
+  //   try {
+  //     const response = await fetch("http://localhost:3000/teacher/tasks", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         title: newTaskTitle,
+  //         priority: "medium",
+  //         category: "other",
+  //       }),
+  //     });
 
-      const result = await response.json();
-      if (result.success) {
-        toast.success("Task added successfully!");
-        setNewTaskTitle("");
-        fetchDashboardData(); // Refresh dashboard data
-      } else {
-        console.error("Add task failed:", result.message);
-        toast.error(result.message || "Failed to add task");
-      }
-    } catch (error) {
-      console.error("Add task error:", error);
-      toast.error("Failed to add task. Please try again.");
-    }
-  };
+  //     const result = await response.json();
+  //     if (result.success) {
+  //       toast.success("Task added successfully!");
+  //       setNewTaskTitle("");
+  //       fetchDashboardData(); // Refresh dashboard data
+  //     } else {
+  //       console.error("Add task failed:", result.message);
+  //       toast.error(result.message || "Failed to add task");
+  //     }
+  //   } catch (error) {
+  //     console.error("Add task error:", error);
+  //     toast.error("Failed to add task. Please try again.");
+  //   }
+  // };
 
   const handleTaskStatusUpdate = async (taskId, newStatus) => {
     if (isLoading || updatingTaskId) return;
@@ -282,17 +287,19 @@ export default function Dashboard() {
     setUpdatingTaskId(taskId);
     const token = localStorage.getItem("Token");
     try {
-      const response = await fetch("http://localhost:3000/teacher/tasks", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          taskId: taskId,
-          status: newStatus,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/teacher/tasks/${taskId}`,
+        {
+          method: "PUT", // now points to /tasks/:id
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            status: newStatus, // only send fields you want to update
+          }),
+        }
+      );
 
       const result = await response.json();
       if (result.success) {
@@ -305,6 +312,38 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Update task error:", error);
       toast.error("Failed to update task. Please try again.");
+    } finally {
+      setUpdatingTaskId(null);
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    if (isLoading || updatingTaskId) return;
+
+    setUpdatingTaskId(taskId);
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await fetch(
+        `http://localhost:3000/teacher/tasks/del/${taskId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Task deleted successfully!");
+        fetchDashboardData(); // Refresh dashboard data
+      } else {
+        console.error("Delete failed:", result.message);
+        toast.error(result.message || "Failed to delete task");
+      }
+    } catch (error) {
+      console.error("Delete task error:", error);
+      toast.error("Failed to delete task. Please try again.");
     } finally {
       setUpdatingTaskId(null);
     }
@@ -563,7 +602,7 @@ export default function Dashboard() {
                 <CheckCircle size={24} />
                 <h3>Today's Tasks</h3>
               </div>
-              <div className="add-task-btn" onClick={handleAddTask}>
+              <div className="add-task-btn" onClick={() => Navigate("/teacher/add-task")}>
                 <Plus size={16} />
                 <span>Add Task</span>
               </div>
@@ -576,12 +615,12 @@ export default function Dashboard() {
               </span>
             </div>
 
-            <div className="tasks-list">
+            <div className="teacher-tasks-list">
               {dashboardData?.recentTasks?.length > 0 ? (
                 dashboardData.recentTasks.map((task) => (
                   <div
                     key={task.id}
-                    className={`task-item ${
+                    className={`teacher-task-item ${
                       task.status === "completed" ? "completed" : ""
                     } ${updatingTaskId === task.id ? "updating" : ""}`}
                     onClick={() =>
@@ -599,31 +638,47 @@ export default function Dashboard() {
                       />
                     </div>
                     <span className="task-text">{task.title}</span>
-                    <span
-                      className="task-priority"
-                      style={{ color: getPriorityColor(task.priority) }}
+                    {task.status === "completed" ? (
+                      <button
+                        className="task-action-btn x"
+                        title="Incomplete"
+                        disabled={updatingTaskId === task._id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleTaskStatusUpdate(task.id, "pending");
+                        }}
+                      >
+                        <X size={16} />
+                      </button>
+                    ) : (
+                      <button
+                        className="task-action-btn check"
+                        title="Complete"
+                        disabled={updatingTaskId === task._id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleTaskStatusUpdate(task.id, "completed");
+                        }}
+                      >
+                        <CheckCheck size={16} />
+                      </button>
+                    )}
+                    <button
+                      className="task-action-btn delete"
+                      title="Delete"
+                      disabled={updatingTaskId === task._id}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDeleteTask(task.id);
+                      }}
                     >
-                      {task.priority}
-                    </span>
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 ))
               ) : (
-                <p className="no-tasks">No tasks available</p>
+                <p className="dash-no-tasks">No tasks available <br /> Create New Tasks</p>
               )}
-            </div>
-
-            <div className="add-task-section">
-              <input
-                type="text"
-                placeholder="Add a new task..."
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
-                className="add-task-input"
-              />
-              <button onClick={handleAddTask} className="add-task-button">
-                <Plus size={16} />
-              </button>
             </div>
 
             <div className="dash-progress-bar">
@@ -658,7 +713,7 @@ export default function Dashboard() {
           <div className="attendance-management-card">
             <div className="attendance-management-header">
               <div className="attendance-mgmt-title">
-                <Users size={isMobile ? 35 : 40} />
+                <Users size={isMobile ? 35 : 35} strokeWidth={2.5} />
                 <h3>Attendance Management</h3>
               </div>
               <div className="attendance-selectors">
@@ -749,9 +804,7 @@ export default function Dashboard() {
                     className="student-attendance-item"
                   >
                     <div className="student-details">
-                      <div className="att-student-name">
-                        {student?.name}
-                      </div>
+                      <div className="att-student-name">{student?.name}</div>
                       <div className="att-student-roll">
                         {student?.rollNo || student?.rollNumber}
                       </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./navbar";
 import Dashboard from "./components/Dashboard";
+import TeacherAttendance from "./components/TeacherAttendance";
 import PendingTask from "./components/PendingTask";
 import AddTask from "./components/AddTask";
 import BatchManagement from "./components/BatchManagement";
@@ -48,6 +49,7 @@ export default function Teacher() {
         <Routes>
           <Route path="/" element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="my-attendance" element={<TeacherAttendance />} />
           <Route path="pending-tasks" element={<PendingTask />} />
           <Route path="add-task" element={<AddTask />} />
           <Route path="reschedule-class" element={<RescheduleClass />} />

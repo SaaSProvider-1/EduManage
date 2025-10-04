@@ -13,7 +13,8 @@ const {
   getTeacherStudents,
   markAttendance,
   teacherCheckInOut,
-  manageTask,
+  createTask,
+  updateTask,
   getTeacherTasks,
   createBatch,
   updateBatch,
@@ -21,7 +22,9 @@ const {
   getMarks,
   saveMarks,
   getBatchJoinRequests,
-  handleJoinRequest
+  handleJoinRequest,
+  deleteTask,
+  getTeacherAttendanceRecords
 } = require("../controllers/TeacherController");
 const { TeacherAuth } = require('../middleware/RoleBasedAuth');
 
@@ -50,9 +53,13 @@ router.post("/attendance", TeacherAuth, markAttendance);
 
 router.post("/check-attendance", TeacherAuth, teacherCheckInOut);
 
-router.post("/tasks", TeacherAuth, manageTask);
+router.get("/attendance-records", TeacherAuth, getTeacherAttendanceRecords);
 
-router.put("/tasks", TeacherAuth, manageTask);
+router.post("/tasks", TeacherAuth, createTask);
+
+router.put("/tasks/:id", TeacherAuth, updateTask);
+
+router.delete("/tasks/del/:id", TeacherAuth, deleteTask);
 
 router.get("/tasks", TeacherAuth, getTeacherTasks);
 

@@ -13,15 +13,25 @@
   margin: 0 auto;
 }
 
-.section-header {
-  margin-bottom: 3rem;
+.pricing-section-header {
+  margin-bottom: 1rem;
+}
+
+.heading-lg {
+  font-size: 1.8rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.text-lg {
+  font-size: 1.1rem;
 }
 
 /* Pricing Toggle */
 .pricing-toggle {
   display: flex;
   justify-content: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .toggle-container {
@@ -386,14 +396,15 @@
 .pricing-faq {
   background: var(--light-gray);
   border-radius: 20px;
-  padding: 3rem;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
 .faq-content h3 {
   text-align: center;
   color: var(--dark-gray);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .faq-grid {
@@ -426,10 +437,20 @@
   margin: 0;
 }
 
+/* Last Section */
+.last-section {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* Enterprise CTA */
 .enterprise-cta {
-  width: 100%;
-  border-radius: 20px;
+  width: 80%;
+  border-radius: 16px;
   text-align: center;
   color: white;
   background: linear-gradient(135deg, var(--primary-blue), #1d4ed8);
@@ -464,13 +485,13 @@
 
 .enterprise-content h3 {
   color: white;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .enterprise-content p {
   color: rgba(255, 255, 255, 0.9);
   max-width: 600px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 1rem;
 }
 
 .enterprise-buttons {
@@ -488,6 +509,124 @@
 .enterprise-buttons .btn:hover {
   transform: translateY(-2px);
   background-color: #d4e5ff;
+}
+
+/* Footer Newsletter */
+.footer-newsletter {
+  width: 100%;
+  background: linear-gradient(135deg, #374151, #4b5563);
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-newsletter::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  right: -100%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.1) 0%,
+    transparent 70%
+  );
+  animation: float 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.newsletter-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.newsletter-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.newsletter-description {
+  color: #d1d5db;
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.newsletter-form {
+  width: 100%;
+}
+
+.email-form-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 0.8rem 1.25rem;
+  border: 2px solid #4b5563;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.newsletter-input::placeholder {
+  color: #9ca3af;
+}
+
+.newsletter-input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.newsletter-btn {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-blue), #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.newsletter-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.newsletter-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.newsletter-btn:hover svg {
+  transform: translateX(2px);
+}
+
+.newsletter-note {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  line-height: 1.4;
 }
 
 /* Responsive Design */

@@ -106,11 +106,6 @@ const TaskSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  priority: {
-    type: String,
-    enum: ["low", "medium", "high"],
-    default: "medium",
-  },
   status: {
     type: String,
     enum: ["pending", "in-progress", "completed"],
@@ -118,14 +113,14 @@ const TaskSchema = new mongoose.Schema({
   },
   dueDate: {
     type: Date,
+    default: null,
   },
   completedAt: {
     type: Date,
   },
-  category: {
+  batch: {
     type: String,
-    enum: ["teaching", "administrative", "grading", "meeting", "other"],
-    default: "other",
+    default: null,
   },
 }, { timestamps: true });
 
@@ -145,7 +140,10 @@ const TeacherAttendanceSchema = new mongoose.Schema({
     }
   },
   checkIn: {
-    time: Date,
+    time: {
+      type: Date,
+      default: null,
+    },
     location: String,
     method: {
       type: String,
@@ -154,7 +152,10 @@ const TeacherAttendanceSchema = new mongoose.Schema({
     }
   },
   checkOut: {
-    time: Date,
+    time: {
+      type: Date,
+      default: null,
+    },
     location: String,
     method: {
       type: String,

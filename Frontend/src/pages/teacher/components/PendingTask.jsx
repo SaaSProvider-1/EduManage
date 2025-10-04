@@ -181,18 +181,18 @@ export default function PendingTask() {
 
   return (
     <div className="pending-tasks">
-      <div className="tasks-header">
+      <div className="pen-tasks-header">
         <h2>Pending Tasks</h2>
-        <div className="tasks-summary">
-          <span className="summary-item">
-            <span className="summary-number">{tasks.length}</span>
-            <span className="summary-label">Total Tasks</span>
+        <div className="pen-tasks-summary">
+          <span className="task-summary-item">
+            <span className="task-summary-number">{tasks.length}</span>
+            <span className="task-summary-label">Total Tasks</span>
           </span>
-          <span className="summary-item">
-            <span className="summary-number">
+          <span className="task-summary-item">
+            <span className="task-summary-number">
               {tasks.filter((t) => t.priority === "high").length}
             </span>
-            <span className="summary-label">High Priority</span>
+            <span className="task-summary-label">High Priority</span>
           </span>
         </div>
       </div>
@@ -224,95 +224,100 @@ export default function PendingTask() {
         </button>
       </div>
 
-      <div className="tasks-grid">
-        {filteredTasks.map((task) => (
-          <div key={task._id || task.id} className="task-card">
-            <div className="task-header">
-              <div className="task-type-icon">
-                {getTypeIcon(task.category || task.type)}
-              </div>
-              <div
-                className="task-priority"
-                style={{ backgroundColor: getPriorityColor(task.priority) }}
-              >
-                {task.priority}
-              </div>
-            </div>
-
-            <div className="task-content">
-              <h3 className="task-title">{task.title}</h3>
-              <div className="task-details">
-                {task.dueDate && (
-                  <div className="task-detail">
-                    <span className="detail-icon">📅</span>
-                    <span>
-                      Due: {new Date(task.dueDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-                {task.description && (
-                  <div className="task-detail">
-                    <span className="detail-icon">�</span>
-                    <span>{task.description}</span>
-                  </div>
-                )}
-                <div className="task-detail">
-                  <span className="detail-icon">⏱️</span>
-                  <span className={`status ${task.status}`}>
-                    {task.status.replace("-", " ")}
-                  </span>
+      {filteredTasks.length > 0 && (
+        filteredTasks.map((task) => (
+          <div className="tasks-list">
+            <div key={task._id || task.id} className="task-card">
+              <div className="task-header">
+                <div className="task-type-icon">
+                  {getTypeIcon(task.category || task.type)}
+                </div>
+                <div
+                  className="task-priority"
+                  style={{ backgroundColor: getPriorityColor(task.priority) }}
+                >
+                  {task.priority}
                 </div>
               </div>
-            </div>
 
-            <div className="task-actions">
-              {task.status === "pending" ? (
-                <>
-                  <button
-                    className={`action-btn start-btn ${
-                      updatingTaskId === (task._id || task.id) ? "loading" : ""
-                    }`}
-                    onClick={() => handleTaskStart(task._id || task.id)}
-                    disabled={updatingTaskId === (task._id || task.id)}
-                  >
-                    {updatingTaskId === (task._id || task.id)
-                      ? "Starting..."
-                      : "Start Task"}
-                  </button>
+              <div className="task-content">
+                <h3 className="task-title">{task.title}</h3>
+                <div className="task-details">
+                  {task.dueDate && (
+                    <div className="task-detail">
+                      <span className="detail-icon">📅</span>
+                      <span>
+                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+                  {task.description && (
+                    <div className="task-detail">
+                      <span className="detail-icon">�</span>
+                      <span>{task.description}</span>
+                    </div>
+                  )}
+                  <div className="task-detail">
+                    <span className="detail-icon">⏱️</span>
+                    <span className={`status ${task.status}`}>
+                      {task.status.replace("-", " ")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="task-actions">
+                {task.status === "pending" ? (
+                  <>
+                    <button
+                      className={`action-btn start-btn ${
+                        updatingTaskId === (task._id || task.id)
+                          ? "loading"
+                          : ""
+                      }`}
+                      onClick={() => handleTaskStart(task._id || task.id)}
+                      disabled={updatingTaskId === (task._id || task.id)}
+                    >
+                      {updatingTaskId === (task._id || task.id)
+                        ? "Starting..."
+                        : "Start Task"}
+                    </button>
+                    <button
+                      className={`action-btn complete-btn ${
+                        updatingTaskId === (task._id || task.id)
+                          ? "loading"
+                          : ""
+                      }`}
+                      onClick={() => handleTaskComplete(task._id || task.id)}
+                      disabled={updatingTaskId === (task._id || task.id)}
+                    >
+                      {updatingTaskId === (task._id || task.id)
+                        ? "Updating..."
+                        : "Mark Complete"}
+                    </button>
+                  </>
+                ) : (
                   <button
                     className={`action-btn complete-btn ${
                       updatingTaskId === (task._id || task.id) ? "loading" : ""
                     }`}
                     onClick={() => handleTaskComplete(task._id || task.id)}
-                    disabled={updatingTaskId === (task._id || task.id)}
+                    disabled={
+                      updatingTaskId === (task._id || task.id) ||
+                      task.status === "completed"
+                    }
                   >
                     {updatingTaskId === (task._id || task.id)
                       ? "Updating..."
+                      : task.status === "completed"
+                      ? "Completed"
                       : "Mark Complete"}
                   </button>
-                </>
-              ) : (
-                <button
-                  className={`action-btn complete-btn ${
-                    updatingTaskId === (task._id || task.id) ? "loading" : ""
-                  }`}
-                  onClick={() => handleTaskComplete(task._id || task.id)}
-                  disabled={
-                    updatingTaskId === (task._id || task.id) ||
-                    task.status === "completed"
-                  }
-                >
-                  {updatingTaskId === (task._id || task.id)
-                    ? "Updating..."
-                    : task.status === "completed"
-                    ? "Completed"
-                    : "Mark Complete"}
-                </button>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        ))}
-      </div>
+        )))}
 
       {filteredTasks.length === 0 && (
         <div className="no-tasks">

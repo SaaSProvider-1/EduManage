@@ -68,7 +68,8 @@
 }
 
 .teacher-profile {
-  padding: 20px;
+  padding: 10px 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
@@ -100,21 +101,37 @@
   font-weight: 600;
 }
 
-.nav-links {
-  padding: 20px 0;
+.teacher-nav-links {
+  height: 70%;
+  width: 100%;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 20px 0;
+  padding-top: 0;
+  overflow: hidden;
   overflow-y: auto;
 }
 
-.nav-links.collapsed {
+.teacher-nav-links::-webkit-scrollbar {
+  width: 4px;
+}
+
+.teacher-nav-links::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.teacher-nav-links.collapsed {
   padding: 20px 10px;
 }
 
-.link-btn {
+.teacher-link-btn {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 12px 20px;
+  padding: 10px 20px;
   margin: 5px 15px;
   text-decoration: none;
   border-radius: 8px;
@@ -123,13 +140,13 @@
   border-left: 4px solid transparent;
 }
 
-.nav-links.collapsed .link-btn {
+.teacher-nav-links.collapsed .teacher-link-btn {
   margin: 5px 10px;
   padding: 12px 15px;
   justify-content: center;
 }
 
-.link-btn:hover {
+.teacher-link-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
   transform: translateX(5px);
 }

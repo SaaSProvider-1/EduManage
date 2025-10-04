@@ -17,6 +17,7 @@ import TutorRegister from "./pages/Register-Login/TutorRegister";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFoundPage from "./NotFoundPage";
 import AdminRegister from "./pages/Register-Login/AdminRegister";
+import ContactForm from "./pages/contact";
 export default function App() {
   return (
     <>
@@ -32,11 +33,13 @@ export default function App() {
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/admin-register" element={<AdminRegister />} />
+          {/* <Route path="/admin-login" element={<Login />} /> */}
+          <Route path="/contact" element={<ContactForm />} />
 
           {/* Protected Routes */}
-          {/* <Route element={<ProtectRoute allowedRoles={["admin"]} />}> */}
+          <Route element={<ProtectRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/*" element={<Admin />} />
-          {/* </Route> */}
+          </Route>
 
           <Route element={<ProtectRoute allowedRoles={["student"]} />}>
             <Route path="/student/*" element={<Student />} />

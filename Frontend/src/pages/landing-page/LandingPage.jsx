@@ -2,11 +2,7 @@ import React, { useEffect } from 'react';
 import './LandingPage.css';
 import HeroSection from './components/HeroSection';
 import FeaturesSection from './components/FeaturesSection';
-import HowItWorksSection from './components/HowItWorksSection';
-import BenefitsSection from './components/BenefitsSection';
-import ScreenshotsSection from './components/ScreenshotsSection';
 import PricingSection from './components/PricingSection';
-import TestimonialsSection from './components/TestimonialsSection';
 import Footer from './Footer';
 import Navbar from './navbar';
 
@@ -36,7 +32,6 @@ const LandingPage = () => {
       <Navbar />
       <HeroSection />
       <FeaturesSection />
-      <HowItWorksSection />
       <PricingSection />
       <Footer />
     </div>
